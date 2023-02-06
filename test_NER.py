@@ -26,7 +26,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
 # features = torch.load(cached_features_file)
-features = torch.load('input/data/ner_data/cached_dev_64')
+features = torch.load('input/data/fengxian/ner/cached_validate_30')
 
 all_input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
 all_attention_mask = torch.tensor([f.attention_mask for f in features], dtype=torch.long)
