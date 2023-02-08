@@ -2,12 +2,15 @@ from BERT_CRF import BertCrf
 from NER_main import NerProcessor, CRF_LABELS
 from SIM_main import SimProcessor,SimInputFeatures
 from transformers import BertTokenizer, BertConfig, BertForSequenceClassification
+from question_intents import QUESTION_INTENTS
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
 import torch
 # import pymysql
 from tqdm import tqdm, trange
-from py2neo import Graph, Node, NodeMatcher
-graph = Graph("bolt://localhost:7687", auth=('neo4j', '123456'))
+from neo4j_graph import Neo4jGraph
+neo4j_addr = "bolt://localhost:7687"
+username = "neo4j"
+password = "123456"
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # device = torch.device('cpu')
@@ -155,8 +158,81 @@ def semantic_matching(model,tokenizer,question,attribute_list,max_length):
         return pre_rest.argmax(dim = -1)
 
 
-def main():
+def do_qa(question, graph, ner_model, sim_model, tokenizer):
+    # 1. Mention Recognition
+        mention = get_entity(model=ner_model, tokenizer=tokenizer, sentence=question, max_len=30)
+        if mention != '':
+            print("问题中的实体：", mention)
+        else: # 如果问题中不存在实体
+            print("回答：未找到该问题的答案")
+            return
 
+        # 2. Entity Linking
+        if mention in graph.entity_list:
+            # 完全匹配
+            entity = mention
+        else:
+            # 局部匹配
+            entity = next((e for e in graph.entity_list if mention in e), None)
+            if entity is None:
+                # 未找到
+                print(f"回答：未找到\"{mention}\"相关信息")
+                return
+        print("链接到的实体：", entity)
+
+        # 3. Intention Mapping + Attribute/Relation Retrival
+        # 获取实体对应的所有属性
+        get_e_relation_query = f"match (n)-[r]-() where n.`名称`='{entity}' return type(r)"
+        get_e_attribute_query =  f"match (n) where n.`名称` = '{entity}' return keys(n)"
+        e_relations = graph.execute_query(get_e_relation_query)
+        e_attributes = graph.execute_query(get_e_attribute_query)[0]
+        relations, attributes = [], []
+
+        match_idx = semantic_matching(sim_model, tokenizer, question, e_relations + e_attributes, 30).item()
+        if match_idx == -1:
+            print(f"回答：未在\"{entity}\"中找到问题相关信息")
+            return
+        elif match_idx < len(e_relations):
+            intention = 'one_hop_e'
+            relations = [e_relations[match_idx]]
+        else:
+            intention = 'one_hop_a'
+            attributes = [e_attributes[match_idx - len(e_relations)]]
+
+        # 4. Query Generation
+        answer_query = QUESTION_INTENTS[intention]['query']
+        slots = QUESTION_INTENTS[intention]['query_slots']
+        slot_fills = []
+        for slot_type, slot_idx in slots:
+            if slot_type == 'e':
+                slot_fills.append(entity)
+            elif slot_type == 'a':
+                slot_fills.append(attributes[slot_idx])
+            elif slot_type == 'r':
+                slot_fills.append(relations[slot_idx])
+        answer_query = answer_query.format(*slot_fills)
+        values = graph.execute_query(answer_query)
+        
+        # 5. Answer Generation
+        answer_template = QUESTION_INTENTS[intention]['answer']
+        slots = QUESTION_INTENTS[intention]['answer_slots']
+        slot_fills = []
+        for slot_type, slot_idx in slots:
+            if slot_type == 'e':
+                slot_fills.append(entity)
+            elif slot_type == 'a':
+                slot_fills.append(attributes[slot_idx])
+            elif slot_type == 'r':
+                slot_fills.append(relations[slot_idx])
+            elif slot_type == 'v':
+                slot_fills.append('，'.join(values))
+        answer = answer_template.format(*slot_fills)
+        print("回答：", answer)
+
+def main():
+    print('连接数据库...')
+    graph = Neo4jGraph(neo4j_addr, username, password)
+    print('加载模型...')
     with torch.no_grad():
         tokenizer_inputs = ()
         tokenizer_kwards = {'do_lower_case': False,
@@ -178,104 +254,15 @@ def main():
 
         sim_model = sim_model.to(device)
         sim_model.eval()
-
-        # while True:
-        #     print("====="*10)
-        #     raw_text = input("问题：") 
-        #     raw_text = raw_text.strip() # 去掉输入的首尾空格
-        #     if ( "quit" == raw_text ):
-        #         print("quit")
-        #         return
-        raw_text = "客户管理是啥意思？他涉及哪些部分？"
-        entity = get_entity(model=ner_model, tokenizer=tokenizer, sentence=raw_text, max_len=30)
-        # print(type(entity))
-        print("问题中的实体：", entity)
-        if '' == entity: # 如果问题中不存在实体
-            print("回答：未找到该问题的答案")
-            # continue #记得取消注释
-        else: # 补全局部匹配
-            flag = 0 # 0代表完全匹配
-            sql_str = "match (n) where n.`名称` = '{}' return keys(n)".format(entity) 
-            attributes = graph.run(sql_str).data()
-            if len(attributes)== 0: # 如果完全匹配没有检索到实体，调用局部匹配
-                sql_str = "match (n) where n.`名称` contains('{}') return keys(n)".format(entity) 
-                attributes = graph.run(sql_str).data()
-                flag =1 # 1代表局部匹配
-                
-            if len(attributes)== 0: # 如果完全匹配没有检索到实体，局部匹配也没有检索到，直接输出答案
-                print("回答：未找到该问题的答案")
-            else:
-                # 获取实体对应的所有属性
-                attribute_list = []
-                for attribute in attributes:
-                    attribute_list+=list(attribute.values())[0]
-                
-                # 获取实体对应的所有关系
-                if flag ==0: 
-                    sql_str = "match (n)-[r]-() where n.`名称` = '{}' return type(r)".format(entity) 
-                else:
-                    sql_str = "match (n)-[r]-() where n.`名称` contains('{}') return type(r)".format(entity) 
-                relationships = graph.run(sql_str).data()
-                for relationship in relationships: 
-                    attribute_list.append(relationship["type(r)"])
-                    
-                attribute_list =list(set(attribute_list))
-                attribute_idx = semantic_matching(sim_model, tokenizer, raw_text, attribute_list, 30).item()
-                if -1 == attribute_idx:
-                    ret = ''
-                else:
-                    attribute = attribute_list[attribute_idx] # 提取的问题中的属性
-                    print("属性：",attribute)
-                    
-                    # 获取属性对应的值【答案】
-                    sql_attribute = ""
-                    if flag ==0:
-                        sql_attribute = "match (n) where n.`名称` = '{}' return n.`{}`".format(entity,attribute) 
-                    else:
-                        sql_attribute = "match (n) where n.`名称` contains('{}') return n.`{}`".format(entity,attribute) 
-                    results_attribute = graph.run(sql_attribute).data()
-                    
-                    # 获取关系对应的节点【答案】
-                    sql_relationship =""
-                    if flag ==0:
-                        sql_relationship = "match (n)-[r]-(m) where n.`名称` = '{}' and type(r)= '{}' return m.`名称`".format(entity,attribute) 
-                    else:
-                        sql_relationship = "match (n)-[r]-(m) where n.`名称` contains('{}') and type(r)= '{}' return m.`名称`".format(entity,attribute) 
-                    results_relationship = graph.run(sql_relationship).data()
-                    
-                    answer = []
-                    if len(results_attribute)!=0:
-                        for result in results_attribute:
-                            if result["n.`{}`".format(attribute)] is not None:
-                                answer.append(result["n.`{}`".format(attribute)])
-                                
-                    if len(results_relationship)!=0:
-                        for result in results_relationship:
-                            if result["m.`名称`"] is not None:
-                                answer.append(result["m.`名称`"])
-                    
-                    ret = "{}的{}是{}".format(entity, attribute, ",".join(answer))
-                    
-                if '' == ret:
-                    print("属性：无")
-                    print("回答：未找到该问题的答案")
-                else:
-                    print("回答：",ret)
+    while True:
+        print("====="*10)
+        raw_text = input("问题：") 
+        raw_text = raw_text.strip() # 去掉输入的首尾空格
+        if ( "quit" == raw_text ):
+            print("quit")
+            return
+        do_qa(raw_text, graph, ner_model, sim_model, tokenizer)
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
