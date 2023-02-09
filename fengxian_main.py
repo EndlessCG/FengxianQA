@@ -36,8 +36,7 @@ def get_entity(model,tokenizer,sentence,max_len = 64):
     inputs = tokenizer.encode_plus(
         text,
         add_special_tokens=True,
-        max_length=max_len,
-        truncate_first_sequence=True  # We're truncating the first sequence in priority if True
+        max_length=max_len
     )
     input_ids, token_type_ids = inputs["input_ids"], inputs["token_type_ids"]
     attention_mask = [1] * len(input_ids)
@@ -100,8 +99,7 @@ def semantic_matching(model,tokenizer,question,attribute_list,max_length):
             text = question,
             text_pair = attribute,
             add_special_tokens = True,
-            max_length = max_length,
-            truncate_first_sequence = True
+            max_length = max_length
         )
         input_ids, token_type_ids = inputs["input_ids"], inputs["token_type_ids"]
         attention_mask = [1] * len(input_ids)
@@ -160,74 +158,89 @@ def semantic_matching(model,tokenizer,question,attribute_list,max_length):
 
 def do_qa(question, graph, ner_model, sim_model, tokenizer):
     # 1. Mention Recognition
-        mention = get_entity(model=ner_model, tokenizer=tokenizer, sentence=question, max_len=30)
-        if mention != '':
-            print("问题中的实体：", mention)
-        else: # 如果问题中不存在实体
-            print("回答：未找到该问题的答案")
-            return
+    mention_list = []
+    # entity list matching
+    for e in graph.entity_list:
+        if e in question:
+            mention_list.append(e)
+            break
+    # NER
+    ner_mention = get_entity(model=ner_model, tokenizer=tokenizer, sentence=question, max_len=30)
+    if ner_mention != '':
+        mention_list.append(ner_mention)
 
-        # 2. Entity Linking
+    mention_list = set(mention_list)
+    if len(mention_list) != 0:
+        print("候选实体：", mention_list)
+    else: # 如果问题中不存在实体
+        print("回答：未找到该问题中的实体")
+
+    # 2. Entity Linking
+    for mention in mention_list:
         if mention in graph.entity_list:
             # 完全匹配
             entity = mention
         else:
             # 局部匹配
             entity = next((e for e in graph.entity_list if mention in e), None)
-            if entity is None:
-                # 未找到
-                print(f"回答：未找到\"{mention}\"相关信息")
-                return
-        print("链接到的实体：", entity)
+        if entity is not None:
+            break
+    
+    if entity is None:
+        # 未找到
+        print(f"回答：未找到\"{mention}\"相关信息")
+        return
+    
+    print("链接到的实体：", entity)
 
-        # 3. Intention Mapping + Attribute/Relation Retrival
-        # 获取实体对应的所有属性
-        get_e_relation_query = f"match (n)-[r]-() where n.`名称`='{entity}' return type(r)"
-        get_e_attribute_query =  f"match (n) where n.`名称` = '{entity}' return keys(n)"
-        e_relations = graph.execute_query(get_e_relation_query)
-        e_attributes = graph.execute_query(get_e_attribute_query)[0]
-        relations, attributes = [], []
+    # 3. Intention Mapping + Attribute/Relation Retrival
+    # 获取实体对应的所有属性
+    get_e_relation_query = f"match (n)-[r]-() where n.`名称`='{entity}' return type(r)"
+    get_e_attribute_query =  f"match (n) where n.`名称` = '{entity}' return keys(n)"
+    e_relations = graph.execute_query(get_e_relation_query)
+    e_attributes = graph.execute_query(get_e_attribute_query)[0]
+    relations, attributes = [], []
 
-        match_idx = semantic_matching(sim_model, tokenizer, question, e_relations + e_attributes, 30).item()
-        if match_idx == -1:
-            print(f"回答：未在\"{entity}\"中找到问题相关信息")
-            return
-        elif match_idx < len(e_relations):
-            intention = 'one_hop_e'
-            relations = [e_relations[match_idx]]
-        else:
-            intention = 'one_hop_a'
-            attributes = [e_attributes[match_idx - len(e_relations)]]
+    match_idx = semantic_matching(sim_model, tokenizer, question, e_relations + e_attributes, 30).item()
+    if match_idx == -1:
+        print(f"回答：未在\"{entity}\"中找到问题相关信息")
+        return
+    elif match_idx < len(e_relations):
+        intention = 'one_hop_e'
+        relations = [e_relations[match_idx]]
+    else:
+        intention = 'one_hop_a'
+        attributes = [e_attributes[match_idx - len(e_relations)]]
 
-        # 4. Query Generation
-        answer_query = QUESTION_INTENTS[intention]['query']
-        slots = QUESTION_INTENTS[intention]['query_slots']
-        slot_fills = []
-        for slot_type, slot_idx in slots:
-            if slot_type == 'e':
-                slot_fills.append(entity)
-            elif slot_type == 'a':
-                slot_fills.append(attributes[slot_idx])
-            elif slot_type == 'r':
-                slot_fills.append(relations[slot_idx])
-        answer_query = answer_query.format(*slot_fills)
-        values = graph.execute_query(answer_query)
-        
-        # 5. Answer Generation
-        answer_template = QUESTION_INTENTS[intention]['answer']
-        slots = QUESTION_INTENTS[intention]['answer_slots']
-        slot_fills = []
-        for slot_type, slot_idx in slots:
-            if slot_type == 'e':
-                slot_fills.append(entity)
-            elif slot_type == 'a':
-                slot_fills.append(attributes[slot_idx])
-            elif slot_type == 'r':
-                slot_fills.append(relations[slot_idx])
-            elif slot_type == 'v':
-                slot_fills.append('，'.join(values))
-        answer = answer_template.format(*slot_fills)
-        print("回答：", answer)
+    # 4. Query Generation
+    answer_query = QUESTION_INTENTS[intention]['query']
+    slots = QUESTION_INTENTS[intention]['query_slots']
+    slot_fills = []
+    for slot_type, slot_idx in slots:
+        if slot_type == 'e':
+            slot_fills.append(entity)
+        elif slot_type == 'a':
+            slot_fills.append(attributes[slot_idx])
+        elif slot_type == 'r':
+            slot_fills.append(relations[slot_idx])
+    answer_query = answer_query.format(*slot_fills)
+    values = graph.execute_query(answer_query)
+    
+    # 5. Answer Generation
+    answer_template = QUESTION_INTENTS[intention]['answer']
+    slots = QUESTION_INTENTS[intention]['answer_slots']
+    slot_fills = []
+    for slot_type, slot_idx in slots:
+        if slot_type == 'e':
+            slot_fills.append(entity)
+        elif slot_type == 'a':
+            slot_fills.append(attributes[slot_idx])
+        elif slot_type == 'r':
+            slot_fills.append(relations[slot_idx])
+        elif slot_type == 'v':
+            slot_fills.append('，'.join(values))
+    answer = answer_template.format(*slot_fills)
+    print("回答：", answer)
 
 def main():
     print('连接数据库...')

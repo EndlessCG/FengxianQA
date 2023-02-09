@@ -1,0 +1,6 @@
+numpy
+py2neo
+transformers
+torch
+pandas
+tqdm

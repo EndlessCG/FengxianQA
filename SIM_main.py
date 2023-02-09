@@ -148,8 +148,7 @@ def sim_convert_examples_to_features(examples,tokenizer,
             text = example.question,
             text_pair= example.attribute,
             add_special_tokens=True,
-            max_length=max_length,
-            truncate_first_sequence=True  # We're truncating the first sequence in priority if True
+            max_length=max_length
         )
         input_ids, token_type_ids = inputs["input_ids"], inputs["token_type_ids"]
         attention_mask = [1 if mask_padding_with_zero else 0] * len(input_ids)
