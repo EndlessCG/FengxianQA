@@ -3,6 +3,9 @@
 
 
 构造数据集
+
+> 数据预处理脚本需要在项目根目录下执行
+
 通过 1_split_data.py 切分数据
 
 通过 2-construct_dataset_ner.py 构造命名实体识别的数据集

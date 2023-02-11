@@ -31,7 +31,7 @@ QUESTION_INTENTS = {
 
     },
 
-    # (e)-(e1)-(e2) ret e2 ex.业务准备中有合规性风险的是哪个环节？
+    # (e)-(e1)-(e2) ret e1 ex.业务准备中有合规性风险的是哪个环节？
     'two_hop_e_with_e':{
 
     }

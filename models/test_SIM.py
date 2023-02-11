@@ -1,6 +1,6 @@
 from transformers import BertConfig, BertForSequenceClassification, BertTokenizer
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
-from SIM_main import SimProcessor,SimInputFeatures,cal_acc
+from models.SIM_main import SimProcessor,SimInputFeatures,cal_acc
 import torch
 from tqdm import tqdm, trange
 
