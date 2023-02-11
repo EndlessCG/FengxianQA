@@ -1,6 +1,6 @@
-from BERT_CRF import BertCrf
+from models.BERT_CRF import BertCrf
 from transformers import BertTokenizer
-from NER_main import NerProcessor,statistical_real_sentences,flatten,CrfInputFeatures
+from models.NER_main import NerProcessor,statistical_real_sentences,flatten,CrfInputFeatures
 from torch.utils.data import DataLoader, RandomSampler,TensorDataset
 from sklearn.metrics import classification_report
 import torch

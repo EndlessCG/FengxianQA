@@ -14,7 +14,7 @@ data_base = 'models/input/data/fengxian/'
 data_dir = data_base + 'ner'
 file_name_list = ['train.csv','validate.csv','test.csv']
 
-new_dir = 'sim_data'
+new_dir = data_base + 'sim_data'
 
 pattern = re.compile('^-+') # 以-开头
 

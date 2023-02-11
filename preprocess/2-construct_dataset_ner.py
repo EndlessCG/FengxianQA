@@ -12,7 +12,7 @@ data_base = 'models/input/data/fengxian/'
 data_dir = data_base + 'qa'
 file_name_list = ['train.txt','validate.txt','test.txt']
 
-new_dir = 'ner'
+new_dir = data_base + 'ner'
 
 question_str = "<question"
 triple_str = "<triple"
