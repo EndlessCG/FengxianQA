@@ -14,9 +14,11 @@ file_name_list = ['train.txt','validate.txt','test.txt']
 
 new_dir = data_base + 'ner'
 
-question_str = "<question"
-triple_str = "<triple"
-answer_str = "<answer"
+question_str = "<question "
+triple_str = "<triple "
+answer_str = "<answer "
+triple0_str = "<triple0 "
+triple1_str = "<triple1 "
 
 for file_name in file_name_list:
 
@@ -31,19 +33,28 @@ for file_name in file_name_list:
         t_str = ""
         a_str = ""
         counter=0
+        t_is_list = False
+        t_list = []
         for line in f:
             if question_str in line:
                 q_str = line.strip()
-            if triple_str in line:
+            elif triple0_str in line:
                 t_str = line.strip()
-            if answer_str in line:
+                t_list = [line]
+            elif triple1_str in line:
+                assert len(t_list) == 1, "File format error"
+                t_is_list = True
+                t_list.append(line)
+            elif triple_str in line:
+                t_str = line.strip()
+            elif answer_str in line:
                 a_str = line.strip()
-            counter+=1
+            counter += 1
 
             # 构建命名实体识别集合 
             # if start_str in line:  # new question answer triple
             # print(t_str)
-            if counter % 3==0:
+            if answer_str in line:
                 entities = t_str.split("\t")[0].split(">")[1].strip() # 切分三元组，只有第一个是实体，获取实体
                 q_str = q_str.split(">")[1].replace(" ", "").strip()  # 获取问题
                 if entities in q_str: 
@@ -61,7 +72,8 @@ for file_name in file_name_list:
                     seq_tag_list.extend([" "])
                 else:
                     pass
-                q_t_a_list.append([q_str, t_str, a_str]) # 问题 原始三元组 原始答案
+                q_t_a_list.append([q_str, t_list if t_is_list else t_str, a_str]) # 问题 原始三元组 原始答案
+                t_is_list = False
                     
 
     seq_result = [str(q) + " " + tag for q, tag in zip(seq_q_list, seq_tag_list)]

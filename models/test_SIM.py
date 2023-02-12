@@ -1,6 +1,6 @@
 from transformers import BertConfig, BertForSequenceClassification, BertTokenizer
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
-from models.SIM_main import SimProcessor,SimInputFeatures,cal_acc
+from .SIM_main import SimProcessor,SimInputFeatures,cal_acc
 import torch
 from tqdm import tqdm, trange
 
@@ -9,10 +9,10 @@ processor = SimProcessor()
 tokenizer_inputs = ()
 tokenizer_kwards = {'do_lower_case': False,
                     'max_len': 30,
-                    'vocab_file': 'input/config/bert-base-chinese-vocab.txt'}
+                    'vocab_file': 'models/input/config/bert-base-chinese-vocab.txt'}
 tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
 
-features = torch.load('input/data/fengxian/sim_data/cached_validate_30')
+features = torch.load('models/input/data/fengxian/sim_data/cached_validate_30')
 
 all_input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
 all_attention_mask = torch.tensor([f.attention_mask for f in features], dtype=torch.long)
@@ -21,7 +21,7 @@ all_label = torch.tensor([f.label for f in features], dtype=torch.long)
 test_dataset = TensorDataset(all_input_ids, all_attention_mask, all_token_type_ids, all_label)
 
 
-bert_config = BertConfig.from_pretrained('input/config/bert-base-chinese-config.json')
+bert_config = BertConfig.from_pretrained('models/input/config/bert-base-chinese-config.json')
 bert_config.num_labels = len(processor.get_labels())
 
 model = BertForSequenceClassification(bert_config)

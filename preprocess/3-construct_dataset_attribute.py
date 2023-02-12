@@ -32,7 +32,17 @@ sql_str = "match ()-[r]-() return type(r)"
 relationships = graph.run(sql_str).data()
 for relationship in relationships: 
     attribute_list.append(relationship["type(r)"])
-    
+
+sql_str = "match ()-[r]->(n) unwind keys(n) as k return distinct type(r), k"
+r_as = graph.run(sql_str).data()
+for r_a in r_as:
+    attribute_list.append(f'{r_a["type(r)"]}[NEDGE]{r_a["k"]}')
+
+sql_str = "match ()-[r]->()-[r1]->() return distinct type(r), type(r1)"
+r_rs = graph.run(sql_str).data()
+for r_r in r_rs:
+    attribute_list.append(f'{r_r["type(r)"]}[NEDGE]{r_a["k"]}')
+
 attribute_list =list(set(attribute_list))
 
 
@@ -42,7 +52,15 @@ for file_name in file_name_list:
 
     attribute_classify_sample = []
     df = pd.read_csv(file_path_name, encoding='utf-8')
-    df['attribute'] = df['t_str'].apply(lambda x: x.split('\t')[1].strip())
+    
+    def triple_to_attr(t):
+        split_func = lambda x: x.split('\t')[1].strip()
+        if "<triple0 " in t:
+            return "[NEDGE]".join(map(split_func, eval(t)))
+        else:
+            return split_func(t)
+
+    df['attribute'] = df['t_str'].apply(triple_to_attr)
     # attribute_list = df['attribute'].tolist()               # 转化成列表
     # attribute_list = list(set(attribute_list))              # 去重
     # attribute_list = [att.strip().replace(' ','') for att in attribute_list]   # 去尾部，去空格

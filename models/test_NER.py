@@ -1,6 +1,6 @@
-from models.BERT_CRF import BertCrf
+from .BERT_CRF import BertCrf
 from transformers import BertTokenizer
-from models.NER_main import NerProcessor,statistical_real_sentences,flatten,CrfInputFeatures
+from .NER_main import NerProcessor,statistical_real_sentences,flatten,CrfInputFeatures
 from torch.utils.data import DataLoader, RandomSampler,TensorDataset
 from sklearn.metrics import classification_report
 import torch
@@ -15,10 +15,10 @@ processor = NerProcessor()
 tokenizer_inputs = ()
 tokenizer_kwards = {'do_lower_case': False,
                     'max_len': 30,
-                    'vocab_file': 'input/config/bert-base-chinese-vocab.txt'}
+                    'vocab_file': 'models/input/config/bert-base-chinese-vocab.txt'}
 tokenizer = BertTokenizer(*tokenizer_inputs,**tokenizer_kwards)
 
-model = BertCrf(config_name= 'input/config/bert-base-chinese-config.json',
+model = BertCrf(config_name= 'models/input/config/bert-base-chinese-config.json',
                 num_tags = len(processor.get_labels()),batch_first=True)
 model.load_state_dict(torch.load('ner_output/best_ner.bin'))
 
@@ -26,7 +26,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
 # features = torch.load(cached_features_file)
-features = torch.load('input/data/fengxian/ner/cached_validate_30')
+features = torch.load('models/input/data/fengxian/ner/cached_validate_30')
 
 all_input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
 all_attention_mask = torch.tensor([f.attention_mask for f in features], dtype=torch.long)

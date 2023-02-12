@@ -62,13 +62,14 @@ def get_mhop_data(intent_list):
             triple_list += [true_triples]
     return question_list, triple_list, answer_list
 
-def write_data_file(path, question_list, triple_list, answer_list):
+def write_data_file(path, question_list, triple_list, answer_list, start_id=1294):
     with open(path, 'w+') as f:
         for i, (q, t, a) in enumerate(zip(question_list, triple_list, answer_list)):
-            f.write(f"<question id={i + 1}> {q}\n")
+            idx = start_id + i
+            f.write(f"<question id={idx}> {q}\n")
             for ti, tr in enumerate(t):
-                f.write(f"<triple{ti} id={i + 1}> {tr[0]}\t{tr[1]}\t{tr[2]}\n")
-            f.write(f"<answer id={i + 1}> {a}\n")
+                f.write(f"<triple{ti} id={idx}> {tr[0]}\t{tr[1]}\t{tr[2]}\n")
+            f.write(f"<answer id={idx}> {a}\n")
 
 def main():
     question_list, triple_list, answer_list = get_mhop_data(['two_hop_a', 'two_hop_e'])

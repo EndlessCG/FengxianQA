@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 # --data_dir
-# ./input/data/ner_data
+# ./models/input/data/ner_data
 # --vob_file
-# ./input/config/bert-base-chinese-vocab.txt
+# ./models/input/config/bert-base-chinese-vocab.txt
 # --model_config
-# ./input/config/bert-base-chinese-config.json
+# ./models/input/config/bert-base-chinese-config.json
 # --output
 # ./output
 # --pre_train_model
-# ./input/config/bert-base-chinese-model.bin
+# ./models/input/config/bert-base-chinese-model.bin
 # --max_seq_length
 # 64
 # --do_train
@@ -389,19 +389,19 @@ def evaluate(args, model, eval_dataset):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", default="input/data/fengxian/ner", type=str, required=False,
+    parser.add_argument("--data_dir", default="models/input/data/fengxian/ner", type=str, required=False,
                         help="数据文件目录，因当有train.txt dev.txt")
 
-    parser.add_argument("--vob_file", default="input/config/bert-base-chinese-vocab.txt", type=str, required=False,
+    parser.add_argument("--vob_file", default="models/input/config/bert-base-chinese-vocab.txt", type=str, required=False,
                         help="词表文件")
 
-    parser.add_argument("--model_config", default="input/config/bert-base-chinese-config.json", type=str, required=False,
+    parser.add_argument("--model_config", default="models/input/config/bert-base-chinese-config.json", type=str, required=False,
                         help="模型配置文件json文件")
     parser.add_argument("--output_dir", default="ner_output", type=str, required=False,
                         help="输出结果的文件")
 
     # Other parameters
-    parser.add_argument("--pre_train_model", default="input/config/bert-base-chinese-model.bin", type=str, required=False,
+    parser.add_argument("--pre_train_model", default="models/input/config/bert-base-chinese-model.bin", type=str, required=False,
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
 
     parser.add_argument("--max_seq_length", default=30, type=int,
