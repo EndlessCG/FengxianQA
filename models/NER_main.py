@@ -35,7 +35,7 @@ from tqdm import tqdm, trange
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
 from transformers import BertForSequenceClassification,BertTokenizer,BertConfig
 from transformers.data.processors.utils import DataProcessor, InputExample
-from .BERT_CRF import BertCrf
+from models.BERT_CRF import BertCrf
 from transformers import AdamW, get_linear_schedule_with_warmup
 from sklearn.metrics import classification_report
 

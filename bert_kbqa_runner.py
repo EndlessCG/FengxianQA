@@ -24,20 +24,20 @@ class BertKBQARunner():
         with torch.no_grad():
             tokenizer_inputs = ()
             tokenizer_kwards = {'do_lower_case': False,
-                                'max_len': 30,
+                                'max_len': 40,
                                 'vocab_file': 'models/input/config/bert-base-chinese-vocab.txt'}
             self.ner_processor = NerProcessor()
             self.sim_processor = SimProcessor()
             self.tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
 
             self.ner_model = self.get_ner_model(config_file='models/input/config/bert-base-chinese-config.json',
-                                           pre_train_model='models/ner_output/best_ner.bin',
+                                           pre_train_model='ner_output/best_ner.bin',
                                            label_num=len(self.ner_processor.get_labels()))
             self.ner_model = self.ner_model.to(self.device)
             self.ner_model.eval()
 
             self.sim_model = self.get_sim_model(config_file='models/input/config/bert-base-chinese-config.json',
-                                      pre_train_model='models/sim_output/best_sim.bin',
+                                      pre_train_model='sim_output/best_sim.bin',
                                       label_num=len(self.sim_processor.get_labels()))
 
             self.sim_model = self.sim_model.to(self.device)
@@ -196,10 +196,11 @@ class BertKBQARunner():
                 else:
                     all_logits = torch.cat([all_logits, logits], dim=0)
         pre_rest = all_logits.argmax(dim=-1)
+        pos_prob_max = all_logits[:,1].argmax(dim=-1)
         if 0 == pre_rest.sum():
             return torch.tensor(-1)
         else:
-            return pre_rest.argmax(dim=-1)
+            return pos_prob_max
 
     def do_qa(self, question):
         graph = self.graph
@@ -211,7 +212,7 @@ class BertKBQARunner():
                 mention_list.append(e)
                 break
         # NER
-        ner_mention = self.get_entity(sentence=question, max_len=30)
+        ner_mention = self.get_entity(sentence=question, max_len=40)
         if ner_mention != '':
             mention_list.append(ner_mention)
 
@@ -242,21 +243,40 @@ class BertKBQARunner():
         # 3. Intention Mapping + Attribute/Relation Retrival
         # 获取实体对应的所有属性
         get_e_relation_query = f"match (n)-[r]-() where n.`名称`='{entity}' return type(r)"
-        get_e_attribute_query =  f"match (n) where n.`名称` = '{entity}' return keys(n)"
-        e_relations = graph.execute_query(get_e_relation_query)
-        e_attributes = graph.execute_query(get_e_attribute_query)[0]
-        relations, attributes = [], []
+        get_e_attribute_query =  f"match (n) where n.`名称`='{entity}' return keys(n)"
+        get_e_r_a_query = f"match (n)-[r]->(n1) where n.`名称`='{entity}' unwind keys(n1) as attr return type(r)+'[NEDGE]'+attr"
+        get_e_r_r_query = f"match (n)-[r]->()-[r1]->() where n.`名称`='{entity}' return type(r)+'[NEDGE]'+type(r1) "
 
-        match_idx = self.semantic_matching(question, e_relations + e_attributes, 30).item()
+        path_type_idx = {}
+        acc_idx = 0
+        e_relations = graph.execute_query(get_e_relation_query)
+        acc_idx += len(e_relations)
+        path_type_idx['one_hop_e'] = acc_idx
+        e_attributes = graph.execute_query(get_e_attribute_query)[0]
+        acc_idx += len(e_attributes)
+        path_type_idx['one_hop_a'] = acc_idx
+        e_r_as = graph.execute_query(get_e_r_a_query)
+        acc_idx += len(e_r_as)
+        path_type_idx['two_hop_a'] = acc_idx
+        e_r_rs = graph.execute_query(get_e_r_r_query)
+        acc_idx += len(e_r_rs)
+        path_type_idx['two_hop_e'] = acc_idx
+        
+        path_candidates = e_relations + e_attributes + e_r_as + e_r_rs
+        links = []
+        match_idx = self.semantic_matching(question, path_candidates, 40).item()
         if match_idx == -1:
             print(f"回答：未在\"{entity}\"中找到问题相关信息")
             return
-        elif match_idx < len(e_relations):
-            intention = 'one_hop_e'
-            relations = [e_relations[match_idx]]
-        else:
-            intention = 'one_hop_a'
-            attributes = [e_attributes[match_idx - len(e_relations)]]
+        
+        for type_intent, type_idx in path_type_idx.items():
+            if match_idx < type_idx:
+                intention = type_intent
+                links.extend(path_candidates[match_idx].split('[NEDGE]'))
+                break
+        print(f"问题类型：{intention}")
+        print(f"问题路径：{links}")
+
 
         # 4. Query Generation
         answer_query = QUESTION_INTENTS[intention]['query']
@@ -265,10 +285,8 @@ class BertKBQARunner():
         for slot_type, slot_idx in slots:
             if slot_type == 'e':
                 slot_fills.append(entity)
-            elif slot_type == 'a':
-                slot_fills.append(attributes[slot_idx])
-            elif slot_type == 'r':
-                slot_fills.append(relations[slot_idx])
+            elif slot_type == 'l':
+                slot_fills.append(links[slot_idx])
         answer_query = answer_query.format(*slot_fills)
         values = graph.execute_query(answer_query)
         
@@ -279,11 +297,11 @@ class BertKBQARunner():
         for slot_type, slot_idx in slots:
             if slot_type == 'e':
                 slot_fills.append(entity)
-            elif slot_type == 'a':
-                slot_fills.append(attributes[slot_idx])
-            elif slot_type == 'r':
-                slot_fills.append(relations[slot_idx])
+            elif slot_type == 'l':
+                slot_fills.append(links[slot_idx])
+            elif slot_type == 'pron':
+                slot_fills.append('节点')
             elif slot_type == 'v':
-                slot_fills.append('，'.join(values))
+                slot_fills.append('，'.join([v[:-1] if v[-1] == '。' else v for v in values]))
         answer = answer_template.format(*slot_fills)
         print("回答：", answer)
