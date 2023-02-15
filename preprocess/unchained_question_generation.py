@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 # 处理风险点
 fengxiandian_path = "preprocess/风控实体关系表/entity_fengxiandian.csv"
-output_path = "preprocess/风控实体关系表/QA_data.txt"
+output_path = "models/input/data/fengxian/qa/QA_unchained_mhop_data.txt"
 fengxiandian = pd.read_csv(fengxiandian_path)
 # 处理专有名词
 mingci_path = "preprocess/风控实体关系表/entity_mingci.csv"
@@ -18,7 +18,6 @@ baohan_path = "preprocess/风控实体关系表/relationship_baohan.csv"
 baohan = pd.read_csv(baohan_path, keep_default_na=False)
 # 处理预警
 yujing_path = "preprocess/风控实体关系表/entity_yujing.csv"
-output_path = "QA_data.txt"
 yujing = pd.read_csv(yujing_path, keep_default_na=False)
 
 question_desc_list = [
