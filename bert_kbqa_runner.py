@@ -1,3 +1,4 @@
+import itertools
 from models.BERT_CRF import BertCrf
 from models.NER_main import NerProcessor, CRF_LABELS
 from models.SIM_main import SimProcessor, SimInputFeatures
@@ -5,6 +6,7 @@ from transformers import BertTokenizer, BertConfig, BertForSequenceClassificatio
 from question_intents import QUESTION_INTENTS
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
 import torch
+import pandas as pd
 # import pymysql
 from tqdm import tqdm, trange
 from utils.neo4j_graph import Neo4jGraph
@@ -274,7 +276,7 @@ class BertKBQARunner():
                 intention = type_intent
                 links.extend(path_candidates[match_idx].split('[NEDGE]'))
                 break
-        print(f"问题类型：{intention}")
+        print(f"问题类型：{QUESTION_INTENTS[intention]['display']}")
         print(f"问题路径：{links}")
 
 
@@ -291,17 +293,28 @@ class BertKBQARunner():
         values = graph.execute_query(answer_query)
         
         # 5. Answer Generation
-        answer_template = QUESTION_INTENTS[intention]['answer']
+        answer_templates = QUESTION_INTENTS[intention]['answer']
         slots = QUESTION_INTENTS[intention]['answer_slots']
-        slot_fills = []
-        for slot_type, slot_idx in slots:
-            if slot_type == 'e':
-                slot_fills.append(entity)
-            elif slot_type == 'l':
-                slot_fills.append(links[slot_idx])
-            elif slot_type == 'pron':
-                slot_fills.append('节点')
-            elif slot_type == 'v':
-                slot_fills.append('，'.join([v[:-1] if v[-1] == '。' else v for v in values]))
-        answer = answer_template.format(*slot_fills)
-        print("回答：", answer)
+        answer_list = []
+        for answer_template, slot in zip(answer_templates, slots):
+            slot_fills = []
+            v_cnt = 0
+            for i, (slot_type, slot_idx) in enumerate(slot):
+                if slot_type == 'e':
+                    slot_fills.append([entity])
+                elif slot_type == 'l':
+                    slot_fills.append([links[slot_idx]])
+                elif slot_type == 'v':
+                    if len(values) != 0 and isinstance(values[0], list):
+                        values_slot_idx = [v_row[slot_idx] for v_row in values]
+                    else:
+                        values_slot_idx = values
+                    v_cnt += 1
+                    slot_fills.append([v[:-1] if v[-1] == '。' else v for v in values_slot_idx])
+            
+            if v_cnt > 1:
+                slot_fills_df = pd.DataFrame(slot_fills).T.fillna(method='pad')
+                answer_list.extend([answer_template.format(*row) for _, row in slot_fills_df.iterrows()])
+            else:
+                answer_list.append(answer_template.format(*["，".join(s) for s in slot_fills]))
+        print("回答：", "。".join(answer_list) + "。")

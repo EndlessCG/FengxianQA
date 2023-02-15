@@ -2,8 +2,9 @@ QUESTION_INTENTS = {
     # (e)-(a) ret a ex.仓库准入的风险等级是什么？
     # 'e'=entity, 'l'=link, 'v'=value
     'one_hop_a':{
-        'answer': "{}的{}是{}。",
-        'answer_slots': [('e', 0), ('l', 0), ('v', 0)],
+        'answer': ["{}的{}是{}"],
+        'answer_slots': [[('e', 0), ('l', 0), ('v', 0)]],
+        'display':'单跳求属性',
         'query': "match (n) where n.`名称` = '{}' return n.`{}`",
         'query_slots': [('e', 0), ('l', 0)],
         'n_hops': 1,
@@ -13,8 +14,9 @@ QUESTION_INTENTS = {
 
     # (e)-[r]-(e1) ret e1.name ex.业务准备包含哪些环节？
     'one_hop_e':{
-        'answer': "{}{}{}。",
-        'answer_slots': [('e', 0), ('l', 0), ('v', 0)],
+        'answer': ["{}{}{}"],
+        'answer_slots': [[('e', 0), ('l', 0), ('v', 0)]],
+        'display': '单跳求实体',
         'query': "match (n)-[r]->(m) where n.`名称` = '{}' and type(r)= '{}' return m.`名称`",
         'query_slots': [('e', 0), ('l', 0)],
         'n_hops': 1,
@@ -23,9 +25,10 @@ QUESTION_INTENTS = {
 
     # (e)-(e1)-(a) ret a ex.业务准备的各环节由哪些部门负责？
     'two_hop_a':{
-        'answer': "{}{}的{}的{}是{}。",
-        'answer_slots': [('e', 0), ('l', 0), ('pron', 0), ('l', 1), ('v', 0)],
-        'query': "match (n)-[r]->(n1) where n.`名称` = '{}' and type(r)='{}' return n1.`{}`",
+        'answer': ["{}{}{}", "{}的{}是{}"],
+        'answer_slots': [[('e', 0), ('l', 0), ('v', 0)], [('v', 0), ('l', 1), ('v', 1)]],
+        'display': '两跳求属性',
+        'query': "match (n)-[r]->(n1) where n.`名称` = '{}' and type(r)='{}' return n1.`名称`, n1.`{}`",
         'query_slots': [('e', 0), ('l', 0), ('l', 1)],
         'n_hops': 2,
         'cypher': "(e)-[r]->(e1)",
@@ -37,9 +40,10 @@ QUESTION_INTENTS = {
 
     # (e)-(e1)-(e2) ret e2 ex.业务准备的各环节有哪些风险点？
     'two_hop_e':{
-        'answer': '{}{}的{}{}的{}是{}。',
-        'answer_slots':[('e', 0), ('l', 0), ('pron', 0), ('l', 1), ('pron', 1), ('v', 0)],
-        'query': "match (n)-[r]->(n1)-[r1]->(n2) where n.`名称` = '{}' and type(r)='{}' and type(r1)='{}' return n2.`名称`",
+        'answer': ["{}的{}是{}", "{}的{}是{}"],
+        'answer_slots':[[('e', 0), ('l', 0), ('v', 0)], [('v', 0), ('l', 1), ('v', 1)]],
+        'display': '两跳求实体',
+        'query': "match (n)-[r]->(n1)-[r1]->(n2) where n.`名称` = '{}' and type(r)='{}' and type(r1)='{}' return n1.`名称`, n2.`名称`",
         'query_slots': [('e', 0), ('l', 0), ('l', 1)],
         'n_hops': 2,
         'cypher': "(e)-[r]->(e1)-[r1]->(e2)",
