@@ -28,7 +28,10 @@ question_desc_list = [
         ["风险等级为{}的风险点有哪些？", "风险等级为{}的风险点有什么？", "{}级别的风险点有哪些？"], # questions
         ['风险等级'], # question slot fills
         [[':ID', '=风险等级', '风险等级']], # triples
-        ':ID' # answer
+        ':ID', # answer
+        [('风险等级', 'attribute')], # ner
+        '<REDGE>{}', # path
+        ['风险等级'] # path slot sills
     ],
     [
         # 名词-类型
@@ -36,7 +39,10 @@ question_desc_list = [
         ["{}名词有哪些？", "哪些名词属于{}？"],
         ['类型'],
         [[':ID', '=类型', '类型']],
-        ':ID'
+        ':ID',
+        [('类型', 'attribute')], # ner
+        '<REDGE>{}', # path
+        ['类型'] # path slot sills
     ],
     [
         # 预警-类型
@@ -44,7 +50,10 @@ question_desc_list = [
         ["{}预警有哪些？", "哪些预警属于{}？"],
         ['类型'],
         [[':ID', '=类型', '类型']],
-        ':ID'
+        ':ID',
+        [('类型', 'attribute')], # ner
+        '<REDGE>{}', # path
+        ['类型'] # path slot sills
     ],
     [
         # 业务环节-负责角色
@@ -52,7 +61,10 @@ question_desc_list = [
         ["{}部门负责的有哪些业务？", "{}负责什么业务？"],
         ['负责角色'],
         [[':ID', '=负责角色', '负责角色']],
-        ':ID'
+        ':ID',
+        [('负责角色', 'attribute')], # ner
+        '<REDGE>{}', # path
+        ['负责角色'] # path slot sills
     ],
     # [
     #     # x-含义，预警-x色预警
@@ -65,7 +77,10 @@ question_desc_list = [
         ["包含{}的业务环节是什么？", "包含{}的业务环节有哪些？", "什么业务有{}？", "哪些业务有{}？"],
         [':END_ID'],
         [[':START_ID', '=包含', ':END_ID']],
-        ':START_ID'
+        ':START_ID',
+        [(':END_ID', 'entity')], # ner
+        '<REDGE>{}', # path
+        [':END_ID'] # path slot sills
     ],
     [
         # 业务流程包含业务环节
@@ -73,7 +88,10 @@ question_desc_list = [
         ["包含{}的业务环节是什么？", "包含{}的业务环节有哪些？", "什么业务有{}？", "哪些业务有{}？"],
         [':END_ID'],
         [[':START_ID', '=包含', ':END_ID']],
-        ':START_ID'
+        ':START_ID',
+        [(':END_ID', 'entity')], # ner
+        '<REDGE>{}', # path
+        [':END_ID'] # path slot sills
     ],
 
     # two_hop_e_with_a e-[e]-a
@@ -86,11 +104,14 @@ question_desc_list = [
         ["{}业务包含的{}等级风险有哪些？"],
         [':START_ID', '风险等级'],
         [[':START_ID', '=包含', ':END_ID'], [':END_ID', '=风险等级', '风险等级']],
-        ':END_ID'
+        ':END_ID',
+        [(':START_ID', 'entity'), ('风险等级', 'attribute')], # ner
+        '{}<NEDGE>{}<REDGE>{}', # path
+        [':END_ID'] # path slot sills
     ]
 ]
 
-start_id = 2000
+start_id = 1765
 with open(output_path, 'w+') as f:
     for chart, raw_questions, question_slots, raw_triples, answer_idx in question_desc_list:
         questions = sum([[raw_question.format(*val) for val in chart[question_slots].values] for raw_question in raw_questions], [])
@@ -111,5 +132,6 @@ with open(output_path, 'w+') as f:
             id = i + start_id
             f.write(f"<question id={id}> {question}\n")
             for j, triple in enumerate(triples):
-                f.write("<triple{} id={}> {}\n".format(j, id, '\t'.join(triple)))
+                f.write("<triple{} id={}> {}\n".format(j if len(triples) > 1 else '', id, '\t'.join(triple)))
+            
             f.write(f"<answer id={id}> {answer}\n")
