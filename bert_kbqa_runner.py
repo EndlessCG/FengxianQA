@@ -3,7 +3,7 @@ from models.BERT_CRF import BertCrf
 from models.NER_main import NerProcessor, CRF_LABELS
 from models.SIM_main import SimProcessor, SimInputFeatures
 from transformers import BertTokenizer, BertConfig, BertForSequenceClassification
-from question_intents import QUESTION_INTENTS
+from question_intents import QUESTION_INTENTS, SUBGRAPHS
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
 import torch
 import pandas as pd
@@ -106,30 +106,48 @@ class BertKBQARunner():
         assert len(pre_tag) == len(sentence_list) or len(pre_tag) == max_len - 2
 
         pre_tag_len = len(pre_tag)
-        b_loc_idx = CRF_LABELS.index('B-entity')
-        i_loc_idx = CRF_LABELS.index('I-entity')
+        b_entity_idx = CRF_LABELS.index('B-entity')
+        i_entity_idx = CRF_LABELS.index('I-entity')
+        b_attr_idx = CRF_LABELS.index('B-attribute')
+        i_attr_idx = CRF_LABELS.index('B-attribute')
         o_idx = CRF_LABELS.index('O')
 
-        if b_loc_idx not in pre_tag and i_loc_idx not in pre_tag:
+        if not any(i in pre_tag for i in [b_entity_idx, i_entity_idx, b_attr_idx, i_attr_idx]):
             print("没有在句子[{}]中发现实体".format(sentence))
             return ''
-        if b_loc_idx in pre_tag:
+        
+        entity_start_idx, attr_start_idx = -1, -1
+        if b_entity_idx in pre_tag:
+            entity_start_idx = pre_tag.index(b_entity_idx)
+        elif b_attr_idx in pre_tag:
+            attr_start_idx = pre_tag.index(b_attr_idx)
+        elif i_entity_idx in pre_tag:
+            entity_start_idx = pre_tag.index(i_entity_idx)
+        elif i_attr_idx in pre_tag:
+            attr_start_idx = pre_tag.index(b_attr_idx)
+        
+        if entity_start_idx != -1:
+            entity_list = []
+            entity_list.append(sentence_list[entity_start_idx])
+            for i in range(entity_start_idx + 1, pre_tag_len):
+                if pre_tag[i] == i_entity_idx:
+                    entity_list.append(sentence_list[i])
+                else:
+                    break
+        
+        if attr_start_idx != -1:
+            attribute_list = []
+            entity_list.append(sentence_list[attr_start_idx])
+            for i in range(attr_start_idx + 1, pre_tag_len):
+                if pre_tag[i] == i_attr_idx:
+                    attribute_list.append(sentence_list[i])
+                else:
+                    break
 
-            entity_start_idx = pre_tag.index(b_loc_idx)
-        else:
-
-            entity_start_idx = pre_tag.index(i_loc_idx)
-        entity_list = []
-        entity_list.append(sentence_list[entity_start_idx])
-        for i in range(entity_start_idx+1, pre_tag_len):
-            if pre_tag[i] == i_loc_idx:
-                entity_list.append(sentence_list[i])
-            else:
-                break
-        return "".join(entity_list)
+        return entity_list, attribute_list
 
 
-    def semantic_matching(self, question, attribute_list, max_length):
+    def semantic_matching(self, question, attribute_list, max_length, top_k=1):
         model = self.sim_model
         tokenizer = self.tokenizer
         pad_token = 0
@@ -198,92 +216,107 @@ class BertKBQARunner():
                 else:
                     all_logits = torch.cat([all_logits, logits], dim=0)
         pre_rest = all_logits.argmax(dim=-1)
-        pos_prob_max = all_logits[:,1].argmax(dim=-1)
         if 0 == pre_rest.sum():
             return torch.tensor(-1)
         else:
-            return pos_prob_max
+            return torch.topk(all_logits[:,1], k=top_k).indices
+
+    def subgraph_generation(self):
+        self.subgraph_candidates = []
+        for query in SUBGRAPHS.values():
+            query_result = self.graph.execute_query(query)
+            self.subgraph_candidates.extend(query_result)
 
     def do_qa(self, question):
         graph = self.graph
         # 1. Mention Recognition
-        mention_list = []
+        e_mention_list = []
+        a_mention_list = []
         # entity list matching
         for e in graph.entity_list:
             if e in question:
-                mention_list.append(e)
+                e_mention_list.append(e)
                 break
         # NER
-        ner_mention = self.get_entity(sentence=question, max_len=40)
-        if ner_mention != '':
-            mention_list.append(ner_mention)
+        ner_e_mention, ner_a_mention = self.get_entity(sentence=question, max_len=40)
+        if ner_e_mention != '':
+            e_mention_list.extend(ner_e_mention)
+        if ner_a_mention != '':
+            a_mention_list.extend(ner_a_mention)
 
-        mention_list = set(mention_list)
-        if len(mention_list) != 0:
-            print("候选实体：", mention_list)
-        else: # 如果问题中不存在实体
+        e_mention_list = set(e_mention_list)
+        a_mention_list = set(a_mention_list)
+        if len(e_mention_list) != 0:
+            print("候选实体：", e_mention_list)
+        if len(a_mention_list) != 0:
+            print("候选属性：", a_mention_list)
+        if len(e_mention_list) == 0 and len(a_mention_list) == 0: # 如果问题中不存在实体
             print("回答：未找到该问题中的实体")
 
         # 2. Entity Linking
-        for mention in mention_list:
+        linked_entity, linked_attribute = [], []
+        for mention in e_mention_list:
             if mention in graph.entity_list:
                 # 完全匹配
-                entity = mention
+                linked_entity.append(mention)
             else:
                 # 局部匹配
                 entity = next((e for e in graph.entity_list if mention in e), None)
-            if entity is not None:
-                break
+                linked_entity.append(entity)
         
-        if entity is None:
+        for mention in a_mention_list:
+            if mention in graph.attribute_list:
+                # 完全匹配
+                linked_attribute.append(mention)
+            else:
+                # 局部匹配
+                attribute = next((e for e in graph.entity_list if mention in e), None)
+                linked_attribute.append(attribute)
+            
+        if len(linked_attribute) == 0 and len(linked_entity) == 0:
             # 未找到
-            print(f"回答：未找到\"{mention}\"相关信息")
+            print(f"回答：未找到\"{e_mention_list + a_mention_list}\"相关信息")
             return
         
-        print("链接到的实体：", entity)
+        print("链接到的实体：", linked_entity)
+        print("链接到的属性：", linked_attribute)
 
-        # 3. Intention Mapping + Attribute/Relation Retrival
-        # 获取实体对应的所有属性
-        get_e_relation_query = f"match (n)-[r]-() where n.`名称`='{entity}' return type(r)"
-        get_e_attribute_query =  f"match (n) where n.`名称`='{entity}' return keys(n)"
-        get_e_r_a_query = f"match (n)-[r]->(n1) where n.`名称`='{entity}' unwind keys(n1) as attr return type(r)+'[NEDGE]'+attr"
-        get_e_r_r_query = f"match (n)-[r]->()-[r1]->() where n.`名称`='{entity}' return type(r)+'[NEDGE]'+type(r1) "
-
-        path_type_idx = {}
+        # 3. Candidate Subgraph Generation
+        # get_e_relation_query = f"match (n)-[r]-() where n.`名称`='{entity}' return type(r)"
+        # get_e_attribute_query =  f"match (n) where n.`名称`='{entity}' return keys(n)"
+        # get_e_r_a_query = f"match (n)-[r]->(n1) where n.`名称`='{entity}' unwind keys(n1) as attr return type(r)+'[NEDGE]'+attr"
+        # get_e_r_r_query = f"match (n)-[r]->()-[r1]->() where n.`名称`='{entity}' return type(r)+'[NEDGE]'+type(r1)"
+        sgraph_type_idx = {}
+        sgraph_candidates = []
         acc_idx = 0
-        e_relations = graph.execute_query(get_e_relation_query)
-        acc_idx += len(e_relations)
-        path_type_idx['one_hop_e'] = acc_idx
-        e_attributes = graph.execute_query(get_e_attribute_query)[0]
-        acc_idx += len(e_attributes)
-        path_type_idx['one_hop_a'] = acc_idx
-        e_r_as = graph.execute_query(get_e_r_a_query)
-        acc_idx += len(e_r_as)
-        path_type_idx['two_hop_a'] = acc_idx
-        e_r_rs = graph.execute_query(get_e_r_r_query)
-        acc_idx += len(e_r_rs)
-        path_type_idx['two_hop_e'] = acc_idx
-        
-        path_candidates = e_relations + e_attributes + e_r_as + e_r_rs
-        links = []
-        match_idx = self.semantic_matching(question, path_candidates, 40).item()
+        # naive subgraph generation (without pruning)
+        for sgraph_type, query in SUBGRAPHS:
+            query_result = self.graph.execute_query(query)
+            sgraph_candidates += query_result
+            sgraph_type_idx[sgraph_type] = acc_idx
+            acc_idx += len(query_result)
+    
+        # 4. Cadidate Subgraph Selection
+        max_sgraph_len = max([len(sg) for sg in sgraph_candidates])
+        match_idx = self.semantic_matching(question, sgraph_candidates, max_sgraph_len).item()
         if match_idx == -1:
             print(f"回答：未在\"{entity}\"中找到问题相关信息")
             return
         
-        for type_intent, type_idx in path_type_idx.items():
+        for type_intent, type_idx in sgraph_type_idx.items():
             if match_idx < type_idx:
                 intention = type_intent
-                links.extend(path_candidates[match_idx].split('[NEDGE]'))
                 break
-        print(f"问题类型：{QUESTION_INTENTS[intention]['display']}")
-        print(f"问题路径：{links}")
+        
+        print(f"问题类型：{QUESTION_INTENTS[intention].get('display', intention)}")
+        print(f"问题路径：{sgraph_candidates[match_idx]}")
 
-
-        # 4. Query Generation
+        # 5. Query Generation
         answer_query = QUESTION_INTENTS[intention]['query']
         slots = QUESTION_INTENTS[intention]['query_slots']
         slot_fills = []
+
+        links = sgraph_candidates[match_idx].split(['[TARGET]', '[NEDGE]'])
         for slot_type, slot_idx in slots:
             if slot_type == 'e':
                 slot_fills.append(entity)
@@ -292,7 +325,7 @@ class BertKBQARunner():
         answer_query = answer_query.format(*slot_fills)
         values = graph.execute_query(answer_query)
         
-        # 5. Answer Generation
+        # 6. Answer Generation
         answer_templates = QUESTION_INTENTS[intention]['answer']
         slots = QUESTION_INTENTS[intention]['answer_slots']
         answer_list = []

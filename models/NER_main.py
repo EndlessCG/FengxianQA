@@ -46,7 +46,7 @@ logger = logging.getLogger(__name__)
 # 这里做以下测试，第一 LABELS = ["O", "B-LOC", "I-LOC"] ，因为需要预测的就只有这三个。
 # 第二 LABELS = ["O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "X", "[CLS]", "[SEP]"]
 
-CRF_LABELS = ["O", "B-entity", "I-entity"]
+CRF_LABELS = ["O", "B-entity", "I-entity", "B-attribute", "I-attribute"]
 
 
 def statistical_real_sentences(input_ids:torch.Tensor,mask:torch.Tensor,predict:list)-> list:
