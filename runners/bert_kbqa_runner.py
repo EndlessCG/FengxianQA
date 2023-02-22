@@ -1,9 +1,8 @@
-import itertools
-from models.BERT_CRF import BertCrf
-from models.NER_main import NerProcessor, CRF_LABELS
-from models.SIM_main import SimProcessor, SimInputFeatures
+from models.NER.BERT_CRF import BertCrf
+from models.NER.NER_main import NerProcessor, CRF_LABELS
+from models.SIM.SIM_main import SimProcessor, SimInputFeatures
 from transformers import BertTokenizer, BertConfig, BertForSequenceClassification
-from question_intents import QUESTION_INTENTS
+from utils.question_intents import QUESTION_INTENTS
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
 import torch
 import pandas as pd
@@ -17,7 +16,7 @@ class BertKBQARunner():
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         print('连接数据库...')
-        neo4j_config = config['neo4j']
+        neo4j_config, ner_config, sim_config = config['neo4j'], config['ner'], config['sim']
         self.graph = Neo4jGraph(neo4j_config['neo4j_addr'], 
                                 neo4j_config['username'], 
                                 neo4j_config['password'])
@@ -32,16 +31,15 @@ class BertKBQARunner():
             self.sim_processor = SimProcessor()
             self.tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
 
-            self.ner_model = self.get_ner_model(config_file='models/input/config/bert-base-chinese-config.json',
-                                           pre_train_model='ner_output/best_ner.bin',
+            self.ner_model = self.get_ner_model(config_file=ner_config.get('config_file', 'models/input/config/bert-base-chinese-config.json'),
+                                           pre_train_model=ner_config.get('pre_train_model','models/ner_output/best_ner.bin'),
                                            label_num=len(self.ner_processor.get_labels()))
             self.ner_model = self.ner_model.to(self.device)
             self.ner_model.eval()
 
-            self.sim_model = self.get_sim_model(config_file='models/input/config/bert-base-chinese-config.json',
-                                      pre_train_model='sim_output/best_sim.bin',
-                                      label_num=len(self.sim_processor.get_labels()))
-
+            self.sim_model = self.get_sim_model(config_file=sim_config.get('config_file', 'models/input/config/bert-base-chinese-config.json'),
+                                            pre_train_model=sim_config.get('pre_train_model', 'sim_output/best_sim.bin'),
+                                            label_num=len(self.sim_processor.get_labels()))
             self.sim_model = self.sim_model.to(self.device)
             self.sim_model.eval()
 
@@ -317,4 +315,5 @@ class BertKBQARunner():
                 answer_list.extend([answer_template.format(*row) for _, row in slot_fills_df.iterrows()])
             else:
                 answer_list.append(answer_template.format(*["，".join(s) for s in slot_fills]))
-        print("回答：", "。".join(answer_list) + "。")
+        
+        return "回答：", "。".join(answer_list) + "。"

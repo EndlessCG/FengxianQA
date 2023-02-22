@@ -1,5 +1,5 @@
 import pandas as pd
-from question_intents import QUESTION_INTENTS
+from utils.question_intents import QUESTION_INTENTS
 from utils.neo4j_graph import Neo4jGraph
 
 graph = Neo4jGraph("bolt://localhost:7687", 'neo4j', '123456')

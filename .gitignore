@@ -128,6 +128,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-input/
-*_output/
+.vscode-upload.json
+
+models/input/
+models/*_output/
 preprocess/风控实体关系表
+models/FAQ/finetune_model
+models/FAQ/pretrain_model
+models/FAQ/results
+models/FAQ/data
+*.tmp

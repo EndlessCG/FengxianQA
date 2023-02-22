@@ -1,6 +1,13 @@
+# Python==3.10.6
 numpy
 py2neo
 transformers
+protobuf==3.20.*
+tensorflow-gpu==1.14.0
 torch
 pandas
 tqdm
+jieba
+synonyms
+scikit-learn
+pymysql
