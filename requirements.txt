@@ -11,3 +11,4 @@ jieba
 synonyms
 scikit-learn
 pymysql
+xlrd

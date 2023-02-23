@@ -18,4 +18,4 @@ def generate_std(file_path):
             f1.write(ans_str)
 
 if __name__ == "__main__":
-    generate_std('data/file/百问问答整理.xlsx')
+    generate_std('data/file/qa100.xls')
