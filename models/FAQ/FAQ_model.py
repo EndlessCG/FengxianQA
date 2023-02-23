@@ -12,12 +12,25 @@ import sys
 import codecs
 
 class FAQ():
-    def __init__(self, args):
+    def __init__(self, init_args=None):
         self._model_loaded = False
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
         self.session = tf.Session(config=config)
-        self.sql_conn = pymysql.connect(**args.conn)
+        if init_args is not None:
+            self.initialize(init_args)
+    
+    def initialize(self, args):
+        if hasattr(args, "conn"):
+            self.sql_conn = pymysql.connect(**args.conn)
+        else:
+            self.sql_conn = pymysql.connect(
+                host=args.sql_host,
+                user=args.sql_user,
+                passwd=args.sql_passwd,
+                charset=args.sql_charset,
+                db=args.sql_db,
+            )
         self.table_name = args.table_name
 
     def pretrain(self, args):

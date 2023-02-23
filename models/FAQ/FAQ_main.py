@@ -15,7 +15,14 @@ def main():
     eval_parser.set_defaults(func=model.evaluate_model)
     predict_parser = subparsers.add_parser("predict", help="test model predict")
     predict_parser.set_defaults(func=model.predict)
-    
+
+    parser.add_argument("--table_name", type=str, default="t_nlp_qa_faq")
+    parser.add_argument("--sql_host", type=str, default="localhost")
+    parser.add_argument("--sql_user", type=str, default="localhost")
+    parser.add_argument("--sql_passwd", type=str, default="localhost")
+    parser.add_argument("--sql_charset", type=str, default="utf8mb4")
+    parser.add_argument("--sql_db", type=str, default="utf8mb4")
+
     pretrain_parser.add_argument("--train_file", type=str, default="data/pre_train_data", help="Input train file.")
     pretrain_parser.add_argument("--vocab_file",   default="data/vocab", help="Input vocab file.")
     pretrain_parser.add_argument("--model_save_dir", type=str, default="pretrain_model",  help="Specified the directory in which the model should stored.")
