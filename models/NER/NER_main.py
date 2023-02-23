@@ -397,7 +397,7 @@ def main():
 
     parser.add_argument("--model_config", default="models/input/config/bert-base-chinese-config.json", type=str, required=False,
                         help="模型配置文件json文件")
-    parser.add_argument("--output_dir", default="ner_output", type=str, required=False,
+    parser.add_argument("--output_dir", default="models/NER/ner_output", type=str, required=False,
                         help="输出结果的文件")
 
     # Other parameters

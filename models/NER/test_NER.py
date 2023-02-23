@@ -20,7 +20,7 @@ tokenizer = BertTokenizer(*tokenizer_inputs,**tokenizer_kwards)
 
 model = BertCrf(config_name= 'models/input/config/bert-base-chinese-config.json',
                 num_tags = len(processor.get_labels()),batch_first=True)
-model.load_state_dict(torch.load('ner_output/best_ner.bin'))
+model.load_state_dict(torch.load('models/NER/ner_output/best_ner.bin'))
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = model.to(device)

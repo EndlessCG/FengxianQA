@@ -14,17 +14,14 @@ echo "Testing FAQ..."
 python FAQ_main.py evaluate
 
 # train NER
+cd $bert_kbqa_home
 echo "Training NER..."
-NER_home=$bert_kbqa_home/models/NER/
-cd $NER_home
-python NER_main.py
+python -m models.NER.NER_main
 echo "Testing FAQ..."
-python test_NER.py
+python -m models.NER.test_NER
 
 # train SIM
 echo "Training SIM..."
-SIM_home=$bert_kbqa_home/models/SIM/
-cd $SIM_home
-python SIM_main.py
+python -m models.SIM.SIM_main
 echo "Testing FAQ..."
-python test_SIM.py
+python -m models.SIM.test_SIM

@@ -351,7 +351,7 @@ def main():
                         help="模型配置文件json文件")
     parser.add_argument("--pre_train_model", default="models/input/config/bert-base-chinese-model.bin", type=str, required=False,
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
-    parser.add_argument("--output_dir", default="sim_output", type=str, required=False,
+    parser.add_argument("--output_dir", default="models/SIM/sim_output", type=str, required=False,
                         help="输出结果的文件")
 
     # Other parameters

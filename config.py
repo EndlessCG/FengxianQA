@@ -20,7 +20,7 @@ faq_config = dict(
         host="localhost",
         passwd="123456",
         db="qa100",
-        charset="utf8",
+        charset="utf8mb4",
     ),
     admit_threshold=0.8,
     table_name="t_nlp_qa_faq",

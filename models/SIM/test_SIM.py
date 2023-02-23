@@ -25,7 +25,7 @@ bert_config = BertConfig.from_pretrained('models/input/config/bert-base-chinese-
 bert_config.num_labels = len(processor.get_labels())
 
 model = BertForSequenceClassification(bert_config)
-model.load_state_dict(torch.load('sim_output/best_sim.bin'))
+model.load_state_dict(torch.load('models/SIM/sim_output/best_sim.bin'))
 model = model.to(device)
 
 

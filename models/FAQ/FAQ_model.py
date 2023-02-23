@@ -9,7 +9,6 @@ import util
 import gc
 import time
 import sys
-import codecs
 
 class FAQ():
     def __init__(self, init_args=None):
