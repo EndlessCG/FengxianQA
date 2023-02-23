@@ -12,12 +12,13 @@ import sys
 import codecs
 
 class FAQ():
-    def __init__(self):
+    def __init__(self, args):
         self._model_loaded = False
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
         self.session = tf.Session(config=config)
-        # self.sql = 
+        self.sql_conn = pymysql.connect(**args.conn)
+        self.table_name = args.table_name
 
     def pretrain(self, args):
         tf.logging.set_verbosity(tf.logging.INFO)
@@ -209,6 +210,14 @@ class FAQ():
         print("准确率：", accuracy_score(label, ans))
         print("f1：", f1_score(label, ans, average='macro'))
 
+    def _get_answer_by_id(self, pred_id):
+        id2answer_query = f"SELECT answer from {self.table_name} WHERE `id`={pred_id}"
+        cursor = self.sql_conn.cursor()
+        cursor.execute(id2answer_query)
+        answer = cursor.fetchall()[0][0]
+        return answer
+
+
     def evaluate_model(self, args):
         tf.logging.set_verbosity(tf.logging.INFO)
         word2id, id2word = util.load_vocab_file(args.vocab_file)
@@ -301,11 +310,6 @@ class FAQ():
                 s += id2label[i] + "|" + str(re[0][i]) + ","
             out_list.append(s + "\t" + " ".join([id2word[t] for t in sen[0]]) + "\n")
 
-        real = []
-        for line in codecs.open(args.input_file, encoding='utf-8'):
-            real.append(line.split('\t')[-1].strip())
-
-
         for idx, line in enumerate(out_list):
             line = line.strip()
             s_line = line.split('\t')
@@ -320,10 +324,11 @@ class FAQ():
                 fir_ans_prob = model_res.split(":")[1].split()[0].strip()
                 # print(fir_ans_prob)
                 # print("问题：{}".format(args.input_sentence))
-                if len(real[fir_ans_num-1]) < 1 or real[fir_ans_num-1] == "nan":
-                    return "回答：无答案"
+                answer = self._get_answer_by_id(fir_ans_num)
+                if len(answer) < 1 or answer == "nan":
+                    return "No FAQ answer", 0
                 else:
-                    return f"回答：{real[fir_ans_num-1]}", float(fir_ans_prob) # 输出
+                    return f"回答：{answer}", float(fir_ans_prob) # 输出
 
     def load_model(self, model_path="", model_dir=""):
         if "" == model_path:

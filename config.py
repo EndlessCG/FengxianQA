@@ -15,11 +15,15 @@ bert_kbqa_config = dict(
 )
 
 faq_config = dict(
-    sql_addr="faq",
-    sql_host="localhost",
-    sql_password="123456",
-    sql_database="qa100",
-    sql_table="qa100",
+    conn=dict(
+        user="faq",
+        host="localhost",
+        passwd="123456",
+        db="qa100",
+        charset="utf8",
+    ),
+    admit_threshold=0.8,
+    table_name="t_nlp_qa_faq",
     input_file="models/FAQ/data/ans_data",
     vocab_file="models/FAQ/data/vocab",
     model_dir="models/FAQ/finetune_model/",

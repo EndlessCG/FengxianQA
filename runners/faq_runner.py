@@ -6,7 +6,7 @@ class FAQRunner():
         self.args = argparse.Namespace(**config)
         model_path = config.get("model_path", "")
         model_dir = config.get("model_dir", "")
-        self.model = FAQ()
+        self.model = FAQ(self.args)
         self.model.load_model(model_path=model_path, model_dir=model_dir)
         pass
 
