@@ -6,7 +6,7 @@ class FengxianQA:
     def __init__(self):
         self.kbqa_runner = BertKBQARunner(bert_kbqa_config)
         self.faq_runner = FAQRunner(faq_config)
-    
+
     def do_qa(self, question):
         faq_answer, faq_prob = self.faq_runner.do_qa(question)
         if faq_prob > faq_config.get("admit_threshold", 0.8):

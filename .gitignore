@@ -136,5 +136,7 @@ preprocess/风控实体关系表
 models/FAQ/finetune_model
 models/FAQ/pretrain_model
 models/FAQ/results
-models/FAQ/data
+models/FAQ/data/*
+!models/FAQ/data/process
+!models/FAQ/data/file
 *.tmp
