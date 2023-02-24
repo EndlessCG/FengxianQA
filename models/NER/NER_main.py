@@ -47,6 +47,7 @@ logger = logging.getLogger(__name__)
 # 第二 LABELS = ["O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "X", "[CLS]", "[SEP]"]
 
 CRF_LABELS = ["O", "B-entity", "I-entity", "B-attribute", "I-attribute"]
+KBQA_TOKEN_LIST = ["[NEDGE]", "[TARGET]"]
 
 
 def statistical_real_sentences(input_ids:torch.Tensor,mask:torch.Tensor,predict:list)-> list:
@@ -445,7 +446,7 @@ def main():
                         'max_len': args.max_seq_length,
                         'vocab_file': args.vob_file}
     tokenizer = BertTokenizer(*tokenizer_inputs,**tokenizer_kwards)
-
+    tokenizer.add_tokens(KBQA_TOKEN_LIST)
 
     model = BertCrf(config_name= args.model_config,model_name=args.pre_train_model,num_tags = len(processor.get_labels()),batch_first=True)
     model = model.to(args.device)

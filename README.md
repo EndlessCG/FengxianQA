@@ -32,5 +32,5 @@
 ## 使用方法
 * 训练所有模型
     1. 运行 `pip install -r requirements.txt`安装依赖
-    2. 
+    2. 将BERT
 

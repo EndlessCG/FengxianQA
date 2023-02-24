@@ -19,6 +19,15 @@ echo $bert_kbqa_home
 if [ ! -d "models/input/data/fengxian/" ]; then
     python preprocess/data_generator.py
 fi
+if [! -f "models/input/config/*.bin" ]; then
+    echo "Downloading bert-base-chinese..."
+    mkdir -p models/input/config
+    cd models/input/config
+    wget https://huggingface.co/bert-base-chinese/resolve/main/pytorch_model.bin -O bert-base-chinese-model.bin
+    wget https://huggingface.co/bert-base-chinese/resolve/main/config.json -O bert-base-chinese-config.json
+    wget https://huggingface.co/bert-base-chinese/resolve/main/vocab.txt -O bert-base-chinese-vocab.txt
+    cd $bert_kbqa_home
+fi
 echo "Training NER..."
 python -m models.NER.NER_main --train_batch_size 8 --eval_batch_size 8
 echo "Testing NER..."
