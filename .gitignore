@@ -134,11 +134,11 @@ dmypy.json
 models/input/
 models/SIM/*_output/
 models/NER/*_output/
-preprocess/风控实体关系表
 models/FAQ/finetune_model
 models/FAQ/pretrain_model
 models/FAQ/results
 models/FAQ/data/*
 !models/FAQ/data/process
 !models/FAQ/data/file
+!models/FAQ/data/vocab
 *.tmp
