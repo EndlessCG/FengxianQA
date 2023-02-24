@@ -1,6 +1,6 @@
 from typing import List, Optional
 from transformers import BertForTokenClassification,BertTokenizer,BertConfig
-from .CRF_Model import CRF
+from .CRF_model import CRF
 import torch
 import torch.nn as nn
 import os

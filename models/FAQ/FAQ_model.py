@@ -101,7 +101,7 @@ class FAQ():
                     util.to_ids(training_sens, word2id, args, id2word)  # MUST run this for randomization for each sentence
                 gc.collect()
 
-    def _finetune_eval(sess, full_tensors, args, model):
+    def _finetune_eval(self, sess, full_tensors, args, model):
         total_num = 0
         right_num = 0
         for batch_data in util.gen_batchs(full_tensors, args.batch_size, is_shuffle=False):
@@ -211,7 +211,7 @@ class FAQ():
                 "dropout_rate": g.get_tensor_by_name("ph_dropout_rate:0"),
                 "input_mask": g.get_tensor_by_name("ph_input_mask:0")}
 
-    def _print_metrics(path):
+    def _print_metrics(self, path):
         label = []
         ans = []
         with open(path, "r") as f:
@@ -285,7 +285,7 @@ class FAQ():
                                                     sentence, model_res))
 
         fout.close()
-        self.print_metrics(args.output_file)
+        self._print_metrics(args.output_file)
     
     def predict(self, args, input_sentence=""):
         if input_sentence == "":

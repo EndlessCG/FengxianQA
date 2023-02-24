@@ -1,4 +1,5 @@
-# Python==3.10.6
+# Python==3.7
+# 没有标识版本的依赖默认为最新版本
 numpy
 py2neo
 transformers
@@ -8,6 +9,7 @@ torch
 pandas
 tqdm
 jieba
+smartopen # 可选
 synonyms
 scikit-learn
 pymysql

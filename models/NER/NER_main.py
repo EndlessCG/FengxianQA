@@ -404,7 +404,7 @@ def main():
     parser.add_argument("--pre_train_model", default="models/input/config/bert-base-chinese-model.bin", type=str, required=False,
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
 
-    parser.add_argument("--max_seq_length", default=30, type=int,
+    parser.add_argument("--max_seq_length", default=50, type=int,
                         help="输入到bert的最大长度，通常不应该超过512")
     parser.add_argument("--do_train", action='store_true',default=True,
                         help="是否进行训练")

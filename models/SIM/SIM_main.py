@@ -51,19 +51,20 @@ def set_seed(args):
     torch.manual_seed(args.seed)
 
 
-def cal_acc(real_label,pred_label):
+def cal_acc(real_label, pred_label, neg_to_pos=3):
+    split_size = neg_to_pos + 1
     real_label = torch.tensor(real_label)
     pred_label = torch.tensor(pred_label)
 
     assert real_label.shape == pred_label.shape
-    assert 0 == real_label.shape[0] % 6
+    assert 0 == real_label.shape[0] % split_size
 
     label_acc = (real_label == pred_label).sum().float() / float(pred_label.shape[0])
 
-    real_label = real_label.reshape(-1,6)
-    assert real_label.shape[0] == real_label[:,0].sum()
+    real_label = real_label.reshape(-1, split_size)
+    assert real_label.shape[0] == real_label[:,0].sum(), "--neg_to_pos wrongly set"
 
-    pred_label = pred_label.reshape(-1,6)
+    pred_label = pred_label.reshape(-1, split_size)
 
     pred_idx = pred_label.argmax(dim=-1)
 
@@ -333,7 +334,7 @@ def evaluate(args, model, eval_dataset):
     loss = total_loss / total_sample_num
 
 
-    question_acc,label_acc = cal_acc(all_real_label,all_pred_label)
+    question_acc,label_acc = cal_acc(all_real_label,all_pred_label, neg_to_pos=args.neg_to_pos)
 
     model.train()
     return loss,question_acc,label_acc
@@ -355,7 +356,7 @@ def main():
                         help="输出结果的文件")
 
     # Other parameters
-    parser.add_argument("--max_seq_length", default=30, type=int,
+    parser.add_argument("--max_seq_length", default=50, type=int,
                         help="输入到bert的最大长度，通常不应该超过512")
     parser.add_argument("--do_train", action='store_true',default=True,
                         help="是否进行训练")
@@ -379,6 +380,8 @@ def main():
                         help="random seed for initialization")
     parser.add_argument("--warmup_steps", default=0, type=int,
                         help="让学习增加到1的步数，在warmup_steps后，再衰减到0")
+    parser.add_argument("--neg_to_pos", default=3, type=int,
+                        help="数据集中负例-正例比")
 
     args = parser.parse_args()
     assert os.path.exists(args.data_dir)

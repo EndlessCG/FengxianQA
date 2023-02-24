@@ -1,3 +1,4 @@
+.vscode
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -131,7 +132,8 @@ dmypy.json
 .vscode-upload.json
 
 models/input/
-models/*_output/
+models/SIM/*_output/
+models/NER/*_output/
 preprocess/风控实体关系表
 models/FAQ/finetune_model
 models/FAQ/pretrain_model

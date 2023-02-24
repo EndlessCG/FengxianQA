@@ -8,7 +8,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 processor = SimProcessor()
 tokenizer_inputs = ()
 tokenizer_kwards = {'do_lower_case': False,
-                    'max_len': 30,
+                    'max_len': 50,
                     'vocab_file': 'models/input/config/bert-base-chinese-vocab.txt'}
 tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
 
