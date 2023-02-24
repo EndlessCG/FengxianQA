@@ -71,7 +71,7 @@ class CRF(nn.Module):
     def decode(self,emissions:torch.Tensor,
                mask : Optional[torch.ByteTensor] = None) ->List[List[int]]:
         self._validate(emissions=emissions,mask=mask)
-
+        # TODO return confidence
         if mask is None:
             mask = emissions.new_ones(emissions.shape[:2],dtype=torch.uint8)
         if self.batch_first:
