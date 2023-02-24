@@ -1,7 +1,7 @@
 #! /bin/bash
 bert_kbqa_home=$(cd $(dirname $0); cd ..; pwd)
 
-train FAQ
+# train FAQ
 echo "Training FAQ..."
 FAQ_home=$bert_kbqa_home/models/FAQ/
 cd $FAQ_home
