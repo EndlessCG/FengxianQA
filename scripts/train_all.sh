@@ -21,7 +21,9 @@ if [ ! -d "input/data/fengxian/ner" ]; then
     python preprocess/data_generator.py
 fi
 cd $bert_kbqa_home
-if [ ! -f "input/pretrained_BERT/bert-base-chinese-model.bin" ]; then
+if [ ! -f "input/pretrained_BERT/bert-base-chinese-model.bin" ||
+     ! -f "input/pretrained_BERT/bert-base-chinese-config.json" ||
+     ! -f "input/pretrained_BERT/bert-base-chinese-vocab.txt"]; then
     echo "Downloading bert-base-chinese..."
     mkdir -p input/pretrained_BERT/
     cd input/pretrained_BERT
