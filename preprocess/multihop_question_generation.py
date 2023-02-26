@@ -73,7 +73,7 @@ def write_data_file(path, question_list, triple_list, answer_list, start_id=1294
 
 def main():
     question_list, triple_list, answer_list = get_mhop_data(['two_hop_a', 'two_hop_e'])
-    write_data_file("models/input/data/fengxian/qa/QA_mhop_data.txt", question_list, triple_list, answer_list)
+    write_data_file("input/data/fengxian/qa/QA_mhop_data.txt", question_list, triple_list, answer_list)
 
 
 if __name__ == '__main__':

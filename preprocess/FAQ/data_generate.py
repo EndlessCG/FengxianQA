@@ -2,7 +2,7 @@ import pandas as pd
 import random
 import jieba
 import synonyms
-
+DATA_BASE = "input/data/fengxian/faq/"
 
 # 同义词替换(Synonyms Replace)
 def sr(num, dataset):
@@ -210,7 +210,7 @@ def generate_datasets():
     dev_number = []
     test_number = []
     from back_translation import back_trans
-    with open('data/std_data', 'r') as f:
+    with open(f'{DATA_BASE}/std_data', 'r') as f:
         data = f.readlines()
         for i in data:
             l = i.split('\t')
@@ -233,19 +233,19 @@ def generate_datasets():
             dev_number.extend([biao_id] * len(generate_list[fir_split:sec_split]))
             test_number.extend([biao_id] * len(generate_list[sec_split:]))
 
-    with open('data/train_data', 'w') as f:
+    with open(f'{DATA_BASE}/train_data', 'w') as f:
         kuo_id = 0
         for j in range(len(train_list)):
             to_write_train += str(train_number[j]) + "\t" + str(kuo_id) + "\t" + train_list[j].replace("\n", "") + "\n"
             kuo_id += 1
         f.write(to_write_train)
-    with open('data/dev_data', 'w') as f:
+    with open(f'{DATA_BASE}/dev_data', 'w') as f:
         kuo_id = 0
         for j in range(len(dev_list)):
             to_write_dev += str(dev_number[j]) + "\t" + str(kuo_id) + "\t" + dev_list[j].replace("\n", "") + "\n"
             kuo_id += 1
         f.write(to_write_dev)
-    with open('data/test_data', 'w') as f:
+    with open(f'{DATA_BASE}/test_data', 'w') as f:
         kuo_id = 0
         for j in range(len(test_list)):
             to_write_test += str(test_number[j]) + "\t" + str(kuo_id) + "\t" + test_list[j].replace("\n", "") + "\n"

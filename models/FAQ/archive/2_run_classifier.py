@@ -34,9 +34,9 @@ def evaluate(sess, full_tensors, args, model):
 def main(_):
     tf.logging.set_verbosity(tf.logging.INFO)
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train_file", type=str, default="data/train_data", help="Input train file.")
-    parser.add_argument("--dev_file", type=str, default="data/dev_data", help="Input dev file.")
-    parser.add_argument("--vocab_file", type=str, default="data/vocab", help="Input vocab file.")
+    parser.add_argument("--train_file", type=str, default="data/fengxian/faq/train_data", help="Input train file.")
+    parser.add_argument("--dev_file", type=str, default="data/fengxian/faq/dev_data", help="Input dev file.")
+    parser.add_argument("--vocab_file", type=str, default="data/fengxian/faq/vocab", help="Input vocab file.")
     parser.add_argument("--output_id2label_file", type=str, default="finetune_model/id2label.has_init", help="File containing (id, class label) map.")
     parser.add_argument("--model_save_dir", type=str, default="finetune_model", help="Specified the directory in which the model should stored.") 
     parser.add_argument("--lstm_dim", type=int, default=500, help="Dimension of LSTM cell.")

@@ -1,5 +1,6 @@
 import xlrd
 import pymysql
+DATA_BASE = "input/data/fengxian/faq/"
 
 def getConn(database):
     args = dict(
@@ -40,6 +41,6 @@ def excel2mysql(excelName, database, table, drop=True):
     conn.close()
 
 if __name__ == '__main__':
-    excel2mysql("/home/gyc/bert-kbqa/models/FAQ/data/file/qa100.xls", 
+    excel2mysql(f"{DATA_BASE}/file/qa100.xls", 
                 database="qa100",
                 table="t_nlp_qa_faq")

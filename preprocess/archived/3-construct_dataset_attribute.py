@@ -10,11 +10,11 @@ import re
 构造属性关联训练集，分类问题，训练BERT分类模型
 '''
 
-data_base = 'models/input/data/fengxian/'
+data_base = 'input/data/fengxian/'
 data_dir = data_base + 'ner'
 file_name_list = ['train.csv','validate.csv','test.csv']
 
-new_dir = data_base + 'sim_data'
+new_dir = data_base + 'sim'
 
 pattern = re.compile('^-+') # 以-开头
 

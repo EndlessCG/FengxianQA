@@ -38,8 +38,8 @@ def evaluate(path):
 def main(_):
     tf.logging.set_verbosity(tf.logging.INFO)
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_file", type=str, default="data/test_data", help="Input file for prediction.")
-    parser.add_argument("--vocab_file", type=str, default="data/vocab", help="Input train file.")
+    parser.add_argument("--input_file", type=str, default="data/fengxian/faq/test_data", help="Input file for prediction.")
+    parser.add_argument("--vocab_file", type=str, default="data/fengxian/faq/vocab", help="Input train file.")
     parser.add_argument("--model_path", type=str, default="", help="Path to model file.")
     parser.add_argument("--model_dir", type=str, default="finetune_model", help="Directory which contains model.")
     parser.add_argument("--output_file", type=str, default="results/result")

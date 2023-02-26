@@ -18,8 +18,8 @@ import time
 def main(_):
     tf.logging.set_verbosity(tf.logging.INFO)
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train_file", type=str, default="data/pre_train_data", help="Input train file.")
-    parser.add_argument("--vocab_file",   default="data/vocab", help="Input vocab file.")
+    parser.add_argument("--train_file", type=str, default="data/fengxian/faq/pre_train_data", help="Input train file.")
+    parser.add_argument("--vocab_file",   default="data/fengxian/faq/vocab", help="Input vocab file.")
     parser.add_argument("--model_save_dir", type=str, default="pretrain_model",  help="Specified the directory in which the model should stored.")
     parser.add_argument("--lstm_dim", type=int, default=500, help="Dimension of LSTM cell.")
     parser.add_argument("--embedding_dim", type=int, default=1000, help="Dimension of word embedding.")

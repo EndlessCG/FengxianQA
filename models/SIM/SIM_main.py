@@ -1,13 +1,13 @@
 # --data_dir
-# ./models/input/data/sim_data
+# ./input/data/sim
 # --vob_file
-# ./models/input/config/bert-base-chinese-vocab.txt
+# ./input/pretrained_BERT/bert-base-chinese-vocab.txt
 # --model_config
-# ./models/input/config/bert-base-chinese-config.json
+# ./input/pretrained_BERT/bert-base-chinese-config.json
 # --output
 # ./output
 # --pre_train_model
-# ./models/input/config/bert-base-chinese-model.bin
+# ./input/pretrained_BERT/bert-base-chinese-model.bin
 # --max_seq_length
 # 64
 # --do_train
@@ -343,14 +343,14 @@ def evaluate(args, model, eval_dataset):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--data_dir", default="models/input/data/fengxian/sim_data", type=str, required=False,
+    parser.add_argument("--data_dir", default="input/data/fengxian/sim", type=str, required=False,
                         help="数据文件目录，因当有train.text dev.text")
 
-    parser.add_argument("--vob_file", default="models/input/config/bert-base-chinese-vocab.txt", type=str, required=False,
+    parser.add_argument("--vob_file", default="input/pretrained_BERT/bert-base-chinese-vocab.txt", type=str, required=False,
                         help="词表文件")
-    parser.add_argument("--model_config", default="models/input/config/bert-base-chinese-config.json", type=str, required=False,
+    parser.add_argument("--model_config", default="input/pretrained_BERT/bert-base-chinese-config.json", type=str, required=False,
                         help="模型配置文件json文件")
-    parser.add_argument("--pre_train_model", default="models/input/config/bert-base-chinese-model.bin", type=str, required=False,
+    parser.add_argument("--pre_train_model", default="input/pretrained_BERT/bert-base-chinese-model.bin", type=str, required=False,
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
     parser.add_argument("--output_dir", default="models/SIM/sim_output", type=str, required=False,
                         help="输出结果的文件")

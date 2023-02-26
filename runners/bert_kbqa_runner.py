@@ -26,18 +26,18 @@ class BertKBQARunner():
             tokenizer_inputs = ()
             tokenizer_kwards = {'do_lower_case': False,
                                 'max_len': 40,
-                                'vocab_file': 'models/input/config/bert-base-chinese-vocab.txt'}
+                                'vocab_file': 'input/pretrained_BERT/bert-base-chinese-vocab.txt'}
             self.ner_processor = NerProcessor()
             self.sim_processor = SimProcessor()
             self.tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
 
-            self.ner_model = self.get_ner_model(config_file=ner_config.get('config_file', 'models/input/config/bert-base-chinese-config.json'),
+            self.ner_model = self.get_ner_model(config_file=ner_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
                                            pre_train_model=ner_config.get('pre_train_model','models/ner_output/best_ner.bin'),
                                            label_num=len(self.ner_processor.get_labels()))
             self.ner_model = self.ner_model.to(self.device)
             self.ner_model.eval()
 
-            self.sim_model = self.get_sim_model(config_file=sim_config.get('config_file', 'models/input/config/bert-base-chinese-config.json'),
+            self.sim_model = self.get_sim_model(config_file=sim_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
                                             pre_train_model=sim_config.get('pre_train_model', 'sim_output/best_sim.bin'),
                                             label_num=len(self.sim_processor.get_labels()))
             self.sim_model = self.sim_model.to(self.device)

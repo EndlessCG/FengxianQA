@@ -15,10 +15,10 @@ processor = NerProcessor()
 tokenizer_inputs = ()
 tokenizer_kwards = {'do_lower_case': False,
                     'max_len': 50,
-                    'vocab_file': 'models/input/config/bert-base-chinese-vocab.txt'}
+                    'vocab_file': 'input/pretrained_BERT/bert-base-chinese-vocab.txt'}
 tokenizer = BertTokenizer(*tokenizer_inputs,**tokenizer_kwards)
 
-model = BertCrf(config_name= 'models/input/config/bert-base-chinese-config.json',
+model = BertCrf(config_name= 'input/pretrained_BERT/bert-base-chinese-config.json',
                 num_tags = len(processor.get_labels()),batch_first=True)
 model.load_state_dict(torch.load('models/NER/ner_output/best_ner.bin'))
 
@@ -26,13 +26,12 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
 # features = torch.load(cached_features_file)
-features = torch.load('models/input/data/fengxian/ner/cached_validate_50')
+features = torch.load('input/data/fengxian/ner/cached_validate_50')
 
 all_input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
 all_attention_mask = torch.tensor([f.attention_mask for f in features], dtype=torch.long)
 all_token_type_ids = torch.tensor([f.token_type_ids for f in features], dtype=torch.long)
 all_label = torch.tensor([f.label for f in features], dtype=torch.long)
-print(all_label)
 dataset = TensorDataset(all_input_ids, all_attention_mask, all_token_type_ids, all_label)
 
 sampler = RandomSampler(dataset)
@@ -46,9 +45,6 @@ for batch in tqdm(data_loader, desc="test"):
     model.eval()
     batch = tuple(t.to(device) for t in batch)
     with torch.no_grad():
-        print(batch[0])
-        print(batch[1])
-        print(batch[2])
         inputs = {'input_ids': batch[0],
                   'attention_mask': batch[1],
                   'token_type_ids': batch[2],

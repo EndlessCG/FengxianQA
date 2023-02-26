@@ -3,8 +3,8 @@ from utils import get_question_descriptions
 import random
 import os.path as osp
 
-NER_BASE = "models/input/data/fengxian/ner"
-SIM_BASE = "models/input/data/fengxian/sim_data"
+NER_BASE = "input/data/fengxian/ner"
+SIM_BASE = "input/data/fengxian/sim"
 
 def generate_data():
     question_descriptions = get_question_descriptions()

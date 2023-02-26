@@ -5,11 +5,11 @@ bert_kbqa_config = dict(
         password="123456"
     ),
     ner=dict(
-        config_file='models/input/config/bert-base-chinese-config.json',
+        config_file='input/pretrained_BERT/bert-base-chinese-config.json',
         pre_train_model='models/ner_output/best_ner.bin',
     ),
     sim=dict(
-        config_file='models/input/config/bert-base-chinese-config.json',
+        config_file='input/pretrained_BERT/bert-base-chinese-config.json',
         pre_train_model='models/sim_output/best_sim.bin'
     ),
 )

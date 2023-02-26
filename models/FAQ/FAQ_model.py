@@ -4,8 +4,8 @@ import os
 import tensorflow as tf
 import numpy as np
 import pymysql
-import models_util
-import util
+from . import models_util
+from . import util
 import gc
 import time
 import sys
