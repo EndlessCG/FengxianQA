@@ -131,8 +131,7 @@ dmypy.json
 
 .vscode-upload.json
 
-input/
-!input/data/fengxian/faq/
+input/pretrained_BERT
 models/SIM/*_output/
 models/NER/*_output/
 models/FAQ/finetune_model
