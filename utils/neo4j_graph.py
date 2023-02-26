@@ -4,7 +4,7 @@ class Neo4jGraph():
     
     def __init__(self, remote_addr, username, password):
         self.graph = Graph(remote_addr, auth=(username, password))
-        self._build_entity_list()
+        self._build_entity_lists()
 
     def execute_query(self, query, drop_keys=True):
         dict_list = self.graph.run(query).data()

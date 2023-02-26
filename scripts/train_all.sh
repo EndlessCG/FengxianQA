@@ -11,24 +11,23 @@ fi
 python -m models.FAQ.FAQ_main pretrain --batch_size 16
 python -m models.FAQ.FAQ_main finetune --batch_size 16
 echo "Testing FAQ..."
-python FAQ_main.py eval
+python -m models.FAQ.FAQ_main eval
 
 # train NER
 cd $bert_kbqa_home
+bash scripts/clean_cached_data.sh
 if [ ! -d "input/data/fengxian/ner" ]; then
     mkdir -p input/data/fengxian/ner/
     mkdir -p input/data/fengxian/sim/
     python preprocess/data_generator.py
 fi
 cd $bert_kbqa_home
-if [ ! -f "input/pretrained_BERT/bert-base-chinese-model.bin" ||
-     ! -f "input/pretrained_BERT/bert-base-chinese-config.json" ||
-     ! -f "input/pretrained_BERT/bert-base-chinese-vocab.txt"]; then
+if [ ! -f "input/pretrained_BERT/bert-base-chinese-model.bin" || ! -f "input/pretrained_BERT/bert-base-chinese-config.json" || ! -f "input/pretrained_BERT/bert-base-chinese-vocab.txt"]; then
     echo "Downloading bert-base-chinese..."
     mkdir -p input/pretrained_BERT/
     cd input/pretrained_BERT
     wget https://huggingface.co/bert-base-chinese/resolve/main/pytorch_model.bin -O bert-base-chinese-model.bin
-    wget https://huggingface.co/bert-base-chinese/resolve/mai/pretrained_BERT.json -O bert-base-chinese-config.json
+    wget https://huggingface.co/bert-base-chinese/resolve/main/config.json -O bert-base-chinese-config.json
     wget https://huggingface.co/bert-base-chinese/resolve/main/vocab.txt -O bert-base-chinese-vocab.txt
     cd $bert_kbqa_home
 fi

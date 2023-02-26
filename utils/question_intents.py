@@ -43,7 +43,7 @@ QUESTION_INTENTS = {
     },
 
     'TeE': {
-        'get_sgraph_query': "match (n)-[r]->[n1] \
+        'get_sgraph_query': "match (n)-[r]->(n1) \
                             where n1.`名称`='{entity}' \
                             return distinct '[TARGET]'+type(r)"
     },
@@ -59,7 +59,7 @@ QUESTION_INTENTS = {
         'get_sgraph_query': "match (n)-[r]->(n1) \
             where n.`名称`='{entity}' \
             unwind keys(n1) as attr \
-            return distinct 'type(r)+'[NEDGE]'+attr+'[TARGET]'",
+            return distinct type(r)+'[NEDGE]'+attr+'[TARGET]'",
     },
 
     # (e)-(e1)-(e2) ret e2 ex.业务准备的各环节有哪些风险点？
@@ -104,37 +104,38 @@ QUESTION_INTENTS = {
 }
 
 SUBGRAPHS = {
-    'EaT': "match (n)-[r]->() \
+    'EaT': "match (n) \
             where n.`名称`='{entity}' \
-            return distinct '{entity}'+type(r)+'[TARGET]'",
-    'EeT': "match (n) \
+            unwind keys(n) as attr \
+            return distinct attr+'[TARGET]'",
+    'EeT': "match (n)-[r]->() \
             where n.`名称`='{entity}' \
-            return distinct '{entity}'+keys(n)+'[TARGET]'",
+            return distinct type(r)+'[TARGET]'",
     'TaA': "match (n) \
             with filter(key in keys(n) where n[key]='{attribute}') as k \
             where not size(k)=0 \
-            return distinct '[TARGET]'+k+'{attribute}'",
-    'TeE': "match (n)-[r]->[n1] \
+            return distinct '[TARGET]'+k",
+    'TeE': "match (n)-[r]->(n1) \
             where n1.`名称`='{entity}' \
-            return distinct '[TARGET]'+type(r)+'{entity}'",
+            return distinct '[TARGET]'+type(r)",
     'EeNaT': "match (n)-[r]->(n1) \
             where n.`名称`='{entity}' \
             unwind keys(n1) as attr \
-            return distinct '{entity}'+'type(r)+'[NEDGE]'+attr+'[TARGET]'",
+            return distinct type(r)+'[NEDGE]'+attr+'[TARGET]'",
     'EeNeT': "match (n)-[r]->()-[r1]->() \
               where n.`名称`='{entity}' \
-              return distinct '{entity}'+type(r)+'[NEDGE]'+type(r1)+'[TARGET]'",
+              return distinct type(r)+'[NEDGE]'+type(r1)+'[TARGET]'",
     'EeTaA': "match (n)-[r]->(n1) \
               where n.`名称`='{entity}' \
               with filter(key in keys(n1) where n1[key]='{attribute}') as k \
-              return distinct '{entity}'+type(r)+'[TARGET]'+k+{attribute}",
+              return distinct type(r)+'[TARGET]'+k",
     'EeTeE': "match (n)-[r]->(n1)<-[r1]-(n2) \
-              where n.`名称`={entity} and n2.`名称`={entity1} \
-              return distinct '{entity}'+type(r)+'[TARGET]'+type(r1)+'{entity1}'",
+              where n.`名称`='{entity}' and n2.`名称`='{entity1}' \
+              return distinct type(r)+'[TARGET]'+type(r1)",
     'TeNaA': "match ()-[r]->(n1) \
               with filter(key in keys(n1) where n1[key]='{attribute}') as k \
-              return distinct '[TARGET]'+type(r)+'[NEDGE]'+a+'{attribute}'",
+              return distinct '[TARGET]'+type(r)+'[NEDGE]'+a",
     'TeNeE': "match ()-[r]->(n1)-[r1]->(n2) \
-              where n2.`名称`={entity} \
-              return distinct '[TARGET]'+type(r)+'[NEDGE]'+type(r1)+'{entity}'"
+              where n2.`名称`='{entity}' \
+              return distinct '[TARGET]'+type(r)+'[NEDGE]'+type(r1)"
 }

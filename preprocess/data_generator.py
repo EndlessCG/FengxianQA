@@ -24,7 +24,8 @@ def generate_data():
                         temp_ner.append((key[1:], label))
                 temp_data['ner'] = temp_ner
                 temp_data['sim'] = sgraph
-                data.append(temp_data)
+                if temp_data not in data:
+                    data.append(temp_data)
     return data
 
 def split_data(data, rseed=2023, ratio=[0.6, 0.2, 0.2], shuffle=True):

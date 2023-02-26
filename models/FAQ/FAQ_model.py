@@ -16,6 +16,7 @@ class FAQ():
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
         self.session = tf.Session(config=config)
+        tf.logging.set_verbosity(tf.logging.INFO)
         if init_args is not None:
             self.initialize(init_args)
     
@@ -33,7 +34,6 @@ class FAQ():
         self.table_name = args.table_name
 
     def pretrain(self, args):
-        tf.logging.set_verbosity(tf.logging.INFO)
         np.random.seed(args.seed)
         tf.set_random_seed(args.seed)
         tf.logging.info(args)
@@ -120,7 +120,6 @@ class FAQ():
         return acc
     
     def finetune(self, args):
-        tf.logging.set_verbosity(tf.logging.INFO)
         np.random.seed(args.seed)
         tf.set_random_seed(args.seed)
         tf.logging.info(str(args))
@@ -231,7 +230,6 @@ class FAQ():
 
 
     def evaluate_model(self, args):
-        tf.logging.set_verbosity(tf.logging.INFO)
         word2id, id2word = util.load_vocab_file(args.vocab_file)
         sys.stderr.write("vocab num : " + str(len(word2id)) + "\n")
 
@@ -288,9 +286,8 @@ class FAQ():
         self._print_metrics(args.output_file)
     
     def predict(self, args, input_sentence=""):
-        if input_sentence == "":
-            input_sentence = args.get("input_sentence", "")
-        tf.logging.set_verbosity(tf.logging.INFO)
+        if input_sentence == "" and hasattr(args, 'input_sentence'):
+            input_sentence = args.input_sentence
         word2id, id2word = util.load_vocab_file(args.vocab_file)
         # sys.stderr.write("vocab num : " + str(len(word2id)) + "\n")
 
@@ -315,7 +312,6 @@ class FAQ():
                                                                   self.input_dict['input_mask']: [sen[1]],
                                                                   self.input_dict['length']: [len(sen[0])],
                                                                   self.input_dict["dropout_rate"]: 0.0})
-            print(time.time()-start)
             sorted_idx = np.argsort(-1 * re[0])  # sort by desc
             s = ""
             for i in sorted_idx[:3]:

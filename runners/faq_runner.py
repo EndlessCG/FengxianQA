@@ -1,3 +1,4 @@
+import tensorflow.compat.v1 as tf
 from models.FAQ.FAQ_model import FAQ
 import argparse
 
@@ -10,8 +11,8 @@ class FAQRunner():
         self.model.load_model(model_path=model_path, model_dir=model_dir)
         pass
 
-    def is_model_trained(self):
-        pass
+    def disable_warnings(self):
+        tf.logging.set_verbosity(tf.logging.ERROR)
 
     def do_qa(self, sentence):
         return self.model.predict(self.args, sentence)

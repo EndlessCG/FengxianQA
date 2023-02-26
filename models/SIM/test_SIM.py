@@ -12,7 +12,7 @@ tokenizer_kwards = {'do_lower_case': False,
                     'vocab_file': 'input/pretrained_BERT/bert-base-chinese-vocab.txt'}
 tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
 
-features = torch.load('input/data/fengxian/sim/cached_validate_30')
+features = torch.load('input/data/fengxian/sim/cached_validate_50')
 
 all_input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
 all_attention_mask = torch.tensor([f.attention_mask for f in features], dtype=torch.long)

@@ -6,12 +6,16 @@ class FengxianQA:
     def __init__(self):
         self.kbqa_runner = BertKBQARunner(bert_kbqa_config)
         self.faq_runner = FAQRunner(faq_config)
+        self.faq_runner.disable_warnings()
 
     def do_qa(self, question):
         faq_answer, faq_prob = self.faq_runner.do_qa(question)
+        print("FAQ信心：", faq_prob)
         if faq_prob > faq_config.get("admit_threshold", 0.8):
+            print("使用FAQ回答")
             return faq_answer
         else:
+            print("使用KBQA回答")
             kbqa_answer = self.kbqa_runner.do_qa(question)
             return kbqa_answer
 

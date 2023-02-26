@@ -6,11 +6,11 @@ bert_kbqa_config = dict(
     ),
     ner=dict(
         config_file='input/pretrained_BERT/bert-base-chinese-config.json',
-        pre_train_model='models/ner_output/best_ner.bin',
+        pre_train_model='models/NER/ner_output/best_ner.bin',
     ),
     sim=dict(
         config_file='input/pretrained_BERT/bert-base-chinese-config.json',
-        pre_train_model='models/sim_output/best_sim.bin'
+        pre_train_model='models/SIM/sim_output/best_sim.bin'
     ),
 )
 
@@ -24,9 +24,8 @@ faq_config = dict(
     ),
     admit_threshold=0.8,
     table_name="t_nlp_qa_faq",
-    input_file="models/FAQ/data/ans_data",
-    vocab_file="models/FAQ/data/vocab",
+    vocab_file="input/data/fengxian/faq/vocab",
     model_dir="models/FAQ/finetune_model/",
-    output_file="models/FAQ/results/result",
+    output_file="models/FAQ/result",
     id2label_file="models/FAQ/finetune_model/id2label.has_init"
 )
