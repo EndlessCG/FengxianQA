@@ -1,6 +1,5 @@
 # bert-kbqa
 基于bert的kbqa系统
-* Python=3.7 cudnn=7.3.1-cuda10.0_0 cudatoolkit=10.0.130
 ## 项目结构
 
 * models
@@ -30,7 +29,13 @@
 * requirements.txt 项目依赖描述
 
 ## 使用方法
-* 训练所有模型
-    1. 运行 `pip install -r requirements.txt`安装依赖
-    2. 将BERT
+1. 安装Python和cudnn，cudatoolkit（推荐Python=3.7 cudnn=7.3.1-cuda10.0_0 cudatoolkit=10.0.130）
+2. 运行 `pip install -r requirements.txt` 安装Python依赖
+3. 运行 `bash scripts/trian_all.sh` 训练所有模型
+4. 运行 `python fengxian_qa.py` 测试问答模型效果
+```Python
+from bert-kbqa import FengxianQA
+QAbot = FengxianQA()
+QAbot.do_qa("新业务开展前，需要做哪些准备？")
+```
 

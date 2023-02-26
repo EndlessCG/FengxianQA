@@ -26,7 +26,7 @@ if [ ! -f "input/pretrained_BERT/bert-base-chinese-model.bin" ]; then
     mkdir -p input/pretrained_BERT/
     cd input/pretrained_BERT
     wget https://huggingface.co/bert-base-chinese/resolve/main/pytorch_model.bin -O bert-base-chinese-model.bin
-    wget https://huggingface.co/bert-base-chinese/resolve/mainpretrained_BERT.json -O bert-base-chinese-config.json
+    wget https://huggingface.co/bert-base-chinese/resolve/mai/pretrained_BERT.json -O bert-base-chinese-config.json
     wget https://huggingface.co/bert-base-chinese/resolve/main/vocab.txt -O bert-base-chinese-vocab.txt
     cd $bert_kbqa_home
 fi
