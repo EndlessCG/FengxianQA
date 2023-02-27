@@ -319,10 +319,11 @@ class BertKBQARunner():
         slots = QUESTION_INTENTS[intention]['query_slots']
         slot_fills = []
 
-        links = sgraph_candidates[match_idx].split(['[TARGET]', '[NEDGE]'])
+        temp_sgraph = sgraph_candidates[match_idx].replace('[TARGET]', '[NEDGE]')
+        links = temp_sgraph.split('[NEDGE]')
         for slot_type, slot_idx in slots:
             if slot_type == 'e':
-                slot_fills.append(entity)
+                slot_fills.append(linked_entity[slot_idx])
             elif slot_type == 'l':
                 slot_fills.append(links[slot_idx])
         answer_query = answer_query.format(*slot_fills)
@@ -337,7 +338,7 @@ class BertKBQARunner():
             v_cnt = 0
             for i, (slot_type, slot_idx) in enumerate(slot):
                 if slot_type == 'e':
-                    slot_fills.append([entity])
+                    slot_fills.append([linked_entity[slot_idx]])
                 elif slot_type == 'l':
                     slot_fills.append([links[slot_idx]])
                 elif slot_type == 'v':
