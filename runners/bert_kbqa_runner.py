@@ -1,6 +1,7 @@
 from models.NER.BERT_CRF import BertCrf
 from models.NER.NER_main import NerProcessor, CRF_LABELS
 from models.SIM.SIM_main import SimProcessor, SimInputFeatures
+import transformers
 from transformers import BertTokenizer, BertConfig, BertForSequenceClassification
 from utils.question_intents import QUESTION_INTENTS, SUBGRAPHS
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
@@ -14,7 +15,7 @@ from utils.neo4j_graph import Neo4jGraph
 class BertKBQARunner():
     def __init__(self, config):
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+        transformers.logging.set_verbosity_error()
         print('连接数据库...')
         neo4j_config, ner_config, sim_config = config['neo4j'], config['ner'], config['sim']
         self.graph = Neo4jGraph(neo4j_config['neo4j_addr'], 
@@ -112,7 +113,7 @@ class BertKBQARunner():
 
         if not any(i in pre_tag for i in [b_entity_idx, i_entity_idx, b_attr_idx, i_attr_idx]):
             print("没有在句子[{}]中发现实体".format(sentence))
-            return ''
+            return '', ''
         
         entity_start_idx, attr_start_idx = -1, -1
         if b_entity_idx in pre_tag:
@@ -248,7 +249,7 @@ class BertKBQARunner():
         if len(a_mention_list) != 0:
             print("候选属性：", a_mention_list)
         if len(e_mention_list) == 0 and len(a_mention_list) == 0: # 如果问题中不存在实体
-            print("回答：未找到该问题中的实体")
+            return "未找到该问题中的实体"
 
         # 2. Entity Linking
         linked_entity, linked_attribute = [], []
@@ -274,8 +275,7 @@ class BertKBQARunner():
             
         if len(linked_attribute) == 0 and len(linked_entity) == 0:
             # 未找到
-            print(f"回答：未找到\"{e_mention_list + a_mention_list}\"相关信息")
-            return
+            return f"未找到\"{e_mention_list.union(a_mention_list)}\"相关信息"
         
         print("链接到的实体：", linked_entity)
         print("链接到的属性：", linked_attribute)
@@ -303,13 +303,14 @@ class BertKBQARunner():
         max_sgraph_len = max([len(sg) for sg in sgraph_candidates])
         match_idx = self.semantic_matching(question, sgraph_candidates, max_sgraph_len).item()
         if match_idx == -1:
-            print(f"回答：未在相关实体中找到问题相关信息")
-            return
+            return f"未找到问题相关信息"
         
+        last_intent = ""
         for type_intent, type_idx in sgraph_type_idx.items():
-            if match_idx < type_idx:
-                intention = type_intent
+            if match_idx <= type_idx:
+                intention = last_intent
                 break
+            last_intent = type_intent
         
         print(f"问题类型：{QUESTION_INTENTS[intention].get('display', intention)}")
         print(f"问题路径：{sgraph_candidates[match_idx]}")
@@ -321,6 +322,8 @@ class BertKBQARunner():
 
         temp_sgraph = sgraph_candidates[match_idx].replace('[TARGET]', '[NEDGE]')
         links = temp_sgraph.split('[NEDGE]')
+        while '' in links:
+            links.remove('')
         for slot_type, slot_idx in slots:
             if slot_type == 'e':
                 slot_fills.append(linked_entity[slot_idx])
@@ -333,6 +336,10 @@ class BertKBQARunner():
         answer_templates = QUESTION_INTENTS[intention]['answer']
         slots = QUESTION_INTENTS[intention]['answer_slots']
         answer_list = []
+        if isinstance(answer_templates, str):
+            answer_templates = [answer_templates]
+        if isinstance(slots[0], tuple):
+            slots = [slots]
         for answer_template, slot in zip(answer_templates, slots):
             slot_fills = []
             v_cnt = 0
@@ -355,4 +362,4 @@ class BertKBQARunner():
             else:
                 answer_list.append(answer_template.format(*["，".join(s) for s in slot_fills]))
         
-        return "回答：", "。".join(answer_list) + "。"
+        return "。".join(answer_list) + "。"

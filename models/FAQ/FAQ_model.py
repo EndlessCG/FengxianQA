@@ -336,7 +336,7 @@ class FAQ():
                 if len(answer) < 1 or answer == "nan":
                     return "No FAQ answer", 0
                 else:
-                    return f"回答：{answer}", float(fir_ans_prob) # 输出
+                    return f"{answer}", float(fir_ans_prob) # 输出
 
     def load_model(self, model_path="", model_dir=""):
         if "" == model_path:

@@ -39,3 +39,5 @@
 * fengxian_main.py  FengxianQA类定义
 * config.py 项目配置文件
 * requirements.txt 项目依赖描述
+
+## 原理简介

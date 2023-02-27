@@ -43,6 +43,12 @@ QUESTION_INTENTS = {
     },
 
     'TeE': {
+        'query': "match (n)-[r]->(n1) \
+                  where n1.`名称`='{}' and type(r)='{}' \
+                  return n.`名称`",
+        'query_slots': [('e', 0), ('l', 0)],
+        'answer': ["{}{}的是{}"],
+        'answer_slots': [[('l', 0), ('e', 0), ('v', 0)]],
         'get_sgraph_query': "match (n)-[r]->(n1) \
                             where n1.`名称`='{entity}' \
                             return distinct '[TARGET]'+type(r)"
@@ -77,6 +83,7 @@ QUESTION_INTENTS = {
 
     # (e)-(e1)-(a) ret e1 ex.业务准备中由运营中心负责的有哪些环节？
     'EeTaA': {
+        'query': "",
         'get_sgraph_query': "match (n)-[r]->(n1) \
               where n.`名称`='{entity}' \
               with filter(key in keys(n1) where n1[key]='{attribute}') as k \
@@ -85,18 +92,21 @@ QUESTION_INTENTS = {
 
     # (e)-(e1)-(e2) ret e1 ex.业务准备中有合规性风险的是哪个环节？
     'EeTeE': {
+        'query': "",
         'get_sgraph_query': "match (n)-[r]->(n1)<-[r1]-(n2) \
               where n.`名称`={entity} and n2.`名称`={entity1} \
               return distinct type(r)+'[TARGET]'+type(r1)'",
     },
 
     'TeNaA': {
+        'query': "",
         'get_sgraph_query': "match ()-[r]->(n1) \
               with filter(key in keys(n1) where n1[key]='{attribute}') as k \
               return distinct '[TARGET]'+type(r)+'[NEDGE]'+a",
     },
 
     'TeNeE': {
+        'query': "",
         'get_sgraph_query': "match ()-[r]->(n1)-[r1]->(n2) \
               where n2.`名称`={entity} \
               return distinct '[TARGET]'+type(r)+'[NEDGE]'+type(r1)"

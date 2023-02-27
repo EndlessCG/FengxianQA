@@ -9,6 +9,8 @@ class FengxianQA:
         self.faq_runner.disable_warnings()
 
     def do_qa(self, question):
+        if question == "":
+            return "请输入问题"
         faq_answer, faq_prob = self.faq_runner.do_qa(question)
         print("FAQ信心：", faq_prob)
         if faq_prob > faq_config.get("admit_threshold", 0.8):
@@ -27,7 +29,7 @@ class FengxianQA:
             if ( "quit" == question ):
                 print("quit")
                 return
-            print(self.do_qa(question))
+            print("回答：" + self.do_qa(question))
 
 
 if __name__ == '__main__':
