@@ -32,6 +32,9 @@ class FAQ():
                 db=args.sql_db,
             )
         self.table_name = args.table_name
+        self.word2id, self.id2word = util.load_vocab_file(args.vocab_file)
+        self.id2label = util.load_id2label_file(args.id2label_file)
+
 
     def pretrain(self, args):
         np.random.seed(args.seed)
@@ -288,16 +291,8 @@ class FAQ():
     def predict(self, args, input_sentence=""):
         if input_sentence == "" and hasattr(args, 'input_sentence'):
             input_sentence = args.input_sentence
-        word2id, id2word = util.load_vocab_file(args.vocab_file)
-        # sys.stderr.write("vocab num : " + str(len(word2id)) + "\n")
 
-        # sen = util.gen_test_data(args.input_file, word2id)
-        
-        sens = util.get_single_data(input_sentence, word2id)
-        # sys.stderr.write("sens num : " + str(len(sens)) + "\n")
-
-        id2label = util.load_id2label_file(args.id2label_file)
-        # sys.stderr.write('label num : ' + str(len(id2label)) + "\n")
+        sens = util.get_single_data(input_sentence, self.word2id)
 
         config = tf.ConfigProto()
         config.gpu_options.allow_growth = True
@@ -315,8 +310,8 @@ class FAQ():
             sorted_idx = np.argsort(-1 * re[0])  # sort by desc
             s = ""
             for i in sorted_idx[:3]:
-                s += id2label[i] + "|" + str(re[0][i]) + ","
-            out_list.append(s + "\t" + " ".join([id2word[t] for t in sen[0]]) + "\n")
+                s += self.id2label[i] + "|" + str(re[0][i]) + ","
+            out_list.append(s + "\t" + " ".join([self.id2word[t] for t in sen[0]]) + "\n")
 
         for idx, line in enumerate(out_list):
             line = line.strip()

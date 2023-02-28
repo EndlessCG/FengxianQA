@@ -1,6 +1,7 @@
 from fengxian_qa import FengxianQA
 import matplotlib.pyplot as plt
 import time
+import sys
 from matplotlib import rcParams
 rcParams['font.family'] = 'SimHei'
 
@@ -26,6 +27,11 @@ def plot_avg_time(times, topic):
     plt.ylabel("平均请求时间(s)")
     plt.savefig(topic)
 
+def faq_once():
+    faq_questions = load_faq_questions("input/data/fengxian/faq/train_data")
+    agent = FengxianQA()
+    agent.do_qa(faq_questions[0])
+
 def main():
     agent = FengxianQA()
     questions = load_sim_questions("input/data/fengxian/sim/train.txt")
@@ -37,7 +43,8 @@ def main():
             _ = agent.do_qa(q)
         t_end = time.time()
         times[ninput] = (t_end - t_start) / ninput
-    plot_avg_time(times, "./kbqa_avgtime.png")
+    print("kbqa", times)
+    # plot_avg_time(times, "./kbqa_avgtime.png")
     times = {}
     for ninput in time_profile_ninputs:
         t_start = time.time()
@@ -45,7 +52,11 @@ def main():
             _ = agent.do_qa(q)
         t_end = time.time()
         times[ninput] = (t_end - t_start) / ninput
-    plot_avg_time(times, "./faq_avgtime.png")
+    print("faq", times)
+    # plot_avg_time(times, "./faq_avgtime.png")
 
 if __name__ == '__main__':
-    main()
+    if '--faq_once' in sys.argv:
+        faq_once()
+    else:
+        main()
