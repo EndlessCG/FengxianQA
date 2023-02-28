@@ -145,3 +145,4 @@ models/FAQ/data/*
 !models/FAQ/data/vocab
 *.tmp
 *.png
+.DS_Store

@@ -18,7 +18,7 @@
 5. 运行 `python fengxian_qa.py` 测试问答模型效果
 6. 在其它应用中调用FengxianQA： 
     ```Python
-    from bert-kbqa import FengxianQA
+    from FengxianQA import FengxianQA
     QA_bot = FengxianQA()
     answer = QA_bot.do_qa("新业务开展前，需要做哪些准备？")
     ```
