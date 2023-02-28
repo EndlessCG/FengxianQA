@@ -1,12 +1,16 @@
 from runners.bert_kbqa_runner import BertKBQARunner
 from runners.faq_runner import FAQRunner
 from config import bert_kbqa_config, faq_config
+import time
 
 class FengxianQA:
     def __init__(self):
+        init_start = time.time()
         self.kbqa_runner = BertKBQARunner(bert_kbqa_config)
         self.faq_runner = FAQRunner(faq_config)
         self.faq_runner.disable_warnings()
+        init_end = time.time()
+        print("初始化用时：", init_end - init_start)
 
     def do_qa(self, question):
         if question == "":

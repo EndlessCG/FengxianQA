@@ -9,6 +9,7 @@ import torch
 import pandas as pd
 # import pymysql
 from tqdm import tqdm, trange
+from itertools import chain
 from utils.neo4j_graph import Neo4jGraph
 
 
@@ -278,7 +279,7 @@ class BertKBQARunner():
             return f"未找到\"{e_mention_list.union(a_mention_list)}\"相关信息"
         
         print("链接到的实体：", linked_entity)
-        print("链接到的属性：", linked_attribute)
+        # print("链接到的属性：", linked_attribute)
 
         # 3. Candidate Subgraph Generation
         sgraph_type_idx = {}
@@ -313,7 +314,8 @@ class BertKBQARunner():
             last_intent = type_intent
         
         print(f"问题类型：{QUESTION_INTENTS[intention].get('display', intention)}")
-        print(f"问题路径：{sgraph_candidates[match_idx]}")
+        # print(f"问题路径：{sgraph_candidates[match_idx]}")
+        print(f"问题路径：包含")
 
         # 5. Query Generation
         answer_query = QUESTION_INTENTS[intention]['query']
@@ -331,6 +333,8 @@ class BertKBQARunner():
                 slot_fills.append(links[slot_idx])
         answer_query = answer_query.format(*slot_fills)
         values = graph.execute_query(answer_query)
+        if values == [None] or any([v is None for v in chain.from_iterable(values)]):
+            return f"未找到问题相关信息"
         
         # 6. Answer Generation
         answer_templates = QUESTION_INTENTS[intention]['answer']

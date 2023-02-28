@@ -1,8 +1,8 @@
 import pandas as pd
 # 处理风险点
 counter = 1
-fengxiandian_path = "风控实体关系表/entity_fengxiandian.csv"
-output_path = "QA_data.txt"
+fengxiandian_path = "preprocess/风控实体关系表/entity_fengxiandian.csv"
+output_path = "input/data/fengxian/qa/QA_data.txt"
 fengxiandian = pd.read_csv(fengxiandian_path)
 with open(output_path, "w") as wirter:
     for i in range(fengxiandian.shape[0]):
@@ -72,8 +72,8 @@ with open(output_path, "w") as wirter:
 
 
 # 处理专有名词
-mingci_path = "风控实体关系表/entity_mingci.csv"
-output_path = "QA_data.txt"
+mingci_path = "preprocess/风控实体关系表/entity_mingci.csv"
+output_path = "input/data/fengxian/qa/QA_data.txt"
 mingci = pd.read_csv(mingci_path)
 with open(output_path, "a+") as wirter:
     for i in range(mingci.shape[0]):
@@ -156,8 +156,8 @@ with open(output_path, "a+") as wirter:
         counter += 1
 
 # 处理业务环节
-yewuhuanjie_path = "风控实体关系表/entity_yewuhuanjie.csv"
-output_path = "QA_data.txt"
+yewuhuanjie_path = "preprocess/风控实体关系表/entity_yewuhuanjie.csv"
+output_path = "input/data/fengxian/qa/QA_data.txt"
 yewuhuanjie = pd.read_csv(yewuhuanjie_path, keep_default_na=False)
 with open(output_path, "a+") as wirter:
     for i in range(yewuhuanjie.shape[0]):
@@ -179,8 +179,8 @@ with open(output_path, "a+") as wirter:
         counter += 1
 
 # 处理包含
-baohan_path = "风控实体关系表/relationship_baohan.csv"
-output_path = "QA_data.txt"
+baohan_path = "preprocess/风控实体关系表/relationship_baohan.csv"
+output_path = "input/data/fengxian/qa/QA_data.txt"
 baohan = pd.read_csv(baohan_path, keep_default_na=False)
 with open(output_path, "a+") as wirter:
     for i in range(baohan.shape[0]):
@@ -209,8 +209,8 @@ with open(output_path, "a+") as wirter:
         counter += 1
 
 # 处理预警
-yujing_path = "风控实体关系表/entity_yujing.csv"
-output_path = "QA_data.txt"
+yujing_path = "preprocess/风控实体关系表/entity_yujing.csv"
+output_path = "input/data/fengxian/qa/QA_data.txt"
 yujing = pd.read_csv(yujing_path, keep_default_na=False)
 with open(output_path, "a+") as wirter:
     for i in range(yujing.shape[0]):

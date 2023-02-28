@@ -2,13 +2,23 @@
 风险知识问答系统
 ## 使用方法
 1. 安装Python和cudnn，cudatoolkit（推荐Python=3.7 cudnn=7.3.1-cuda10.0_0 cudatoolkit=10.0.130）
+    * 如使用Anaconda，可执行如下命令安装cudnn和cudatoolkit：
+    ```bash
+    $ wget https://mirrors.bfsu.edu.cn/anaconda/pkgs/main/linux-64/cudatoolkit-10.0.130-0.conda
+    wget 
+    $ conda install cudatoolkit-10.0.130-0.conda
+    $ wget https://mirrors.bfsu.edu.cn/anaconda/pkgs/main/linux-64/cudnn-7.3.1-cuda10.0_0.conda
+    $ conda install cudatoolkit-7.3.1-cuda10.0_0.conda
+    $ rm cudatoolkit-10.0.130-0.conda
+    $ rm cudatoolkit-7.3.1-cuda10.0_0.conda
+    ```
 2. 运行 `pip install -r requirements.txt` 安装Python依赖
 3. 运行 `bash scripts/trian_all.sh` 训练所有模型
 4. 在 `config.py` 中进行配置
 5. 运行 `python fengxian_qa.py` 测试问答模型效果
 6. 在其它应用中调用FengxianQA： 
     ```Python
-    from FengxianQA import FengxianQA
+    from bert-kbqa import FengxianQA
     QA_bot = FengxianQA()
     answer = QA_bot.do_qa("新业务开展前，需要做哪些准备？")
     ```
@@ -41,3 +51,4 @@
 * requirements.txt 项目依赖描述
 
 ## 原理简介
+* TODO 待完善

@@ -7,7 +7,7 @@ def getRandomIndex(n, x):
     return index
 
 data_base = 'input/data/fengxian/'
-data_sets = [data_base + p for p in ["qa/QA_unchained_mhop_data.txt", "qa/QA_mhop_data.txt", "qa/QA_data.txt"]]
+data_sets = [data_base + p for p in ["qa/QA_mhop_data.txt", "qa/QA_data.txt"]]
 train_set = data_base + "qa/train.txt"
 validate_set = data_base + "qa/validate.txt"
 test_set = data_base + "qa/test.txt"

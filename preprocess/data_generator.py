@@ -1,5 +1,5 @@
 import copy
-from utils import get_question_descriptions
+from preprocess.utils import get_question_descriptions
 import random
 import os.path as osp
 

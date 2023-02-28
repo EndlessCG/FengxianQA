@@ -9,7 +9,8 @@ import re
 通过 ner_data 中的数据 构建出 用来匹配句子相似度的 样本集合
 构造属性关联训练集，分类问题，训练BERT分类模型
 '''
-
+NEG_TO_POS = 3
+start_id_list = [1256, 420, 420]
 data_base = 'input/data/fengxian/'
 data_dir = data_base + 'ner'
 file_name_list = ['train.csv','validate.csv','test.csv']
@@ -46,7 +47,7 @@ for r_r in r_rs:
 attribute_list =list(set(attribute_list))
 
 
-for file_name in file_name_list:
+for start_id, file_name in zip(start_id_list, file_name_list):
     file_path_name = os.path.join(data_dir,file_name)
     assert os.path.exists(file_path_name)
 
@@ -80,14 +81,14 @@ for file_name in file_name_list:
 
         neg_att_list = []
         while True:
-            neg_att_list = random.sample(attribute_list, 5)
+            neg_att_list = random.sample(attribute_list, NEG_TO_POS)
             if pos_att not in neg_att_list:
                 break
         attribute_classify_sample.append([question, pos_att, '1'])
 
         neg_att_sample = [[question, neg_att, '0'] for neg_att in neg_att_list]
         attribute_classify_sample.extend(neg_att_sample)
-    seq_result = [str(lineno) + '\t' + '\t'.join(line) for (lineno, line) in enumerate(attribute_classify_sample)]
+    seq_result = [str(lineno + start_id) + '\t' + '\t'.join(line) for (lineno, line) in enumerate(attribute_classify_sample)]
 
     if not os.path.exists(new_dir):
         os.makedirs(new_dir)
