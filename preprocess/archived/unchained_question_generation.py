@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 # 处理风险点
 fengxiandian_path = "preprocess/风控实体关系表/entity_fengxiandian.csv"
-output_path = "models/input/data/fengxian/qa/QA_unchained_mhop_data.txt"
+output_path = "input/data/fengxian/qa/QA_unchained_mhop_data.txt"
 fengxiandian = pd.read_csv(fengxiandian_path)
 # 处理专有名词
 mingci_path = "preprocess/风控实体关系表/entity_mingci.csv"

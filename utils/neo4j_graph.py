@@ -4,7 +4,7 @@ class Neo4jGraph():
     
     def __init__(self, remote_addr, username, password):
         self.graph = Graph(remote_addr, auth=(username, password))
-        self._build_entity_list()
+        self._build_entity_lists()
 
     def execute_query(self, query, drop_keys=True):
         dict_list = self.graph.run(query).data()
@@ -16,6 +16,10 @@ class Neo4jGraph():
         else:
             return dict_list
 
-    def _build_entity_list(self):
+    def _build_entity_lists(self):
         get_all_e_query = 'MATCH (n) WHERE EXISTS(n.`名称`) RETURN DISTINCT n.`名称`'
+        get_all_a_query = 'match (n) return [k IN KEYS(n) | n[k]]'
         self.entity_list = sorted(self.execute_query(get_all_e_query), key=lambda x: len(x), reverse=True)
+        self.attribute_list = self.execute_query(get_all_a_query)
+        self.attribute_list = list(set(sum(self.attribute_list, [])))
+        self.attribute_list = sorted(self.attribute_list, key=lambda x: len(x), reverse=True)

@@ -2,8 +2,8 @@ import os
 
 # 计算模型最大的长度多少合适
 
-data_base = 'models/input/data/fengxian/'
-dir_name = data_base + 'sim_data'
+data_base = 'input/data/fengxian/'
+dir_name = data_base + 'sim'
 file_list = ['train.txt','validate.txt','test.txt']
 
 for file in file_list:

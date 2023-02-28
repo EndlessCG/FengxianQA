@@ -1,10 +1,10 @@
 import copy
-from utils import get_question_descriptions
+from preprocess.utils import get_question_descriptions
 import random
 import os.path as osp
 
-NER_BASE = "models/input/data/fengxian/ner"
-SIM_BASE = "models/input/data/fengxian/sim_data"
+NER_BASE = "input/data/fengxian/ner"
+SIM_BASE = "input/data/fengxian/sim"
 
 def generate_data():
     question_descriptions = get_question_descriptions()
@@ -24,13 +24,15 @@ def generate_data():
                         temp_ner.append((key[1:], label))
                 temp_data['ner'] = temp_ner
                 temp_data['sim'] = sgraph
-                data.append(temp_data)
+                if temp_data not in data:
+                    data.append(temp_data)
     return data
 
-def split_data(data, rseed=2023, ratio=[0.6, 0.2, 0.2]):
+def split_data(data, rseed=2023, ratio=[0.6, 0.2, 0.2], shuffle=True):
     assert sum(ratio) == 1
-    random.seed(rseed) # fix seed to make results reproducible
-    random.shuffle(data)
+    if shuffle:
+        random.seed(rseed) # fix seed to make results reproducible
+        random.shuffle(data)
     acc = 0
     datasets = []
     for r in ratio:
@@ -40,14 +42,18 @@ def split_data(data, rseed=2023, ratio=[0.6, 0.2, 0.2]):
         acc = end_idx
     return datasets
 
-def make_sim_dataset(data, neg_to_pos=5):
+def make_sim_dataset(data, neg_to_pos=3):
     filled_data = []
     all_sims = set([d["sim"] for d in data])
-    for pos_data in data:
+    for pos_data in copy.deepcopy(data):
         pos_data["label"] = 1
         filled_data.append(pos_data)
+        neg_sample = random.sample(all_sims, neg_to_pos)
+        while pos_data["sim"] in neg_sample:
+            neg_sample = random.sample(all_sims, neg_to_pos)
         for neg_sim in random.sample(all_sims, neg_to_pos):
-            neg_data = copy.deepcopy(pos_data)
+            neg_data = dict()
+            neg_data["question"] = pos_data["question"]
             neg_data["label"] = 0
             neg_data["sim"] = neg_sim
             filled_data.append(neg_data)
@@ -74,18 +80,18 @@ def make_ner_dataset(data):
     return labeled_data
 
 def write_ner_dataset(train, dev, test, base_dir):
-    ftrain, fdev, ftest = [open(osp.join(base_dir, path), 'w+') for path in ['train.txt', 'dev.txt', 'test.txt']]
+    ftrain, fdev, ftest = [open(osp.join(base_dir, path), 'w+') for path in ['train.txt', 'validate.txt', 'test.txt']]
     for question, label in train:
         for char_q, char_l in zip(question, label):
-            ftrain.write(f"{char_q}\t{char_l}\n")
+            ftrain.write(f"{char_q} {char_l}\n")
         ftrain.write("\n")
     for question, label in dev:
         for char_q, char_l in zip(question, label):
-            fdev.write(f"{char_q}\t{char_l}\n")
+            fdev.write(f"{char_q} {char_l}\n")
         fdev.write("\n")
     for question, label in test:
         for char_q, char_l in zip(question, label):
-            ftest.write(f"{char_q}\t{char_l}\n")
+            ftest.write(f"{char_q} {char_l}\n")
         ftest.write("\n")
     ftrain.close()
     fdev.close()
@@ -93,7 +99,7 @@ def write_ner_dataset(train, dev, test, base_dir):
 
 
 def write_sim_dataset(train, dev, test, base_dir):
-    ftrain, fdev, ftest = [open(osp.join(base_dir, path), 'w+') for path in ['train.txt', 'dev.txt', 'test.txt']]
+    ftrain, fdev, ftest = [open(osp.join(base_dir, path), 'w+') for path in ['train.txt', 'validate.txt', 'test.txt']]
     for i, item in enumerate(train):
         ftrain.write("{}\t{}\t{}\t{}\n".format(i, item["question"], item["sim"], item["label"]))
     for i, item in enumerate(dev):
@@ -106,10 +112,9 @@ def write_sim_dataset(train, dev, test, base_dir):
 
 def main():
     data = generate_data()
-    ner_dataset = make_ner_dataset(data)
-    sim_dataset = make_sim_dataset(data)
-    ner_train_set, ner_dev_set, ner_test_set = split_data(ner_dataset, rseed=20231, ratio=[0.6, 0.2, 0.2])
-    sim_train_set, sim_dev_set, sim_test_set = split_data(sim_dataset, rseed=20232, ratio=[0.6, 0.2, 0.2])
+    train_data, dev_data, test_data = split_data(data, rseed=202302, ratio=[0.6, 0.2, 0.2], shuffle=True)
+    ner_train_set, ner_dev_set, ner_test_set = make_ner_dataset(train_data), make_ner_dataset(dev_data), make_ner_dataset(test_data)
+    sim_train_set, sim_dev_set, sim_test_set = make_sim_dataset(train_data), make_sim_dataset(dev_data), make_sim_dataset(test_data)
     write_ner_dataset(ner_train_set, ner_dev_set, ner_test_set, NER_BASE)
     write_sim_dataset(sim_train_set, sim_dev_set, sim_test_set, SIM_BASE)
 

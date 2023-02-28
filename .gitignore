@@ -1,3 +1,4 @@
+.vscode
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -128,6 +129,20 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-input/
-*_output/
-preprocess/风控实体关系表
+.vscode-upload.json
+
+input/pretrained_BERT
+input/data/fengxian/ner/cached*
+input/data/fengxian/sim/cached*
+models/SIM/*_output/
+models/NER/*_output/
+models/FAQ/finetune_model
+models/FAQ/pretrain_model
+models/FAQ/result
+models/FAQ/data/*
+!models/FAQ/data/process
+!models/FAQ/data/file
+!models/FAQ/data/vocab
+*.tmp
+*.png
+.DS_Store

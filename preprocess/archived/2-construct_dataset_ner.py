@@ -8,7 +8,7 @@ import pandas as pd
 通过 NLPCC2016KBQA 中的原始数据，构建用来训练NER的样本集合
 构造NER训练集，实体序列标注，训练BERT+CRF
 '''
-data_base = 'models/input/data/fengxian/'
+data_base = 'input/data/fengxian/'
 data_dir = data_base + 'qa'
 file_name_list = ['train.txt','validate.txt','test.txt']
 
