@@ -40,7 +40,7 @@ from transformers.data.processors.utils import DataProcessor, InputExample
 
 import numpy as np
 import pandas as pd
-
+from utils import KBQA_TOKEN_LIST
 logger = logging.getLogger(__name__)
 
 
@@ -404,6 +404,7 @@ def main():
                         'max_len': args.max_seq_length,
                         'vocab_file': args.vob_file}
     tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
+    tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
 
     train_dataset = load_and_cache_example(args, tokenizer, processor, 'train')
     eval_dataset = load_and_cache_example(args, tokenizer, processor, 'validate')
@@ -417,6 +418,7 @@ def main():
 
     model = BertForSequenceClassification.from_pretrained(args.pre_train_model, **model_kwargs)
     model = model.to(args.device)
+    model.resize_token_embeddings(len(tokenizer))
 
     if args.do_train:
         trains(args,train_dataset,eval_dataset,model)

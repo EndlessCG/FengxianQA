@@ -8,8 +8,8 @@ if [ ! -f "input/data/fengxian/faq/train_data" ]; then
     python preprocess/FAQ/data_generate.py
     python preprocess/FAQ/file_to_mysql.py
 fi
-python -m models.FAQ.FAQ_main pretrain --batch_size 16
-python -m models.FAQ.FAQ_main finetune --batch_size 16
+python -m models.FAQ.FAQ_main pretrain
+python -m models.FAQ.FAQ_main finetune
 echo "Testing FAQ..."
 python -m models.FAQ.FAQ_main eval
 
@@ -22,7 +22,11 @@ if [ ! -d "input/data/fengxian/ner" ]; then
     python preprocess/data_generator.py
 fi
 cd $bert_kbqa_home
-if [ ! -t "input/pretrained_BERT/bert-base-chinese-model.bin" || ! -t "input/pretrained_BERT/bert-base-chinese-config.json" || ! -t "input/pretrained_BERT/bert-base-chinese-vocab.txt"]; then
+config_size=$(wc -c <"input/pretrained_BERT/bert-base-chinese-config.json")
+if [ ! -f "input/pretrained_BERT/bert-base-chinese-model.bin" ] || 
+   [ ! -f "input/pretrained_BERT/bert-base-chinese-config.json" ] || 
+   [ ! -f "input/pretrained_BERT/bert-base-chinese-vocab.txt" ] ||
+   [ $config_size -lt 10 ]; then
     echo "Downloading bert-base-chinese..."
     mkdir -p input/pretrained_BERT/
     cd input/pretrained_BERT
@@ -32,12 +36,12 @@ if [ ! -t "input/pretrained_BERT/bert-base-chinese-model.bin" || ! -t "input/pre
     cd $bert_kbqa_home
 fi
 echo "Training NER..."
-python -m models.NER.NER_main --train_batch_size 8 --eval_batch_size 8
+python -m models.NER.NER_main
 echo "Testing NER..."
 python -m models.NER.test_NER
 
 # train SIM
 echo "Training SIM..."
-python -m models.SIM.SIM_main --train_batch_size 8 --eval_batch_size 8
+python -m models.SIM.SIM_main
 echo "Testing SIM..."
 python -m models.SIM.test_SIM

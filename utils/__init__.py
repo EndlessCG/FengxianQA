@@ -1,0 +1,1 @@
+KBQA_TOKEN_LIST = {"additional_special_tokens": ["[NEDGE]", "[TARGET]"]}

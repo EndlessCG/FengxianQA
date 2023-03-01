@@ -122,8 +122,7 @@ SUBGRAPHS = {
             where n.`名称`='{entity}' \
             return distinct type(r)+'[TARGET]'",
     'TaA': "match (n) \
-            with filter(key in keys(n) where n[key]='{attribute}') as k \
-            where not size(k)=0 \
+            unwind [k in keys(n) where n[k]='{attribute}'] as k \
             return distinct '[TARGET]'+k",
     'TeE': "match (n)-[r]->(n1) \
             where n1.`名称`='{entity}' \
@@ -137,14 +136,14 @@ SUBGRAPHS = {
               return distinct type(r)+'[NEDGE]'+type(r1)+'[TARGET]'",
     'EeTaA': "match (n)-[r]->(n1) \
               where n.`名称`='{entity}' \
-              with filter(key in keys(n1) where n1[key]='{attribute}') as k \
+              unwind [k in keys(n) where n[k]='{attribute}'] as k \
               return distinct type(r)+'[TARGET]'+k",
     'EeTeE': "match (n)-[r]->(n1)<-[r1]-(n2) \
               where n.`名称`='{entity}' and n2.`名称`='{entity1}' \
               return distinct type(r)+'[TARGET]'+type(r1)",
-    'TeNaA': "match ()-[r]->(n1) \
-              with filter(key in keys(n1) where n1[key]='{attribute}') as k \
-              return distinct '[TARGET]'+type(r)+'[NEDGE]'+a",
+    'TeNaA': "match ()-[r]->(n) \
+              unwind [k in keys(n) where n[k]='{attribute}'] as k \
+              return distinct '[TARGET]'+type(r)+'[NEDGE]'+k",
     'TeNeE': "match ()-[r]->(n1)-[r1]->(n2) \
               where n2.`名称`='{entity}' \
               return distinct '[TARGET]'+type(r)+'[NEDGE]'+type(r1)"

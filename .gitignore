@@ -1,4 +1,5 @@
 .vscode
+.idea
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -138,6 +139,7 @@ models/SIM/*_output/
 models/NER/*_output/
 models/FAQ/finetune_model
 models/FAQ/pretrain_model
+models/FAQ/results/
 models/FAQ/result
 models/FAQ/data/*
 !models/FAQ/data/process
