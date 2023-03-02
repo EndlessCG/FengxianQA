@@ -1,4 +1,6 @@
 from .FAQ_model import FAQ
+from utils import merge_arg_and_config
+from config import faq_model_config
 import tensorflow as tf
 import sys
 import argparse
@@ -6,6 +8,7 @@ import argparse
 def main():
     model = FAQ()
     parser = argparse.ArgumentParser(usage="python FAQ_main.py <command> [<args>]")
+    parser.set_defaults(func=model.pretrain)
     subparsers = parser.add_subparsers(help="pretrain/finetune/eval/predict")
     pretrain_parser = subparsers.add_parser("pretrain", help="pretrain model")
     pretrain_parser.set_defaults(func=model.pretrain)
@@ -18,10 +21,10 @@ def main():
 
     parser.add_argument("--table_name", type=str, default="t_nlp_qa_faq")
     parser.add_argument("--sql_host", type=str, default="localhost")
-    parser.add_argument("--sql_user", type=str, default="localhost")
-    parser.add_argument("--sql_passwd", type=str, default="localhost")
+    parser.add_argument("--sql_user", type=str, default="faq")
+    parser.add_argument("--sql_passwd", type=str, default="123456")
     parser.add_argument("--sql_charset", type=str, default="utf8mb4")
-    parser.add_argument("--sql_db", type=str, default="utf8mb4")
+    parser.add_argument("--sql_db", type=str, default="qa100")
 
     pretrain_parser.add_argument("--train_file", type=str, default="input/data/fengxian/faq/pre_train_data", help="Input train file.")
     pretrain_parser.add_argument("--vocab_file",   default="input/data/fengxian/faq/vocab", help="Input vocab file.")
@@ -95,10 +98,21 @@ def main():
     predict_parser.add_argument("--vocab_file", type=str, default="input/data/fengxian/faq/vocab", help="Input train file.")
     predict_parser.add_argument("--model_path", type=str, default="", help="Path to model file.")
     predict_parser.add_argument("--model_dir", type=str, default="models/FAQ/finetune_model", help="Directory which contains model.")
-    predict_parser.add_argument("--output_file", type=str, default="models/FAQ/result")
     predict_parser.add_argument("--id2label_file", type=str, default="models/FAQ/finetune_model/id2label.has_init", help="File containing (id, class label) map.")
 
     args = parser.parse_args()
+    command = sys.argv[1]
+    if command == "pretrain":
+        merge_arg_and_config(args, faq_model_config.get("pretrain", []))
+    elif command == "finetune":
+        merge_arg_and_config(args, faq_model_config.get("finetune", []))
+    elif command == "eval":
+        merge_arg_and_config(args, faq_model_config.get("eval", []))
+    elif command == "predict":
+        merge_arg_and_config(args, faq_model_config.get("predict", []))
+    else:
+        # default: pretrain
+        merge_arg_and_config(args, faq_model_config.get("pretrain", []))
     args.func(args)
 
 if __name__ == '__main__':

@@ -36,7 +36,8 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, Tenso
 from transformers import BertForSequenceClassification,BertTokenizer,BertConfig
 from transformers.data.processors.utils import DataProcessor, InputExample
 from .BERT_CRF import BertCrf
-from utils import KBQA_TOKEN_LIST
+from utils import KBQA_TOKEN_LIST, merge_arg_and_config
+from config import ner_model_config
 from transformers import AdamW, get_linear_schedule_with_warmup
 from sklearn.metrics import classification_report
 
@@ -431,6 +432,7 @@ def main():
                         help="让学习增加到1的步数，在warmup_steps后，再衰减到0")
 
     args = parser.parse_args()
+    merge_arg_and_config(args, ner_model_config)
 
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

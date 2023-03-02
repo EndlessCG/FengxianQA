@@ -3,9 +3,9 @@ feature/2_18/new_data_gen 融合FAQ_KBQA 2
 * :Label视作属性
 
 refactor/2_28/v1.0 1
-* 统一模型训练参数到config.py中
-* 取消question_intents.py冗余项
-* 提供verbose选项
+* 统一模型训练参数到config.py中 DONE
+* 取消question_intents.py冗余项 DONE
+* 提供verbose选项 DONE
 * 当前版本缺陷：多跳和非链式效果不佳 为何测试集准确率高？
 
 feature/2_28/profile_faq 1

@@ -253,7 +253,7 @@ def get_question_descriptions():
                 pd.merge(yewuhuanjie, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
                 fengxiandian, left_on=':END_ID', right_on=':ID', how='inner'
             ),
-            ["{}业务包含的{}等级风险有哪些？", "{}包含什么等级的风险？", "{}有什么等级的风险？"],
+            ["{}业务包含的{}等级风险有哪些？", "{}包含{}等级的风险有哪些？", "{}有哪些{}级风险？"],
             [':START_ID', '风险等级'],
             [(':START_ID', 'entity'), ('风险等级', 'attribute')], # ner
             '包含[TARGET]风险等级', # path

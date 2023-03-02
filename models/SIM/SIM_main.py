@@ -40,7 +40,8 @@ from transformers.data.processors.utils import DataProcessor, InputExample
 
 import numpy as np
 import pandas as pd
-from utils import KBQA_TOKEN_LIST
+from utils import KBQA_TOKEN_LIST, merge_arg_and_config
+from config import sim_model_config
 logger = logging.getLogger(__name__)
 
 
@@ -384,6 +385,7 @@ def main():
                         help="数据集中负例-正例比")
 
     args = parser.parse_args()
+    merge_arg_and_config(args, sim_model_config)
     assert os.path.exists(args.data_dir)
     assert os.path.exists(args.vob_file)
     assert os.path.exists(args.model_config)
