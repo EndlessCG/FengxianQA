@@ -301,7 +301,8 @@ class BertKBQARunner():
             except KeyError:
                 continue
             sgraph_candidates += query_result
-            sgraph_type_idx[sgraph_type] = acc_idx
+            for g in query_result:
+                sgraph_type_idx[g] = sgraph_type
             acc_idx += len(query_result)
     
         # 4. Cadidate Subgraph Selection
@@ -310,17 +311,9 @@ class BertKBQARunner():
         if match_idx == -1:
             return f"未在\"{','.join(linked_entity + linked_attribute)}\"中找到问题相关信息"
         
-        last_intent = ""
-        for type_intent, type_idx in sgraph_type_idx.items():
-            if match_idx < type_idx:
-                intention = last_intent
-                break
-            last_intent = type_intent
-        if match_idx == len(sgraph_type_idx):
-            intention = last_intent
-        
-        print(f"问题类型：{QUESTION_INTENTS[intention].get('display', intention)}")
-        print(f"问题路径：{sgraph_candidates[match_idx]}")
+        intention = sgraph_type_idx[sgraph_candidates[match_idx]]
+        self._print(f"问题类型：{QUESTION_INTENTS[intention].get('display', intention)}")
+        self._print(f"问题路径：{sgraph_candidates[match_idx]}")
 
         # 5. Query Generation
         answer_query = QUESTION_INTENTS[intention]['query']
