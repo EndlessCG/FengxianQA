@@ -36,6 +36,8 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, Tenso
 from transformers import BertForSequenceClassification,BertTokenizer,BertConfig
 from transformers.data.processors.utils import DataProcessor, InputExample
 from .BERT_CRF import BertCrf
+from utils import KBQA_TOKEN_LIST, merge_arg_and_config
+from config import ner_model_config
 from transformers import AdamW, get_linear_schedule_with_warmup
 from sklearn.metrics import classification_report
 
@@ -47,7 +49,6 @@ logger = logging.getLogger(__name__)
 # 第二 LABELS = ["O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "X", "[CLS]", "[SEP]"]
 
 CRF_LABELS = ["O", "B-entity", "I-entity", "B-attribute", "I-attribute"]
-KBQA_TOKEN_LIST = ["[NEDGE]", "[TARGET]"]
 
 
 def statistical_real_sentences(input_ids:torch.Tensor,mask:torch.Tensor,predict:list)-> list:
@@ -431,6 +432,7 @@ def main():
                         help="让学习增加到1的步数，在warmup_steps后，再衰减到0")
 
     args = parser.parse_args()
+    merge_arg_and_config(args, ner_model_config)
 
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -446,7 +448,7 @@ def main():
                         'max_len': args.max_seq_length,
                         'vocab_file': args.vob_file}
     tokenizer = BertTokenizer(*tokenizer_inputs,**tokenizer_kwards)
-    tokenizer.add_tokens(KBQA_TOKEN_LIST)
+    tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
 
     model = BertCrf(config_name= args.model_config,model_name=args.pre_train_model,num_tags = len(processor.get_labels()),batch_first=True)
     model = model.to(args.device)
