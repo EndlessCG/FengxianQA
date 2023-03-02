@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import os
 import tensorflow as tf
+from tensorflow.python.client import timeline
 import numpy as np
 import pymysql
 from . import models_util
@@ -306,12 +307,27 @@ class FAQ():
         if not self._model_loaded:
             self.load_model(model_path=args.model_path)
 
+        if hasattr(args, "profile_faq"):
+            output_file = args.profile_faq
+            run_options = tf.compat.v1.RunOptions(trace_level=tf.compat.v1.RunOptions.FULL_TRACE)
+            run_metadata = tf.compat.v1.RunMetadata()
+        else:
+            run_options = None
+            run_metadata = None
+
         for sen in sens:
-            start = time.time()
             re = self.session.run(self.output_dict['softmax'], feed_dict={self.input_dict['tokens']: [sen[0]],
                                                                   self.input_dict['input_mask']: [sen[1]],
                                                                   self.input_dict['length']: [len(sen[0])],
-                                                                  self.input_dict["dropout_rate"]: 0.0})
+                                                                  self.input_dict["dropout_rate"]: 0.0},
+                                                                  options=run_options,
+                                                                  run_metadata=run_metadata)
+            if hasattr(args, "profile_faq"):
+                tl = timeline.Timeline(run_metadata.step_stats)
+                ctf = tl.generate_chrome_trace_format()
+                with open(output_file, 'w') as f:
+                    f.write(ctf)
+            
             sorted_idx = np.argsort(-1 * re[0])  # sort by desc
             s = ""
             for i in sorted_idx[:3]:

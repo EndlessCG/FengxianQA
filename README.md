@@ -14,7 +14,7 @@
     ```
 2. 运行 `pip install -r requirements.txt` 安装Python依赖
 3. 运行 `bash scripts/trian_all.sh` 训练所有模型
-4. 在 `config.py` 中进行配置
+4. 在 `config.py` 中进行配置，设置FAQ使用的mysql数据库以及KBQA使用的neo4j数据库
 5. 运行 `python fengxian_qa.py` 测试问答模型效果
 6. 在其它应用中调用FengxianQA： 
     ```Python
