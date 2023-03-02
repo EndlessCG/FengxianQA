@@ -33,8 +33,12 @@ QUESTION_INTENTS = {
     },
 
     'TaA': {
-        'answer': ["{key}为{attribute}的是{result}"],
-        'query': "",
+        'answer': ["{}为{}的是{}"],
+        'answer_slots': [[('l', 0), ('a', 0), ('v', 0)]],
+        'query': "match (n) \
+                  where n.`{}`='{}' \
+                  return distinct n.`名称`",
+        'query_slots': [('l', 0), ('a', 0)],
         'n_hops_': 1,
         'get_sgraph_query': "match (n) \
                             with filter(key in keys(n) where n[key]='{attribute}') as k \
@@ -43,12 +47,12 @@ QUESTION_INTENTS = {
     },
 
     'TeE': {
+        'answer': ["{}{}的是{}"],
+        'answer_slots': [[('l', 0), ('e', 0), ('v', 0)]],
         'query': "match (n)-[r]->(n1) \
                   where n1.`名称`='{}' and type(r)='{}' \
                   return n.`名称`",
         'query_slots': [('e', 0), ('l', 0)],
-        'answer': ["{}{}的是{}"],
-        'answer_slots': [[('l', 0), ('e', 0), ('v', 0)]],
         'get_sgraph_query': "match (n)-[r]->(n1) \
                             where n1.`名称`='{entity}' \
                             return distinct '[TARGET]'+type(r)"
@@ -70,7 +74,7 @@ QUESTION_INTENTS = {
 
     # (e)-(e1)-(e2) ret e2 ex.业务准备的各环节有哪些风险点？
     'EeNeT': {
-        'answer': ["{}的{}是{}", "{}的{}是{}"],
+        'answer': ["{}{}{}", "{}{}{}"],
         'answer_slots': [[('e', 0), ('l', 0), ('v', 0)], [('v', 0), ('l', 1), ('v', 1)]],
         'display': '两跳求实体',
         'query': "match (n)-[r]->(n1)-[r1]->(n2) where n.`名称` = '{}' and type(r)='{}' and type(r1)='{}' return n1.`名称`, n2.`名称`",
@@ -83,7 +87,12 @@ QUESTION_INTENTS = {
 
     # (e)-(e1)-(a) ret e1 ex.业务准备中由运营中心负责的有哪些环节？
     'EeTaA': {
-        'query': "",
+        'answer': ["{}{}{}", "{}为{}的是{}"],
+        'answer_slots': [[('e', 0), ('l', 0), ('v', 0)], [('l', 1), ('a', 0), ('v', 1)]],
+        'query': "match (n)-[r]->(n1) \
+                  where n.`名称`='{}' and n1.`{}`='{}'\
+                  return distinct n1.`名称`",
+        'query_slots': [('e', 0), ('l', 0), ('a', 0)],
         'get_sgraph_query': "match (n)-[r]->(n1) \
               where n.`名称`='{entity}' \
               with filter(key in keys(n1) where n1[key]='{attribute}') as k \
@@ -92,21 +101,36 @@ QUESTION_INTENTS = {
 
     # (e)-(e1)-(e2) ret e1 ex.业务准备中有合规性风险的是哪个环节？
     'EeTeE': {
-        'query': "",
+        'answer': ["{}{}{}", "{}{}的是{}"],
+        'answer_slots': [[('e', 0), ('l', 0), ('v', 0)], [('l', 1), ('e', 1), ('v', 1)]],
+        'query': "match (n)-[r]->(n1)-[r1]->(n2) \
+              where n.`名称`='{}' and n2.`名称`='{}' \
+              return distinct n1.`名称`",
+        'query_slots': [('e', 0), ('e', 1)],
         'get_sgraph_query': "match (n)-[r]->(n1)<-[r1]-(n2) \
-              where n.`名称`={entity} and n2.`名称`={entity1} \
+              where n.`名称`='{entity}' and n2.`名称`='{entity1}' \
               return distinct type(r)+'[TARGET]'+type(r1)'",
     },
 
     'TeNaA': {
-        'query': "",
+        'answer': ["{}{}为{}的是{}"],
+        'answer_slots': [[('l', 0), ('l', 1), ('a', 0), ('v', 0)]],
+        'query': "match (n)-[r]->(n1) \
+              where type(r)='{}' and n1.`{}`='{}' \
+              return distinct n.`名称`",
+        'query_slots': [('l', 0), ('l', 1), ('a', 0)],
         'get_sgraph_query': "match ()-[r]->(n1) \
               with filter(key in keys(n1) where n1[key]='{attribute}') as k \
               return distinct '[TARGET]'+type(r)+'[NEDGE]'+a",
     },
 
     'TeNeE': {
-        'query': "",
+        'answer': ["{}{}{}的是{}"],
+        'answer_slots': [[('l', 0), ('l', 1), ('e', 0), ('v', 0)]],
+        'query': "match (n)-[r]->(n1)-[r1]->(n2) \
+              where type(r)='{}' and type(r1)='{}' and n2.`名称`='{}' \
+              return distinct n1.`名称`",
+        'query_slots': [('l', 0), ('l', 1), ('e', 0)],
         'get_sgraph_query': "match ()-[r]->(n1)-[r1]->(n2) \
               where n2.`名称`={entity} \
               return distinct '[TARGET]'+type(r)+'[NEDGE]'+type(r1)"
@@ -138,7 +162,7 @@ SUBGRAPHS = {
               where n.`名称`='{entity}' \
               unwind [k in keys(n) where n[k]='{attribute}'] as k \
               return distinct type(r)+'[TARGET]'+k",
-    'EeTeE': "match (n)-[r]->(n1)<-[r1]-(n2) \
+    'EeTeE': "match (n)-[r]->(n1)-[r1]->(n2) \
               where n.`名称`='{entity}' and n2.`名称`='{entity1}' \
               return distinct type(r)+'[TARGET]'+type(r1)",
     'TeNaA': "match ()-[r]->(n) \

@@ -334,6 +334,8 @@ class BertKBQARunner():
         for slot_type, slot_idx in slots:
             if slot_type == 'e':
                 slot_fills.append(linked_entity[slot_idx])
+            elif slot_type == 'a':
+                slot_fills.append(linked_attribute[slot_idx])
             elif slot_type == 'l':
                 slot_fills.append(links[slot_idx])
         answer_query = answer_query.format(*slot_fills)
@@ -355,6 +357,8 @@ class BertKBQARunner():
             for i, (slot_type, slot_idx) in enumerate(slot):
                 if slot_type == 'e':
                     slot_fills.append([linked_entity[slot_idx]])
+                elif slot_type == 'a':
+                    slot_fills.append([linked_attribute[slot_idx]])
                 elif slot_type == 'l':
                     slot_fills.append([links[slot_idx]])
                 elif slot_type == 'v':
