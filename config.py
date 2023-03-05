@@ -7,6 +7,7 @@ fengxian_qa_config = dict(
 kbqa_runner_config = dict(
     # KBQA配置
     verbose=True, # 是否输出KBQA过程详细信息
+    sim_accept_threshold=0.1, # SIM模型认定有答案的最低信心值
     neo4j=dict(
         neo4j_addr="bolt://localhost:7687", # neo4j地址
         username="neo4j", # neo4j用户名
@@ -70,6 +71,7 @@ sim_model_config=dict(
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
         model_config="input/pretrained_BERT/bert-base-chinese-config.json",
         output_dir="models/SIM/ner_output",
+        output_model_name="best_sim_neg_to_pos_3.bin",
         pre_train_model="input/pretrained_BERT/bert-base-chinese-model.bin",
         max_seq_length=50,
         train_batch_size=32,
@@ -77,6 +79,10 @@ sim_model_config=dict(
         gradient_accumulation_steps=4,
         num_train_epochs=5,
     ),
+    test=dict(
+        model_path='models/SIM/sim_output/best_sim.bin',
+        do_split_tests=True,
+    )
 )
 
 faq_model_config=dict(

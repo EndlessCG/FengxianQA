@@ -40,8 +40,10 @@ from transformers.data.processors.utils import DataProcessor, InputExample
 
 import numpy as np
 import pandas as pd
+from sklearn.metrics import classification_report
+
 from utils import KBQA_TOKEN_LIST, merge_arg_and_config
-from config import sim_model_config
+from config import sim_model_config, kbqa_runner_config
 logger = logging.getLogger(__name__)
 
 
@@ -52,27 +54,31 @@ def set_seed(args):
     torch.manual_seed(args.seed)
 
 
-def cal_acc(real_label, pred_label, neg_to_pos=3):
-    split_size = neg_to_pos + 1
+def cal_acc(pred_logits, real_label):
     real_label = torch.tensor(real_label)
-    pred_label = torch.tensor(pred_label)
+    pred_logits = torch.tensor(pred_logits)
+    pred_label = pred_logits.argmax(dim=-1)
 
     assert real_label.shape == pred_label.shape
-    assert 0 == real_label.shape[0] % split_size
+    # assert 0 == real_label.shape[0] % split_size
 
     label_acc = (real_label == pred_label).sum().float() / float(pred_label.shape[0])
-
-    real_label = real_label.reshape(-1, split_size)
-    assert real_label.shape[0] == real_label[:,0].sum(), "--neg_to_pos wrongly set"
-
-    pred_label = pred_label.reshape(-1, split_size)
-
-    pred_idx = pred_label.argmax(dim=-1)
-
-    # 要转成float的
-    question_acc = (pred_idx == 0).sum().float() / float(pred_idx.shape[0])
-
-    return question_acc.item(),label_acc.item()
+    
+    reshaped = False
+    split_size = np.where(real_label == 1)[0][1]
+    if 0 == real_label.shape[0] % split_size:
+        reshaped = True
+        real_label = real_label.reshape(-1, split_size)
+    
+    if reshaped and real_label.shape[0] == real_label[:,0].sum():
+        pred_logits = pred_logits[:, 1].reshape(-1, split_size)
+        pred_values, pred_idx = pred_logits.max(dim=-1)
+        # 可能性最大的问题==0且可能性>0.1
+        question_acc = ((pred_idx == 0) & (pred_values > kbqa_runner_config.get("sim_accept_threshold", 0.1))).sum().float() / float(pred_idx.shape[0])
+        return question_acc.item(),label_acc.item()
+    else:
+        print("SIM cal_acc: pos & neg samples in dataset not formally aligned, disabling question_acc")
+        return -1, label_acc.item()
     # 测试用的
     # return ((real_label.argmax(dim=-1) == 0).sum() / real_label.shape[0]).item()
 
@@ -111,10 +117,11 @@ class SimProcessor(DataProcessor):
         return self._create_examples(
             os.path.join(data_dir, "validate.txt"))
 
-    def get_test_examples(self,data_dir):
-        logger.info("*******  test  ********")
+    def get_test_examples(self,data_dir, subtest=""):
+        logger.info(f"*******  test {subtest} ********")
+        file_path = "test.txt" if subtest == "" else f"{subtest}.txt"
         return self._create_examples(
-            os.path.join(data_dir, "test.txt"))
+            os.path.join(data_dir, file_path))
 
     def get_labels(self):
         return [0, 1]
@@ -186,7 +193,7 @@ def sim_convert_examples_to_features(examples,tokenizer,
 
 def load_and_cache_example(args,tokenizer,processor,data_type):
 
-    type_list = ['train','validate','test']
+    type_list = ['train','validate','test', 'test_1hop', 'test_mhop', 'test_unchain1hop', 'test_unchainmhop']
     if data_type not in type_list:
         raise ValueError("data_type must be one of {}".format(" ".join(type_list)))
 
@@ -202,6 +209,8 @@ def load_and_cache_example(args,tokenizer,processor,data_type):
             examples = processor.get_dev_examples(args.data_dir)
         elif type_list[2] == data_type:
             examples = processor.get_test_examples(args.data_dir)
+        else:
+            examples = processor.get_test_examples(args.data_dir, subtest=data_type)
 
         features = sim_convert_examples_to_features(examples=examples,tokenizer=tokenizer,max_length=args.max_seq_length,label_list=label_list)
         logger.info("Saving features into cached file %s", cached_features_file)
@@ -288,9 +297,9 @@ def evaluate_and_save_model(args,model,eval_dataset,epoch,global_step,best_acc):
                 epoch + 1, args.num_train_epochs,global_step,eval_loss, question_acc,label_acc)
     if question_acc > best_acc:
         best_acc = question_acc
-        torch.save(model.state_dict(), os.path.join(args.output_dir, "best_sim.bin"))
+        torch.save(model.state_dict(), os.path.join(args.output_dir, args.output_model_name))
         logging.info("save the best model %s , question_acc = %f",
-                     os.path.join(args.output_dir, "best_bert.bin"),best_acc)
+                     os.path.join(args.output_dir, args.output_model_name),best_acc)
     return best_acc
 
 
@@ -327,15 +336,15 @@ def evaluate(args, model, eval_dataset):
             total_loss += loss * batch[0].shape[0]    # loss * 样本个数
             total_sample_num += batch[0].shape[0]     # 记录样本个数
 
-            pred = logits.argmax(dim=-1).tolist()     # 得到预测的label转为list
+            # pred = logits.argmax(dim=-1).tolist()     # 得到预测的label转为list
 
-            all_pred_label.extend(pred)                        # 记录预测的 label
+            # all_pred_label.extend(pred)                        # 记录预测的 label
             all_real_label.extend(batch[3].view(-1).tolist())  # 记录真实的label
 
     loss = total_loss / total_sample_num
 
 
-    question_acc,label_acc = cal_acc(all_real_label,all_pred_label, neg_to_pos=args.neg_to_pos)
+    question_acc,label_acc = cal_acc(logits.softmax(dim=-1), all_real_label)
 
     model.train()
     return loss,question_acc,label_acc
@@ -355,6 +364,8 @@ def main():
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
     parser.add_argument("--output_dir", default="models/SIM/sim_output", type=str, required=False,
                         help="输出结果的文件")
+    parser.add_argument("--output_model_name", default="best_sim.bin", type=str, required=False,
+                        help="输出的模型文件名")
 
     # Other parameters
     parser.add_argument("--max_seq_length", default=50, type=int,
@@ -410,7 +421,11 @@ def main():
 
     train_dataset = load_and_cache_example(args, tokenizer, processor, 'train')
     eval_dataset = load_and_cache_example(args, tokenizer, processor, 'validate')
-    test_dataset = load_and_cache_example(args,tokenizer,processor,'test')
+    _ = load_and_cache_example(args,tokenizer,processor,'test')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
 
 
 

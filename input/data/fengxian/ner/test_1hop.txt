@@ -89,32 +89,6 @@
 险 O
 ？ O
 
-票 B-entity
-据 I-entity
-包 O
-含 O
-中 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-采 B-entity
-购 I-entity
-结 I-entity
-算 I-entity
-？ O
-
 分 B-entity
 批 I-entity
 付 I-entity
@@ -144,95 +118,6 @@
 什 O
 么 O
 ？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-货 B-attribute
-物 I-attribute
-出 I-attribute
-库 I-attribute
-级 O
-风 O
-险 O
-
-实 B-entity
-物 I-entity
-管 I-entity
-理 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
-？ O
-
-包 O
-含 O
-系 B-entity
-统 I-entity
-开 I-entity
-户 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-哪 O
-些 O
-流 O
-程 O
-由 O
-资 B-attribute
-金 I-attribute
-计 I-attribute
-划 I-attribute
-负 O
-责 O
-？ O
-
-包 O
-含 O
-采 B-entity
-购 I-entity
-审 I-entity
-批 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-质 B-attribute
-量 I-attribute
-异 I-attribute
-议 I-attribute
-风 I-attribute
-险 I-attribute
-级 O
-风 O
-险 O
 
 估 B-entity
 值 I-entity
@@ -279,22 +164,6 @@
 型 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-市 B-attribute
-场 I-attribute
-情 I-attribute
-报 I-attribute
-收 I-attribute
-集 I-attribute
-级 O
-风 O
-险 O
-？ O
-
 付 B-entity
 款 I-entity
 审 I-entity
@@ -318,36 +187,6 @@
 么 O
 意 O
 思 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-采 B-entity
-购 I-entity
-结 I-entity
-算 I-entity
-风 I-entity
-险 I-entity
-？ O
-
-仓 B-entity
-库 I-entity
-监 I-entity
-管 I-entity
-包 O
-含 O
-中 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
 ？ O
 
 钢 B-entity
@@ -377,24 +216,6 @@
 别 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-开 B-attribute
-立 I-attribute
-银 I-attribute
-行 I-attribute
-账 I-attribute
-户 I-attribute
-参 O
-与 O
-？ O
-
 印 B-entity
 章 I-entity
 使 I-entity
@@ -404,24 +225,6 @@
 些 O
 步 O
 骤 O
-？ O
-
-包 O
-含 O
-挂 B-entity
-牌 I-entity
-价 I-entity
-格 I-entity
-风 I-entity
-险 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
 ？ O
 
 谁 O
@@ -447,17 +250,6 @@
 是 O
 多 O
 少 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-采 B-entity
-购 I-entity
-发 I-entity
-票 I-entity
 ？ O
 
 怎 O
@@ -494,22 +286,6 @@
 么 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-挂 B-attribute
-牌 I-attribute
-价 I-attribute
-格 I-attribute
-风 I-attribute
-险 I-attribute
-级 O
-风 O
-险 O
-
 仓 B-entity
 库 I-entity
 监 I-entity
@@ -524,22 +300,6 @@
 的 O
 风 O
 险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-销 B-attribute
-售 I-attribute
-结 I-attribute
-算 I-attribute
-参 O
-与 O
 ？ O
 
 合 B-entity
@@ -575,20 +335,6 @@
 么 O
 ？ O
 
-授 B-attribute
-权 I-attribute
-管 I-attribute
-理 I-attribute
-参 O
-与 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-？ O
-
 资 B-entity
 金 I-entity
 计 I-entity
@@ -611,18 +357,6 @@
 么 O
 类 O
 别 O
-？ O
-
-哪 O
-些 O
-部 O
-门 O
-负 O
-责 O
-业 B-entity
-务 I-entity
-完 I-entity
-结 I-entity
 ？ O
 
 质 B-entity
@@ -688,47 +422,6 @@
 理 I-entity
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-统 B-entity
-购 I-entity
-分 I-entity
-销 I-entity
-供 I-entity
-方 I-entity
-准 I-entity
-入 I-entity
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-开 B-entity
-立 I-entity
-公 I-entity
-司 I-entity
-银 I-entity
-行 I-entity
-账 I-entity
-户 I-entity
-风 O
-险 O
-？ O
-
 钢 B-entity
 厂 I-entity
 跟 I-entity
@@ -752,22 +445,6 @@
 审 I-entity
 批 I-entity
 ？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-印 B-attribute
-章 I-attribute
-使 I-attribute
-用 I-attribute
-风 I-attribute
-险 I-attribute
-级 O
-风 O
-险 O
 
 业 B-entity
 务 I-entity
@@ -824,24 +501,6 @@
 少 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-合 B-attribute
-规 I-attribute
-性 I-attribute
-风 I-attribute
-险 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
 分 B-entity
 批 I-entity
 付 I-entity
@@ -852,23 +511,6 @@
 是 O
 什 O
 么 O
-？ O
-
-购 B-entity
-销 I-entity
-合 I-entity
-同 I-entity
-包 O
-含 O
-的 O
-业 O
-务 O
-环 O
-节 O
-由 O
-谁 O
-负 O
-责 O
 ？ O
 
 合 B-entity
@@ -905,24 +547,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-印 B-entity
-章 I-entity
-使 I-entity
-用 I-entity
-风 I-entity
-险 I-entity
-风 O
-险 O
-？ O
-
 价 B-entity
 格 I-entity
 管 I-entity
@@ -934,20 +558,6 @@
 风 O
 险 O
 ？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-分 B-attribute
-批 I-attribute
-付 I-attribute
-款 I-attribute
-等 O
-级 O
-风 O
-险 O
 
 档 B-entity
 案 I-entity
@@ -998,51 +608,6 @@
 险 O
 ？ O
 
-出 B-entity
-入 I-entity
-库 I-entity
-由 O
-哪 O
-几 O
-个 O
-部 O
-门 O
-负 O
-责 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-合 B-entity
-同 I-entity
-结 I-entity
-案 I-entity
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-钢 B-attribute
-厂 I-attribute
-跟 I-attribute
-单 I-attribute
-参 O
-与 O
-？ O
-
 供 B-entity
 方 I-entity
 自 I-entity
@@ -1054,66 +619,6 @@
 用 I-entity
 代 O
 表 O
-什 O
-么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-印 B-attribute
-章 I-attribute
-使 I-attribute
-用 I-attribute
-参 O
-与 O
-？ O
-
-货 B-entity
-物 I-entity
-入 I-entity
-库 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-运 B-attribute
-输 I-attribute
-环 I-attribute
-节 I-attribute
-级 O
-风 O
-险 O
-？ O
-
-包 O
-含 O
-票 B-entity
-据 I-entity
-收 I-entity
-取 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
 什 O
 么 O
 ？ O
@@ -1195,22 +700,6 @@
 么 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-实 B-attribute
-物 I-attribute
-管 I-attribute
-理 I-attribute
-参 O
-与 O
-？ O
-
 授 B-entity
 信 I-entity
 占 I-entity
@@ -1229,22 +718,6 @@
 别 O
 ？ O
 
-包 O
-含 O
-库 B-entity
-存 I-entity
-超 I-entity
-期 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
 实 B-entity
 物 I-entity
 管 I-entity
@@ -1253,34 +726,6 @@
 含 O
 什 O
 么 O
-风 O
-险 O
-？ O
-
-采 B-attribute
-购 I-attribute
-结 I-attribute
-算 I-attribute
-负 O
-责 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-应 B-attribute
-急 I-attribute
-处 I-attribute
-置 I-attribute
-级 O
 风 O
 险 O
 ？ O
@@ -1311,22 +756,6 @@
 的 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-授 B-entity
-权 I-entity
-签 I-entity
-约 I-entity
-风 O
-险 O
-？ O
-
 印 B-entity
 章 I-entity
 使 I-entity
@@ -1349,18 +778,6 @@
 划 I-entity
 风 I-entity
 险 I-entity
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-收 B-entity
-付 I-entity
-款 I-entity
-控 I-entity
-制 I-entity
 ？ O
 
 现 B-entity
@@ -1429,19 +846,6 @@
 么 O
 ？ O
 
-业 B-entity
-务 I-entity
-完 I-entity
-结 I-entity
-包 O
-含 O
-哪 O
-些 O
-风 O
-险 O
-点 O
-？ O
-
 入 B-entity
 库 I-entity
 超 I-entity
@@ -1460,73 +864,6 @@
 色 O
 预 O
 警 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-授 B-entity
-权 I-entity
-签 I-entity
-约 I-entity
-？ O
-
-估 B-attribute
-值 I-attribute
-盯 I-attribute
-市 I-attribute
-( I-attribute
-业 I-attribute
-务 I-attribute
-环 I-attribute
-节 I-attribute
-) I-attribute
-参 O
-与 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-发 B-entity
-货 I-entity
-指 I-entity
-令 I-entity
-传 I-entity
-递 I-entity
-风 O
-险 O
-？ O
-
-包 O
-含 O
-质 B-entity
-量 I-entity
-异 I-entity
-议 I-entity
-风 I-entity
-险 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
 ？ O
 
 怎 O
@@ -1607,36 +944,6 @@
 节 O
 ？ O
 
-库 B-entity
-存 I-entity
-管 I-entity
-理 I-entity
-包 O
-含 O
-中 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
-印 B-entity
-章 I-entity
-使 I-entity
-用 I-entity
-有 O
-哪 O
-些 O
-中 B-attribute
-级 O
-风 O
-险 O
-？ O
-
 合 B-entity
 同 I-entity
 管 I-entity
@@ -1645,22 +952,6 @@
 表 O
 什 O
 么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-定 B-entity
-期 I-entity
-对 I-entity
-账 I-entity
-风 O
-险 O
 ？ O
 
 授 B-entity
@@ -1681,25 +972,6 @@
 色 O
 预 O
 警 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-合 B-entity
-同 I-entity
-金 I-entity
-额 I-entity
-约 I-entity
-定 I-entity
-风 O
-险 O
 ？ O
 
 合 B-entity
@@ -1775,34 +1047,6 @@
 么 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-钢 B-entity
-厂 I-entity
-跟 I-entity
-单 I-entity
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-钢 B-attribute
-厂 I-attribute
-超 I-attribute
-发 I-attribute
-或 I-attribute
-欠 I-attribute
-发 I-attribute
-等 O
-级 O
-风 O
-险 O
-
 三 B-entity
 新 I-entity
 业 I-entity
@@ -1841,18 +1085,6 @@
 付 I-entity
 ？ O
 
-欧 B-attribute
-冶 I-attribute
-物 I-attribute
-流 I-attribute
-负 O
-责 O
-什 O
-么 O
-业 O
-务 O
-？ O
-
 资 B-entity
 金 I-entity
 计 I-entity
@@ -1864,26 +1096,6 @@
 内 O
 容 O
 ？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-供 B-attribute
-应 I-attribute
-商 I-attribute
-资 I-attribute
-质 I-attribute
-及 I-attribute
-资 I-attribute
-信 I-attribute
-材 I-attribute
-料 I-attribute
-级 O
-风 O
-险 O
 
 两 B-entity
 金 I-entity
@@ -1963,20 +1175,6 @@
 型 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-业 B-attribute
-务 I-attribute
-归 I-attribute
-档 I-attribute
-等 O
-级 O
-风 O
-险 O
-
 货 B-entity
 物 I-entity
 入 I-entity
@@ -2002,74 +1200,6 @@
 思 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-开 B-entity
-立 I-entity
-公 I-entity
-司 I-entity
-银 I-entity
-行 I-entity
-账 I-entity
-户 I-entity
-风 O
-险 O
-？ O
-
-业 B-entity
-务 I-entity
-洽 I-entity
-谈 I-entity
-有 O
-哪 O
-些 O
-中 B-attribute
-级 O
-风 O
-险 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-客 B-attribute
-户 I-attribute
-折 I-attribute
-扣 I-attribute
-生 I-attribute
-成 I-attribute
-等 O
-级 O
-风 O
-险 O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-合 B-entity
-同 I-entity
-条 I-entity
-款 I-entity
-内 I-entity
-容 I-entity
-风 O
-险 O
-？ O
-
 销 B-entity
 项 I-entity
 超 I-entity
@@ -2080,19 +1210,6 @@
 是 O
 什 O
 么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-发 B-entity
-货 I-entity
-指 I-entity
-令 I-entity
-传 I-entity
-递 I-entity
 ？ O
 
 应 B-entity
@@ -2125,31 +1242,6 @@
 么 O
 ？ O
 
-包 O
-含 O
-代 B-entity
-收 I-entity
-代 I-entity
-付 I-entity
-资 I-entity
-金 I-entity
-未 I-entity
-取 I-entity
-得 I-entity
-相 I-entity
-关 I-entity
-证 I-entity
-明 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
 销 B-entity
 售 I-entity
 发 I-entity
@@ -2164,22 +1256,6 @@
 型 O
 ？ O
 
-包 O
-含 O
-票 B-entity
-据 I-entity
-收 I-entity
-取 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
 系 B-entity
 统 I-entity
 开 I-entity
@@ -2192,46 +1268,6 @@
 是 O
 多 O
 少 O
-？ O
-
-包 O
-含 O
-价 B-entity
-格 I-entity
-及 I-entity
-结 I-entity
-算 I-entity
-方 I-entity
-式 I-entity
-风 I-entity
-险 I-entity
-识 I-entity
-别 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
-购 B-entity
-销 I-entity
-评 I-entity
-审 I-entity
-包 O
-含 O
-低 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
 ？ O
 
 进 B-entity
@@ -2280,20 +1316,6 @@
 么 O
 意 O
 思 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-票 B-attribute
-据 I-attribute
-折 I-attribute
-现 I-attribute
-级 O
-风 O
-险 O
 ？ O
 
 供 B-entity
@@ -2352,33 +1374,6 @@
 险 O
 ？ O
 
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-定 B-entity
-期 I-entity
-对 I-entity
-账 I-entity
-风 O
-险 O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-印 B-entity
-章 I-entity
-使 I-entity
-用 I-entity
-风 I-entity
-险 I-entity
-？ O
-
 采 B-entity
 购 I-entity
 结 I-entity
@@ -2392,24 +1387,6 @@
 责 O
 的 O
 ？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-钢 B-entity
-厂 I-entity
-货 I-entity
-物 I-entity
-信 I-entity
-息 I-entity
-获 I-entity
-取 I-entity
-风 O
-险 O
 
 毛 B-entity
 利 I-entity
@@ -2461,24 +1438,6 @@
 理 I-entity
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-合 B-entity
-规 I-entity
-性 I-entity
-风 I-entity
-险 I-entity
-风 O
-险 O
-？ O
-
 质 B-entity
 量 I-entity
 异 I-entity
@@ -2515,19 +1474,6 @@
 理 I-entity
 ？ O
 
-仓 B-entity
-库 I-entity
-监 I-entity
-管 I-entity
-有 O
-哪 O
-些 O
-中 B-attribute
-级 O
-风 O
-险 O
-？ O
-
 授 B-entity
 权 I-entity
 管 I-entity
@@ -2553,24 +1499,6 @@
 是 O
 什 O
 么 O
-？ O
-
-购 B-entity
-销 I-entity
-合 I-entity
-同 I-entity
-包 O
-含 O
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-风 O
-险 O
 ？ O
 
 采 B-entity
@@ -2619,23 +1547,6 @@
 险 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-库 B-entity
-存 I-entity
-超 I-entity
-期 I-entity
-风 O
-险 O
-？ O
-
 谁 O
 负 O
 责 O
@@ -2655,24 +1566,6 @@
 些 O
 内 O
 容 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-销 B-entity
-售 I-entity
-合 I-entity
-同 I-entity
-签 I-entity
-约 I-entity
-风 O
-险 O
 ？ O
 
 怎 O
@@ -2749,20 +1642,6 @@
 骤 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-客 B-attribute
-户 I-attribute
-退 I-attribute
-款 I-attribute
-级 O
-风 O
-险 O
-
 授 B-entity
 信 I-entity
 占 I-entity
@@ -2779,22 +1658,6 @@
 是 O
 什 O
 么 O
-？ O
-
-欧 B-attribute
-冶 I-attribute
-物 I-attribute
-流 I-attribute
-部 O
-门 O
-负 O
-责 O
-的 O
-有 O
-哪 O
-些 O
-业 O
-务 O
 ？ O
 
 系 B-entity
@@ -2835,44 +1698,6 @@
 别 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-授 B-attribute
-权 I-attribute
-签 I-attribute
-约 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
-包 O
-含 O
-供 B-entity
-应 I-entity
-商 I-entity
-授 I-entity
-信 I-entity
-逾 I-entity
-期 I-entity
-超 I-entity
-额 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
 返 B-entity
 利 I-entity
 返 I-entity
@@ -2896,20 +1721,6 @@
 么 O
 ？ O
 
-销 B-entity
-售 I-entity
-结 I-entity
-算 I-entity
-有 O
-什 O
-么 O
-等 O
-级 O
-的 O
-风 O
-险 O
-？ O
-
 用 B-entity
 户 I-entity
 对 I-entity
@@ -2921,20 +1732,6 @@
 环 O
 节 O
 ？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-业 B-entity
-务 I-entity
-归 I-entity
-档 I-entity
-风 O
-险 O
 
 市 B-entity
 场 I-entity
@@ -2948,22 +1745,6 @@
 么 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-毛 B-attribute
-利 I-attribute
-核 I-attribute
-算 I-attribute
-风 I-attribute
-险 I-attribute
-级 O
-风 O
-险 O
-
 怎 O
 么 O
 解 O
@@ -2972,61 +1753,6 @@
 项 I-entity
 超 I-entity
 期 I-entity
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-库 B-entity
-存 I-entity
-超 I-entity
-期 I-entity
-？ O
-
-哪 O
-些 O
-流 O
-程 O
-由 O
-三 B-attribute
-新 I-attribute
-业 I-attribute
-务 I-attribute
-模 I-attribute
-式 I-attribute
-审 I-attribute
-批 I-attribute
-负 O
-责 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-销 B-attribute
-售 I-attribute
-合 I-attribute
-同 I-attribute
-签 I-attribute
-约 I-attribute
-级 O
-风 O
-险 O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-业 B-entity
-务 I-entity
-洽 I-entity
-谈 I-entity
 ？ O
 
 用 B-entity
@@ -3138,24 +1864,6 @@
 么 O
 ？ O
 
-包 O
-含 O
-合 B-entity
-同 I-entity
-年 I-entity
-协 I-entity
-备 I-entity
-案 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
 业 B-entity
 务 I-entity
 洽 I-entity
@@ -3182,20 +1890,6 @@
 少 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-系 B-attribute
-统 I-attribute
-开 I-attribute
-户 I-attribute
-级 O
-风 O
-险 O
-
 销 B-entity
 售 I-entity
 结 I-entity
@@ -3215,20 +1909,6 @@
 表 O
 什 O
 么 O
-？ O
-
-付 B-entity
-款 I-entity
-申 I-entity
-请 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
 ？ O
 
 销 B-entity
@@ -3274,22 +1954,6 @@
 么 O
 ？ O
 
-合 B-attribute
-同 I-attribute
-年 I-attribute
-协 I-attribute
-备 I-attribute
-案 I-attribute
-负 O
-责 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-？ O
-
 授 B-entity
 信 I-entity
 管 I-entity
@@ -3300,22 +1964,6 @@
 是 O
 什 O
 么 O
-？ O
-
-包 O
-含 O
-客 B-entity
-户 I-entity
-退 I-entity
-款 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
 ？ O
 
 付 B-entity
@@ -3338,33 +1986,6 @@
 么 O
 ？ O
 
-物 B-entity
-流 I-entity
-服 I-entity
-务 I-entity
-商 I-entity
-准 I-entity
-入 I-entity
-有 O
-哪 O
-些 O
-高 B-attribute
-级 O
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-客 B-entity
-户 I-entity
-管 I-entity
-理 I-entity
-？ O
-
 挂 B-entity
 牌 I-entity
 价 I-entity
@@ -3381,22 +2002,6 @@
 少 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-在 B-attribute
-途 I-attribute
-管 I-attribute
-控 I-attribute
-参 O
-与 O
-？ O
-
 用 B-entity
 户 I-entity
 对 I-entity
@@ -3406,33 +2011,6 @@
 些 O
 步 O
 骤 O
-？ O
-
-价 B-entity
-格 I-entity
-管 I-entity
-理 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-印 B-entity
-章 I-entity
-使 I-entity
-用 I-entity
-风 I-entity
-险 I-entity
 ？ O
 
 质 B-entity
@@ -3459,35 +2037,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-非 B-entity
-标 I-entity
-合 I-entity
-同 I-entity
-条 I-entity
-款 I-entity
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-库 B-attribute
-存 I-attribute
-管 I-attribute
-理 I-attribute
-参 O
-与 O
-？ O
-
 交 B-entity
 易 I-entity
 职 I-entity
@@ -3498,58 +2047,6 @@
 表 O
 什 O
 么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-钢 B-attribute
-厂 I-attribute
-延 I-attribute
-期 I-attribute
-交 I-attribute
-货 I-attribute
-级 O
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-两 B-attribute
-金 I-attribute
-管 I-attribute
-理 I-attribute
-级 O
-风 O
-险 O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-交 B-entity
-易 I-entity
-对 I-entity
-象 I-entity
-信 I-entity
-用 I-entity
-风 I-entity
-险 I-entity
-管 I-entity
-理 I-entity
-风 O
-险 O
 ？ O
 
 估 B-entity
@@ -3567,20 +2064,6 @@
 么 O
 意 O
 思 O
-？ O
-
-库 B-entity
-存 I-entity
-管 I-entity
-理 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
 ？ O
 
 授 B-entity
@@ -3630,19 +2113,6 @@
 么 O
 ？ O
 
-授 B-entity
-信 I-entity
-管 I-entity
-理 I-entity
-有 O
-哪 O
-些 O
-中 B-attribute
-级 O
-风 O
-险 O
-？ O
-
 付 B-entity
 款 I-entity
 申 I-entity
@@ -3651,25 +2121,6 @@
 含 O
 什 O
 么 O
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-合 B-entity
-同 I-entity
-变 I-entity
-更 I-entity
-风 I-entity
-险 I-entity
 风 O
 险 O
 ？ O
@@ -3684,24 +2135,6 @@
 么 O
 类 O
 别 O
-？ O
-
-三 B-entity
-新 I-entity
-业 I-entity
-务 I-entity
-模 I-entity
-式 I-entity
-审 I-entity
-批 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
 ？ O
 
 钢 B-entity
@@ -3727,56 +2160,6 @@
 险 I-entity
 ？ O
 
-包 O
-含 O
-承 B-entity
-运 I-entity
-商 I-entity
-准 I-entity
-入 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-合 B-entity
-同 I-entity
-年 I-entity
-协 I-entity
-备 I-entity
-案 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-采 B-entity
-购 I-entity
-复 I-entity
-审 I-entity
-风 O
-险 O
-？ O
-
 付 B-entity
 款 I-entity
 申 I-entity
@@ -3787,17 +2170,6 @@
 么 O
 类 O
 别 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-库 B-entity
-存 I-entity
-管 I-entity
-理 I-entity
 ？ O
 
 交 B-entity
@@ -3812,22 +2184,6 @@
 是 O
 什 O
 么 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-审 B-entity
-批 I-entity
-及 I-entity
-拨 I-entity
-付 I-entity
-为 I-entity
-同 I-entity
-一 I-entity
-人 I-entity
 ？ O
 
 钢 B-entity
@@ -3845,45 +2201,6 @@
 思 O
 ？ O
 
-合 B-attribute
-同 I-attribute
-管 I-attribute
-理 I-attribute
-负 O
-责 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-三 B-attribute
-新 I-attribute
-业 I-attribute
-务 I-attribute
-开 I-attribute
-展 I-attribute
-前 I-attribute
-的 I-attribute
-评 I-attribute
-估 I-attribute
-审 I-attribute
-批 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
 怎 O
 么 O
 理 O
@@ -3892,91 +2209,6 @@
 据 I-entity
 收 I-entity
 取 I-entity
-？ O
-
-库 B-attribute
-存 I-attribute
-管 I-attribute
-理 I-attribute
-参 O
-与 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-资 B-attribute
-金 I-attribute
-计 I-attribute
-划 I-attribute
-风 I-attribute
-险 I-attribute
-等 O
-级 O
-风 O
-险 O
-
-销 B-entity
-售 I-entity
-结 I-entity
-算 I-entity
-业 O
-务 O
-包 O
-含 O
-的 O
-中 B-attribute
-等 O
-级 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
-包 O
-含 O
-业 B-entity
-务 I-entity
-人 I-entity
-员 I-entity
-职 I-entity
-业 I-entity
-素 I-entity
-养 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-毛 B-attribute
-利 I-attribute
-核 I-attribute
-算 I-attribute
-参 O
-与 O
 ？ O
 
 结 B-entity
@@ -3989,40 +2221,6 @@
 么 O
 类 O
 别 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-跌 B-attribute
-价 I-attribute
-风 I-attribute
-险 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
-销 B-entity
-售 I-entity
-结 I-entity
-算 I-entity
-包 O
-含 O
-中 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
 ？ O
 
 现 B-entity
@@ -4051,37 +2249,6 @@
 什 O
 么 O
 ？ O
-
-业 B-entity
-务 I-entity
-洽 I-entity
-谈 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
-？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-现 B-entity
-款 I-entity
-和 I-entity
-银 I-entity
-票 I-entity
-混 I-entity
-配 I-entity
-风 O
-险 O
 
 怎 O
 么 O
@@ -4121,68 +2288,6 @@
 些 O
 环 O
 节 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-仓 B-attribute
-库 I-attribute
-准 I-attribute
-入 I-attribute
-等 O
-级 O
-风 O
-险 O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-非 B-attribute
-标 I-attribute
-合 I-attribute
-同 I-attribute
-条 I-attribute
-款 I-attribute
-等 O
-级 O
-风 O
-险 O
-
-授 B-entity
-信 I-entity
-管 I-entity
-理 I-entity
-包 O
-含 O
-中 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-采 B-entity
-用 I-entity
-线 I-entity
-下 I-entity
-付 I-entity
-款 I-entity
-方 I-entity
-式 I-entity
 ？ O
 
 三 B-entity
@@ -4251,20 +2356,6 @@
 型 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-关 B-attribute
-联 I-attribute
-关 I-attribute
-系 I-attribute
-级 O
-风 O
-险 O
-？ O
-
 质 B-entity
 量 I-entity
 异 I-entity
@@ -4326,24 +2417,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-毛 B-entity
-利 I-entity
-核 I-entity
-算 I-entity
-风 I-entity
-险 I-entity
-风 O
-险 O
-？ O
-
 厂 B-entity
 内 I-entity
 交 I-entity
@@ -4359,81 +2432,6 @@
 险 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-统 B-attribute
-购 I-attribute
-分 I-attribute
-销 I-attribute
-供 I-attribute
-方 I-attribute
-复 I-attribute
-评 I-attribute
-级 O
-风 O
-险 O
-？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-仓 B-entity
-库 I-entity
-监 I-entity
-管 I-entity
-风 I-entity
-险 I-entity
-风 O
-险 O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-钢 B-entity
-厂 I-entity
-延 I-entity
-期 I-entity
-交 I-entity
-货 I-entity
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-采 B-entity
-购 I-entity
-审 I-entity
-批 I-entity
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-库 B-entity
-存 I-entity
-超 I-entity
-期 I-entity
-？ O
-
 资 B-entity
 金 I-entity
 计 I-entity
@@ -4443,40 +2441,6 @@
 么 O
 ？ O
 
-包 O
-含 O
-审 B-entity
-批 I-entity
-及 I-entity
-拨 I-entity
-付 I-entity
-为 I-entity
-同 I-entity
-一 I-entity
-人 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
-购 B-entity
-销 I-entity
-评 I-entity
-审 I-entity
-有 O
-哪 O
-些 O
-高 B-attribute
-级 O
-风 O
-险 O
-？ O
-
 折 B-entity
 扣 I-entity
 有 O
@@ -4484,38 +2448,6 @@
 么 O
 危 O
 险 O
-？ O
-
-哪 O
-些 O
-流 O
-程 O
-由 O
-实 B-attribute
-物 I-attribute
-管 I-attribute
-理 I-attribute
-负 O
-责 O
-？ O
-
-付 B-entity
-款 I-entity
-审 I-entity
-批 I-entity
-业 O
-务 O
-包 O
-含 O
-的 O
-低 B-attribute
-等 O
-级 O
-风 O
-险 O
-有 O
-哪 O
-些 O
 ？ O
 
 出 B-entity
@@ -4648,44 +2580,6 @@
 容 O
 ？ O
 
-采 B-entity
-购 I-entity
-结 I-entity
-算 I-entity
-包 O
-含 O
-中 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-与 B-attribute
-不 I-attribute
-良 I-attribute
-交 I-attribute
-易 I-attribute
-对 I-attribute
-象 I-attribute
-开 I-attribute
-展 I-attribute
-业 I-attribute
-务 I-attribute
-等 O
-级 O
-风 O
-险 O
-
 毛 B-entity
 利 I-entity
 核 I-entity
@@ -4738,25 +2632,6 @@
 别 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-客 B-entity
-户 I-entity
-折 I-entity
-扣 I-entity
-生 I-entity
-成 I-entity
-风 O
-险 O
-？ O
-
 钢 B-entity
 厂 I-entity
 余 I-entity
@@ -4779,41 +2654,6 @@
 险 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-合 B-attribute
-同 I-attribute
-变 I-attribute
-更 I-attribute
-风 I-attribute
-险 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-实 B-attribute
-物 I-attribute
-管 I-attribute
-理 I-attribute
-风 I-attribute
-险 I-attribute
-级 O
-风 O
-险 O
-？ O
-
 物 B-entity
 流 I-entity
 服 I-entity
@@ -4827,17 +2667,6 @@
 些 O
 环 O
 节 O
-？ O
-
-哪 O
-些 O
-部 O
-门 O
-负 O
-责 O
-出 B-entity
-入 I-entity
-库 I-entity
 ？ O
 
 仓 B-entity
@@ -4854,22 +2683,6 @@
 型 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-授 B-attribute
-信 I-attribute
-管 I-attribute
-理 I-attribute
-参 O
-与 O
-？ O
-
 客 B-entity
 户 I-entity
 管 I-entity
@@ -4879,26 +2692,6 @@
 么 O
 意 O
 思 O
-？ O
-
-包 O
-含 O
-采 B-entity
-用 I-entity
-线 I-entity
-下 I-entity
-付 I-entity
-款 I-entity
-方 I-entity
-式 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
 ？ O
 
 资 B-entity
@@ -4928,23 +2721,6 @@
 么 O
 ？ O
 
-票 B-entity
-据 I-entity
-业 O
-务 O
-包 O
-含 O
-的 O
-低 B-attribute
-等 O
-级 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
 收 B-entity
 付 I-entity
 款 I-entity
@@ -4956,20 +2732,6 @@
 险 O
 点 O
 ？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-采 B-attribute
-购 I-attribute
-发 I-attribute
-票 I-attribute
-级 O
-风 O
-险 O
 
 货 B-entity
 物 I-entity
@@ -4983,59 +2745,11 @@
 么 O
 ？ O
 
-包 O
-含 O
-收 B-entity
-付 I-entity
-款 I-entity
-控 I-entity
-制 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
 销 B-entity
 售 I-entity
 结 I-entity
 算 I-entity
 指 O
-什 O
-么 O
-？ O
-
-采 B-entity
-购 I-entity
-结 I-entity
-算 I-entity
-有 O
-哪 O
-些 O
-低 B-attribute
-级 O
-风 O
-险 O
-？ O
-
-包 O
-含 O
-资 B-entity
-金 I-entity
-计 I-entity
-划 I-entity
-风 I-entity
-险 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
 什 O
 么 O
 ？ O
@@ -5093,28 +2807,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-销 B-entity
-售 I-entity
-合 I-entity
-同 I-entity
-文 I-entity
-本 I-entity
-关 I-entity
-键 I-entity
-用 I-entity
-词 I-entity
-风 O
-险 O
-？ O
-
 实 B-entity
 物 I-entity
 管 I-entity
@@ -5147,36 +2839,6 @@
 节 O
 ？ O
 
-收 B-entity
-付 I-entity
-款 I-entity
-是 O
-哪 O
-个 O
-部 O
-门 O
-负 O
-责 O
-的 O
-？ O
-
-实 B-entity
-物 I-entity
-管 I-entity
-理 I-entity
-包 O
-含 O
-中 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
 开 B-entity
 立 I-entity
 公 I-entity
@@ -5195,25 +2857,6 @@
 少 O
 ？ O
 
-估 B-entity
-值 I-entity
-盯 I-entity
-市 I-entity
-( I-entity
-业 I-entity
-务 I-entity
-环 I-entity
-节 I-entity
-) I-entity
-有 O
-哪 O
-些 O
-高 B-attribute
-级 O
-风 O
-险 O
-？ O
-
 库 B-entity
 存 I-entity
 超 I-entity
@@ -5228,33 +2871,6 @@
 险 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-客 B-attribute
-户 I-attribute
-管 I-attribute
-理 I-attribute
-等 O
-级 O
-风 O
-险 O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-钢 B-entity
-厂 I-entity
-余 I-entity
-款 I-entity
-处 I-entity
-理 I-entity
-？ O
-
 关 B-entity
 联 I-entity
 关 I-entity
@@ -5266,53 +2882,6 @@
 什 O
 么 O
 ？ O
-
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-业 B-attribute
-务 I-attribute
-归 I-attribute
-档 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-交 B-attribute
-易 I-attribute
-职 I-attribute
-责 I-attribute
-授 I-attribute
-权 I-attribute
-级 O
-风 O
-险 O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-票 B-entity
-据 I-entity
-运 I-entity
-作 I-entity
-风 O
-险 O
 
 在 B-entity
 途 I-entity
@@ -5358,47 +2927,6 @@
 么 O
 ？ O
 
-包 O
-含 O
-授 B-entity
-信 I-entity
-占 I-entity
-用 I-entity
-和 I-entity
-释 I-entity
-放 I-entity
-的 I-entity
-节 I-entity
-点 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-销 B-entity
-售 I-entity
-合 I-entity
-同 I-entity
-签 I-entity
-约 I-entity
-风 O
-险 O
-？ O
-
 采 B-entity
 购 I-entity
 价 I-entity
@@ -5413,34 +2941,6 @@
 少 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-提 B-entity
-货 I-entity
-？ O
-
-开 B-entity
-立 I-entity
-银 I-entity
-行 I-entity
-账 I-entity
-户 I-entity
-包 O
-含 O
-低 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
 出 B-entity
 入 I-entity
 库 I-entity
@@ -5450,45 +2950,6 @@
 么 O
 类 O
 型 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-采 B-entity
-购 I-entity
-计 I-entity
-划 I-entity
-？ O
-
-包 O
-含 O
-授 B-entity
-权 I-entity
-签 I-entity
-约 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-合 B-entity
-规 I-entity
-性 I-entity
-风 I-entity
-险 I-entity
 ？ O
 
 购 B-entity
@@ -5536,22 +2997,6 @@
 容 O
 ？ O
 
-包 O
-含 O
-资 B-entity
-金 I-entity
-计 I-entity
-划 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
 毛 B-entity
 利 I-entity
 核 I-entity
@@ -5578,20 +3023,6 @@
 么 O
 ？ O
 
-出 B-entity
-入 I-entity
-库 I-entity
-流 O
-程 O
-包 O
-含 O
-哪 O
-些 O
-风 O
-险 O
-点 O
-？ O
-
 业 B-entity
 务 I-entity
 人 I-entity
@@ -5610,22 +3041,6 @@
 少 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-钢 B-attribute
-厂 I-attribute
-延 I-attribute
-期 I-attribute
-交 I-attribute
-货 I-attribute
-级 O
-风 O
-险 O
-
 谁 O
 负 O
 责 O
@@ -5642,59 +3057,6 @@
 销 I-entity
 评 I-entity
 审 I-entity
-？ O
-
-包 O
-含 O
-仓 B-entity
-库 I-entity
-准 I-entity
-入 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-钢 B-attribute
-厂 I-attribute
-超 I-attribute
-发 I-attribute
-或 I-attribute
-欠 I-attribute
-发 I-attribute
-级 O
-风 O
-险 O
-？ O
-
-物 B-entity
-流 I-entity
-服 I-entity
-务 I-entity
-商 I-entity
-准 I-entity
-入 I-entity
-包 O
-含 O
-高 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
 ？ O
 
 库 B-entity
@@ -5743,20 +3105,6 @@
 养 I-entity
 ？ O
 
-实 B-entity
-物 I-entity
-管 I-entity
-理 I-entity
-有 O
-什 O
-么 O
-等 O
-级 O
-的 O
-风 O
-险 O
-？ O
-
 货 B-entity
 物 I-entity
 入 I-entity
@@ -5765,18 +3113,6 @@
 表 O
 什 O
 么 O
-？ O
-
-票 B-attribute
-据 I-attribute
-参 O
-与 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
 ？ O
 
 估 B-entity
@@ -5795,22 +3131,6 @@
 么 O
 类 O
 别 O
-？ O
-
-包 O
-含 O
-结 B-entity
-算 I-entity
-价 I-entity
-格 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
 ？ O
 
 采 B-entity
@@ -5842,22 +3162,6 @@
 么 O
 ？ O
 
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-挂 B-entity
-牌 I-entity
-价 I-entity
-格 I-entity
-风 I-entity
-险 I-entity
-风 O
-险 O
-
 业 B-entity
 务 I-entity
 完 I-entity
@@ -5869,24 +3173,6 @@
 内 O
 容 O
 ？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-统 B-attribute
-购 I-attribute
-分 I-attribute
-销 I-attribute
-供 I-attribute
-方 I-attribute
-准 I-attribute
-入 I-attribute
-级 O
-风 O
-险 O
 
 质 B-entity
 量 I-entity
@@ -5920,20 +3206,6 @@
 些 O
 环 O
 节 O
-？ O
-
-毛 B-entity
-利 I-entity
-核 I-entity
-算 I-entity
-有 O
-什 O
-么 O
-等 O
-级 O
-的 O
-风 O
-险 O
 ？ O
 
 毛 B-entity
@@ -5994,88 +3266,6 @@
 么 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-承 B-entity
-运 I-entity
-商 I-entity
-准 I-entity
-入 I-entity
-？ O
-
-业 B-entity
-务 I-entity
-洽 I-entity
-谈 I-entity
-包 O
-含 O
-高 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
-仓 B-entity
-库 I-entity
-监 I-entity
-管 I-entity
-业 O
-务 O
-包 O
-含 O
-的 O
-中 B-attribute
-等 O
-级 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
-包 O
-含 O
-合 B-entity
-同 I-entity
-变 I-entity
-更 I-entity
-风 I-entity
-险 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
-质 B-entity
-量 I-entity
-异 I-entity
-议 I-entity
-的 O
-风 O
-险 O
-都 O
-是 O
-什 O
-么 O
-等 O
-级 O
-的 O
-？ O
-
 合 B-entity
 同 I-entity
 归 I-entity
@@ -6086,20 +3276,6 @@
 表 O
 什 O
 么 O
-？ O
-
-质 B-entity
-量 I-entity
-异 I-entity
-议 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
 ？ O
 
 代 B-entity
@@ -6127,22 +3303,6 @@
 点 O
 ？ O
 
-包 O
-含 O
-质 B-entity
-量 I-entity
-异 I-entity
-议 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
 实 B-entity
 物 I-entity
 管 I-entity
@@ -6152,40 +3312,6 @@
 什 O
 么 O
 ？ O
-
-包 O
-含 O
-采 B-entity
-购 I-entity
-结 I-entity
-算 I-entity
-风 I-entity
-险 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-采 B-attribute
-购 I-attribute
-结 I-attribute
-算 I-attribute
-风 I-attribute
-险 I-attribute
-等 O
-级 O
-风 O
-险 O
 
 用 B-entity
 户 I-entity
@@ -6212,23 +3338,6 @@
 险 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-应 B-entity
-急 I-entity
-处 I-entity
-置 I-entity
-风 O
-险 O
-？ O
-
 返 B-entity
 利 I-entity
 返 I-entity
@@ -6236,22 +3345,6 @@
 的 O
 类 O
 型 O
-是 O
-什 O
-么 O
-？ O
-
-包 O
-含 O
-在 B-entity
-途 I-entity
-管 I-entity
-控 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
 是 O
 什 O
 么 O
@@ -6295,38 +3388,6 @@
 么 O
 ？ O
 
-出 B-entity
-入 I-entity
-库 I-entity
-各 O
-环 O
-节 O
-由 O
-谁 O
-负 O
-责 O
-？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-销 B-entity
-售 I-entity
-合 I-entity
-同 I-entity
-文 I-entity
-本 I-entity
-关 I-entity
-键 I-entity
-用 I-entity
-词 I-entity
-风 O
-险 O
-
 谁 O
 负 O
 责 O
@@ -6345,22 +3406,6 @@
 什 O
 么 O
 ？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-销 B-attribute
-售 I-attribute
-合 I-attribute
-同 I-attribute
-签 I-attribute
-约 I-attribute
-等 O
-级 O
-风 O
-险 O
 
 跌 B-entity
 价 I-entity
@@ -6455,25 +3500,6 @@
 么 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-钢 B-entity
-厂 I-entity
-延 I-entity
-期 I-entity
-交 I-entity
-货 I-entity
-风 O
-险 O
-？ O
-
 怎 O
 么 O
 理 O
@@ -6501,40 +3527,6 @@
 些 O
 内 O
 容 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-票 B-attribute
-据 I-attribute
-运 I-attribute
-作 I-attribute
-等 O
-级 O
-风 O
-险 O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-钢 B-entity
-厂 I-entity
-货 I-entity
-物 I-entity
-信 I-entity
-息 I-entity
-获 I-entity
-取 I-entity
-风 O
-险 O
 ？ O
 
 定 B-entity
@@ -6569,56 +3561,6 @@
 协 I-entity
 备 I-entity
 案 I-entity
-？ O
-
-包 O
-含 O
-货 B-entity
-物 I-entity
-入 I-entity
-库 I-entity
-风 I-entity
-险 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-货 B-entity
-物 I-entity
-出 I-entity
-库 I-entity
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-价 B-attribute
-格 I-attribute
-管 I-attribute
-理 I-attribute
-参 O
-与 O
 ？ O
 
 提 B-entity
@@ -6690,66 +3632,6 @@
 节 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-钢 B-entity
-厂 I-entity
-超 I-entity
-发 I-entity
-或 I-entity
-欠 I-entity
-发 I-entity
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-结 B-entity
-算 I-entity
-价 I-entity
-格 I-entity
-？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-两 B-entity
-金 I-entity
-管 I-entity
-理 I-entity
-风 O
-险 O
-
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-供 B-entity
-方 I-entity
-自 I-entity
-由 I-entity
-款 I-entity
-及 I-entity
-时 I-entity
-使 I-entity
-用 I-entity
-风 O
-险 O
-？ O
-
 采 B-entity
 购 I-entity
 结 I-entity
@@ -6762,19 +3644,6 @@
 型 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-合 B-entity
-同 I-entity
-变 I-entity
-更 I-entity
-风 I-entity
-险 I-entity
-？ O
-
 客 B-entity
 商 I-entity
 准 I-entity
@@ -6782,25 +3651,6 @@
 指 O
 什 O
 么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-销 B-attribute
-售 I-attribute
-发 I-attribute
-票 I-attribute
-结 I-attribute
-算 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
 ？ O
 
 业 B-entity
@@ -6813,36 +3663,6 @@
 些 O
 内 O
 容 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-交 B-entity
-易 I-entity
-职 I-entity
-责 I-entity
-授 I-entity
-权 I-entity
-？ O
-
-资 B-entity
-金 I-entity
-计 I-entity
-划 I-entity
-包 O
-含 O
-中 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
 ？ O
 
 与 B-entity
@@ -6879,19 +3699,6 @@
 点 O
 ？ O
 
-质 B-entity
-量 I-entity
-异 I-entity
-议 I-entity
-有 O
-哪 O
-些 O
-低 B-attribute
-级 O
-风 O
-险 O
-？ O
-
 货 B-entity
 物 I-entity
 入 I-entity
@@ -6915,27 +3722,6 @@
 是 O
 多 O
 少 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-钢 B-entity
-厂 I-entity
-货 I-entity
-物 I-entity
-信 I-entity
-息 I-entity
-获 I-entity
-取 I-entity
-风 O
-险 O
 ？ O
 
 授 B-entity
@@ -6964,31 +3750,6 @@
 是 O
 什 O
 么 O
-？ O
-
-包 O
-含 O
-提 B-entity
-货 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-客 B-entity
-商 I-entity
-准 I-entity
-入 I-entity
 ？ O
 
 怎 O
@@ -7073,33 +3834,6 @@
 险 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-票 B-attribute
-据 I-attribute
-运 I-attribute
-作 I-attribute
-级 O
-风 O
-险 O
-
-仓 B-entity
-库 I-entity
-监 I-entity
-管 I-entity
-有 O
-哪 O
-些 O
-高 B-attribute
-级 O
-风 O
-险 O
-？ O
-
 档 B-entity
 案 I-entity
 管 I-entity
@@ -7107,20 +3841,6 @@
 指 O
 什 O
 么 O
-？ O
-
-用 B-entity
-户 I-entity
-对 I-entity
-帐 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
 ？ O
 
 估 B-entity
@@ -7139,17 +3859,6 @@
 是 O
 什 O
 么 O
-？ O
-
-财 B-attribute
-务 I-attribute
-部 I-attribute
-负 O
-责 O
-什 O
-么 O
-业 O
-务 O
 ？ O
 
 库 B-entity
@@ -7201,35 +3910,6 @@
 请 I-entity
 ？ O
 
-包 O
-含 O
-采 B-entity
-购 I-entity
-计 I-entity
-划 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-购 B-entity
-销 I-entity
-结 I-entity
-算 I-entity
-各 O
-环 O
-节 O
-由 O
-谁 O
-负 O
-责 O
-？ O
-
 折 B-entity
 扣 I-entity
 包 O
@@ -7239,44 +3919,6 @@
 风 O
 险 O
 点 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-现 B-entity
-款 I-entity
-和 I-entity
-银 I-entity
-票 I-entity
-混 I-entity
-配 I-entity
-风 O
-险 O
-？ O
-
-包 O
-含 O
-开 B-entity
-立 I-entity
-银 I-entity
-行 I-entity
-账 I-entity
-户 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
 ？ O
 
 怎 O
@@ -7289,23 +3931,6 @@
 更 I-entity
 风 I-entity
 险 I-entity
-？ O
-
-付 B-entity
-款 I-entity
-审 I-entity
-批 I-entity
-包 O
-含 O
-低 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
 ？ O
 
 业 B-entity
@@ -7359,50 +3984,12 @@
 节 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-应 B-attribute
-急 I-attribute
-处 I-attribute
-置 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
 后 B-entity
 结 I-entity
 算 I-entity
 指 O
 什 O
 么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-业 B-attribute
-务 I-attribute
-人 I-attribute
-员 I-attribute
-职 I-attribute
-业 I-attribute
-素 I-attribute
-养 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
 ？ O
 
 价 B-entity
@@ -7422,52 +4009,6 @@
 是 O
 什 O
 么 O
-？ O
-
-实 B-entity
-物 I-entity
-管 I-entity
-理 I-entity
-的 O
-风 O
-险 O
-都 O
-是 O
-什 O
-么 O
-等 O
-级 O
-的 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-印 B-entity
-章 I-entity
-使 I-entity
-用 I-entity
-风 I-entity
-险 I-entity
-风 O
-险 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-分 B-entity
-批 I-entity
-付 I-entity
-款 I-entity
 ？ O
 
 业 B-entity
@@ -7493,20 +4034,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-采 B-attribute
-购 I-attribute
-复 I-attribute
-审 I-attribute
-等 O
-级 O
-风 O
-险 O
-
 价 B-entity
 格 I-entity
 管 I-entity
@@ -7519,47 +4046,6 @@
 的 O
 风 O
 险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-质 B-entity
-量 I-entity
-异 I-entity
-议 I-entity
-？ O
-
-货 B-attribute
-物 I-attribute
-入 I-attribute
-库 I-attribute
-参 O
-与 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-付 B-attribute
-款 I-attribute
-审 I-attribute
-批 I-attribute
-参 O
-与 O
 ？ O
 
 毛 B-entity
@@ -7588,87 +4074,6 @@
 是 O
 什 O
 么 O
-？ O
-
-交 B-attribute
-易 I-attribute
-事 I-attribute
-业 I-attribute
-部 I-attribute
-、 I-attribute
-地 I-attribute
-区 I-attribute
-公 I-attribute
-司 I-attribute
-、 I-attribute
-运 I-attribute
-营 I-attribute
-中 I-attribute
-心 I-attribute
-部 O
-门 O
-负 O
-责 O
-的 O
-有 O
-哪 O
-些 O
-业 O
-务 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-供 B-attribute
-应 I-attribute
-商 I-attribute
-资 I-attribute
-质 I-attribute
-及 I-attribute
-资 I-attribute
-信 I-attribute
-材 I-attribute
-料 I-attribute
-级 O
-风 O
-险 O
-？ O
-
-物 B-entity
-流 I-entity
-服 I-entity
-务 I-entity
-商 I-entity
-准 I-entity
-入 I-entity
-的 O
-风 O
-险 O
-都 O
-是 O
-什 O
-么 O
-等 O
-级 O
-的 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-钢 B-entity
-厂 I-entity
-货 I-entity
-物 I-entity
-信 I-entity
-息 I-entity
-获 I-entity
-取 I-entity
 ？ O
 
 三 B-entity
@@ -7721,43 +4126,6 @@
 思 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-非 B-attribute
-标 I-attribute
-合 I-attribute
-同 I-attribute
-条 I-attribute
-款 I-attribute
-级 O
-风 O
-险 O
-？ O
-
-业 B-entity
-务 I-entity
-完 I-entity
-结 I-entity
-包 O
-含 O
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-哪 O
-个 O
-部 O
-门 O
-负 O
-责 O
-的 O
-？ O
-
 货 B-entity
 物 I-entity
 入 I-entity
@@ -7784,21 +4152,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-业 B-entity
-务 I-entity
-人 I-entity
-员 I-entity
-职 I-entity
-业 I-entity
-素 I-entity
-养 I-entity
-？ O
-
 付 B-entity
 款 I-entity
 审 I-entity
@@ -7811,24 +4164,6 @@
 别 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-实 B-entity
-物 I-entity
-管 I-entity
-理 I-entity
-风 I-entity
-险 I-entity
-风 O
-险 O
-？ O
-
 怎 O
 么 O
 解 O
@@ -7839,24 +4174,6 @@
 警 I-entity
 ？ O
 
-包 O
-含 O
-印 B-entity
-章 I-entity
-使 I-entity
-用 I-entity
-风 I-entity
-险 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
 定 B-entity
 金 I-entity
 的 O
@@ -7865,19 +4182,6 @@
 是 O
 什 O
 么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-非 B-entity
-标 I-entity
-合 I-entity
-同 I-entity
-条 I-entity
-款 I-entity
 ？ O
 
 业 B-entity
@@ -7903,22 +4207,6 @@
 风 I-entity
 险 I-entity
 ？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-钢 B-entity
-厂 I-entity
-延 I-entity
-期 I-entity
-交 I-entity
-货 I-entity
-风 O
-险 O
 
 合 B-entity
 同 I-entity
@@ -8028,24 +4316,6 @@
 么 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-合 B-entity
-同 I-entity
-金 I-entity
-额 I-entity
-约 I-entity
-定 I-entity
-风 O
-险 O
-？ O
-
 怎 O
 么 O
 解 O
@@ -8054,19 +4324,6 @@
 务 I-entity
 完 I-entity
 结 I-entity
-？ O
-
-哪 O
-些 O
-流 O
-程 O
-由 O
-采 B-attribute
-购 I-attribute
-结 I-attribute
-算 I-attribute
-负 O
-责 O
 ？ O
 
 钢 B-entity
@@ -8083,23 +4340,6 @@
 么 O
 ？ O
 
-包 O
-含 O
-收 B-entity
-付 I-entity
-款 I-entity
-控 I-entity
-制 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
 印 B-entity
 章 I-entity
 使 I-entity
@@ -8111,70 +4351,6 @@
 内 O
 容 O
 ？ O
-
-合 B-entity
-同 I-entity
-管 I-entity
-理 I-entity
-包 O
-含 O
-低 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-审 B-attribute
-批 I-attribute
-及 I-attribute
-拨 I-attribute
-付 I-attribute
-为 I-attribute
-同 I-attribute
-一 I-attribute
-人 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-在 B-entity
-途 I-entity
-管 I-entity
-控 I-entity
-？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-跌 B-entity
-价 I-entity
-风 I-entity
-险 I-entity
-风 O
-险 O
 
 入 B-entity
 库 I-entity
@@ -8188,41 +4364,6 @@
 么 O
 类 O
 型 O
-？ O
-
-采 B-entity
-购 I-entity
-结 I-entity
-算 I-entity
-业 O
-务 O
-包 O
-含 O
-的 O
-低 B-attribute
-等 O
-级 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-关 B-entity
-联 I-entity
-关 I-entity
-系 I-entity
-风 O
-险 O
 ？ O
 
 实 B-entity
@@ -8276,22 +4417,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-运 B-entity
-输 I-entity
-环 I-entity
-节 I-entity
-风 O
-险 O
-？ O
-
 授 B-entity
 信 I-entity
 占 I-entity
@@ -8323,24 +4448,6 @@
 思 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-钢 B-entity
-厂 I-entity
-余 I-entity
-款 I-entity
-处 I-entity
-理 I-entity
-风 O
-险 O
-？ O
-
 购 B-entity
 销 I-entity
 合 I-entity
@@ -8354,40 +4461,6 @@
 险 O
 ？ O
 
-购 B-entity
-销 I-entity
-评 I-entity
-审 I-entity
-的 O
-风 O
-险 O
-都 O
-是 O
-什 O
-么 O
-等 O
-级 O
-的 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-开 B-attribute
-立 I-attribute
-公 I-attribute
-司 I-attribute
-银 I-attribute
-行 I-attribute
-账 I-attribute
-户 I-attribute
-级 O
-风 O
-险 O
-？ O
-
 质 B-entity
 量 I-entity
 异 I-entity
@@ -8397,39 +4470,6 @@
 指 O
 什 O
 么 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-实 B-entity
-物 I-entity
-管 I-entity
-理 I-entity
-风 I-entity
-险 I-entity
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-付 B-attribute
-款 I-attribute
-申 I-attribute
-请 I-attribute
-的 I-attribute
-发 I-attribute
-起 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
 ？ O
 
 统 B-entity
@@ -8446,22 +4486,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-流 O
-程 O
-会 O
-有 O
-定 B-entity
-期 I-entity
-对 I-entity
-账 I-entity
-风 O
-险 O
-？ O
-
 钢 B-entity
 厂 I-entity
 跟 I-entity
@@ -8473,24 +4497,6 @@
 么 O
 意 O
 思 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-承 B-entity
-运 I-entity
-商 I-entity
-选 I-entity
-择 I-entity
-风 O
-险 O
 ？ O
 
 关 B-entity
@@ -8527,20 +4533,6 @@
 意 O
 思 O
 ？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-结 B-entity
-算 I-entity
-价 I-entity
-格 I-entity
-风 O
-险 O
 
 怎 O
 么 O
@@ -8584,42 +4576,6 @@
 容 O
 ？ O
 
-实 B-attribute
-物 I-attribute
-管 I-attribute
-理 I-attribute
-负 O
-责 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-估 B-attribute
-值 I-attribute
-盯 I-attribute
-市 I-attribute
-( I-attribute
-业 I-attribute
-务 I-attribute
-环 I-attribute
-节 I-attribute
-) I-attribute
-参 O
-与 O
-？ O
-
 钢 B-entity
 厂 I-entity
 跟 I-entity
@@ -8628,34 +4584,6 @@
 表 O
 什 O
 么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-付 B-attribute
-款 I-attribute
-申 I-attribute
-请 I-attribute
-的 I-attribute
-发 I-attribute
-起 I-attribute
-级 O
-风 O
-险 O
-？ O
-
-票 B-entity
-据 I-entity
-有 O
-哪 O
-些 O
-低 B-attribute
-级 O
-风 O
-险 O
 ？ O
 
 付 B-entity
@@ -8706,33 +4634,6 @@
 负 O
 责 O
 的 O
-？ O
-
-包 O
-含 O
-资 B-entity
-金 I-entity
-释 I-entity
-放 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-客 B-entity
-户 I-entity
-管 I-entity
-理 I-entity
 ？ O
 
 运 B-entity
@@ -8844,22 +4745,6 @@
 少 O
 ？ O
 
-包 O
-含 O
-结 B-entity
-算 I-entity
-价 I-entity
-格 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
 购 B-entity
 销 I-entity
 合 I-entity
@@ -8888,21 +4773,6 @@
 少 O
 ？ O
 
-合 B-entity
-同 I-entity
-年 I-entity
-协 I-entity
-备 I-entity
-案 I-entity
-有 O
-哪 O
-些 O
-中 B-attribute
-级 O
-风 O
-险 O
-？ O
-
 怎 O
 么 O
 解 O
@@ -8929,15 +4799,6 @@
 么 O
 ？ O
 
-谁 O
-负 O
-责 O
-购 B-entity
-销 I-entity
-合 I-entity
-同 I-entity
-？ O
-
 增 B-entity
 值 I-entity
 税 I-entity
@@ -8951,17 +4812,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-货 B-entity
-物 I-entity
-出 I-entity
-库 I-entity
-？ O
-
 应 B-entity
 急 I-entity
 处 I-entity
@@ -8972,22 +4822,6 @@
 是 O
 什 O
 么 O
-？ O
-
-出 B-entity
-入 I-entity
-库 I-entity
-的 O
-各 O
-环 O
-节 O
-包 O
-含 O
-哪 O
-些 O
-风 O
-险 O
-点 O
 ？ O
 
 审 B-entity
@@ -9045,18 +4879,6 @@
 型 O
 ？ O
 
-地 B-attribute
-区 I-attribute
-公 I-attribute
-司 I-attribute
-负 O
-责 O
-什 O
-么 O
-业 O
-务 O
-？ O
-
 怎 O
 么 O
 理 O
@@ -9086,38 +4908,6 @@
 的 O
 含 O
 义 O
-是 O
-什 O
-么 O
-？ O
-
-包 O
-含 O
-关 B-entity
-联 I-entity
-关 I-entity
-系 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
-包 O
-含 O
-付 B-entity
-款 I-entity
-审 I-entity
-批 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
 是 O
 什 O
 么 O
@@ -9219,39 +5009,6 @@
 么 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-产 B-attribute
-品 I-attribute
-业 I-attribute
-务 I-attribute
-系 I-attribute
-统 I-attribute
-权 I-attribute
-限 I-attribute
-分 I-attribute
-配 I-attribute
-级 O
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-开 B-entity
-立 I-entity
-银 I-entity
-行 I-entity
-账 I-entity
-户 I-entity
-？ O
-
 合 B-entity
 同 I-entity
 结 I-entity
@@ -9271,29 +5028,6 @@
 预 I-entity
 警 I-entity
 ？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-代 B-entity
-收 I-entity
-代 I-entity
-付 I-entity
-资 I-entity
-金 I-entity
-未 I-entity
-取 I-entity
-得 I-entity
-相 I-entity
-关 I-entity
-证 I-entity
-明 I-entity
-风 O
-险 O
 
 出 B-entity
 入 I-entity
@@ -9343,64 +5077,6 @@
 么 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-价 B-attribute
-格 I-attribute
-及 I-attribute
-结 I-attribute
-算 I-attribute
-方 I-attribute
-式 I-attribute
-风 I-attribute
-险 I-attribute
-识 I-attribute
-别 I-attribute
-级 O
-风 O
-险 O
-
-出 B-entity
-入 I-entity
-库 I-entity
-包 O
-含 O
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-风 O
-险 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-代 B-entity
-收 I-entity
-代 I-entity
-付 I-entity
-资 I-entity
-金 I-entity
-未 I-entity
-取 I-entity
-得 I-entity
-相 I-entity
-关 I-entity
-证 I-entity
-明 I-entity
-？ O
-
 入 B-entity
 库 I-entity
 超 I-entity
@@ -9412,27 +5088,6 @@
 么 O
 意 O
 思 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-可 O
-能 O
-有 O
-业 B-entity
-务 I-entity
-人 I-entity
-员 I-entity
-职 I-entity
-业 I-entity
-素 I-entity
-养 I-entity
-风 O
-险 O
 ？ O
 
 销 B-entity
@@ -9477,57 +5132,6 @@
 金 I-entity
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-有 O
-增 B-entity
-值 I-entity
-税 I-entity
-进 I-entity
-销 I-entity
-项 I-entity
-管 I-entity
-理 I-entity
-？ O
-
-估 B-entity
-值 I-entity
-盯 I-entity
-市 I-entity
-( I-entity
-业 I-entity
-务 I-entity
-环 I-entity
-节 I-entity
-) I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
-的 O
-风 O
-险 O
-？ O
-
-开 B-attribute
-立 I-attribute
-银 I-attribute
-行 I-attribute
-账 I-attribute
-户 I-attribute
-负 O
-责 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-？ O
-
 毛 B-entity
 利 I-entity
 核 I-entity
@@ -9535,58 +5139,6 @@
 指 O
 什 O
 么 O
-？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-交 B-entity
-易 I-entity
-对 I-entity
-象 I-entity
-信 I-entity
-用 I-entity
-风 I-entity
-险 I-entity
-管 I-entity
-理 I-entity
-风 O
-险 O
-
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-钢 B-attribute
-厂 I-attribute
-延 I-attribute
-期 I-attribute
-交 I-attribute
-货 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-钢 B-entity
-厂 I-entity
-延 I-entity
-期 I-entity
-交 I-entity
-货 I-entity
 ？ O
 
 估 B-entity
@@ -9651,17 +5203,6 @@
 险 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-合 B-entity
-同 I-entity
-变 I-entity
-更 I-entity
-？ O
-
 库 B-entity
 存 I-entity
 预 I-entity
@@ -9679,22 +5220,6 @@
 预 O
 警 O
 ？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-资 B-entity
-金 I-entity
-计 I-entity
-划 I-entity
-风 I-entity
-险 I-entity
-风 O
-险 O
 
 销 B-entity
 售 I-entity
@@ -9729,40 +5254,6 @@
 么 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-资 B-attribute
-金 I-attribute
-释 I-attribute
-放 I-attribute
-等 O
-级 O
-风 O
-险 O
-
-包 O
-含 O
-统 B-entity
-购 I-entity
-分 I-entity
-销 I-entity
-供 I-entity
-方 I-entity
-准 I-entity
-入 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
 挂 B-entity
 牌 I-entity
 价 I-entity
@@ -9775,39 +5266,6 @@
 是 O
 什 O
 么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-分 B-entity
-批 I-entity
-付 I-entity
-款 I-entity
-风 O
-险 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-承 B-entity
-运 I-entity
-商 I-entity
-选 I-entity
-择 I-entity
-风 O
-险 O
 ？ O
 
 用 B-entity
@@ -9835,17 +5293,6 @@
 些 O
 内 O
 容 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-关 B-entity
-联 I-entity
-关 I-entity
-系 I-entity
 ？ O
 
 出 B-entity
@@ -9879,36 +5326,6 @@
 是 O
 什 O
 么 O
-？ O
-
-包 O
-含 O
-付 B-entity
-款 I-entity
-审 I-entity
-批 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-毛 B-attribute
-利 I-attribute
-核 I-attribute
-算 I-attribute
-参 O
-与 O
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
 ？ O
 
 采 B-entity
@@ -9994,40 +5411,6 @@
 少 O
 ？ O
 
-包 O
-含 O
-钢 B-entity
-厂 I-entity
-余 I-entity
-款 I-entity
-处 I-entity
-理 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-里 O
-有 O
-货 B-attribute
-物 I-attribute
-入 I-attribute
-库 I-attribute
-参 O
-与 O
-？ O
-
 钢 B-entity
 厂 I-entity
 超 I-entity
@@ -10093,75 +5476,6 @@
 算 I-entity
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-授 B-entity
-权 I-entity
-签 I-entity
-约 I-entity
-风 O
-险 O
-？ O
-
-包 O
-含 O
-与 B-entity
-不 I-entity
-良 I-entity
-交 I-entity
-易 I-entity
-对 I-entity
-象 I-entity
-开 I-entity
-展 I-entity
-业 I-entity
-务 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
-包 O
-含 O
-档 B-entity
-案 I-entity
-管 I-entity
-理 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
-？ O
-
-在 B-entity
-途 I-entity
-管 I-entity
-控 I-entity
-有 O
-什 O
-么 O
-等 O
-级 O
-的 O
-风 O
-险 O
-？ O
-
 运 B-entity
 输 I-entity
 环 I-entity
@@ -10188,23 +5502,6 @@
 么 O
 ？ O
 
-采 B-entity
-购 I-entity
-结 I-entity
-算 I-entity
-包 O
-含 O
-低 B-attribute
-等 O
-级 O
-的 O
-风 O
-险 O
-有 O
-哪 O
-些 O
-？ O
-
 价 B-entity
 格 I-entity
 及 I-entity
@@ -10222,42 +5519,6 @@
 么 O
 类 O
 型 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-供 B-attribute
-应 I-attribute
-商 I-attribute
-授 I-attribute
-信 I-attribute
-逾 I-attribute
-期 I-attribute
-超 I-attribute
-额 I-attribute
-等 O
-级 O
-风 O
-险 O
-
-购 B-entity
-销 I-entity
-合 I-entity
-同 I-entity
-的 O
-各 O
-环 O
-节 O
-包 O
-含 O
-哪 O
-些 O
-风 O
-险 O
-点 O
 ？ O
 
 挂 B-entity
@@ -10298,22 +5559,6 @@
 么 O
 ？ O
 
-包 O
-含 O
-合 B-entity
-同 I-entity
-结 I-entity
-案 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
 仓 B-entity
 库 I-entity
 监 I-entity
@@ -10326,69 +5571,6 @@
 型 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-采 B-attribute
-购 I-attribute
-复 I-attribute
-审 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-业 B-entity
-务 I-entity
-人 I-entity
-员 I-entity
-职 I-entity
-业 I-entity
-素 I-entity
-养 I-entity
-？ O
-
-购 B-entity
-销 I-entity
-合 I-entity
-同 I-entity
-流 O
-程 O
-包 O
-含 O
-哪 O
-些 O
-风 O
-险 O
-点 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-采 B-attribute
-购 I-attribute
-价 I-attribute
-差 I-attribute
-核 I-attribute
-对 I-attribute
-等 O
-级 O
-风 O
-险 O
-
 客 B-entity
 商 I-entity
 准 I-entity
@@ -10398,42 +5580,6 @@
 些 O
 环 O
 节 O
-？ O
-
-什 O
-么 O
-业 O
-务 O
-有 O
-开 B-entity
-立 I-entity
-银 I-entity
-行 I-entity
-账 I-entity
-户 I-entity
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-流 O
-程 O
-包 O
-含 O
-价 B-entity
-格 I-entity
-及 I-entity
-结 I-entity
-算 I-entity
-方 I-entity
-式 I-entity
-风 I-entity
-险 I-entity
-识 I-entity
-别 I-entity
-风 O
-险 O
 ？ O
 
 怎 O
@@ -10486,50 +5632,6 @@
 险 O
 ？ O
 
-哪 O
-些 O
-业 O
-务 O
-包 O
-含 O
-采 B-attribute
-购 I-attribute
-审 I-attribute
-批 I-attribute
-等 O
-级 O
-风 O
-险 O
-点 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-会 O
-有 O
-货 B-attribute
-物 I-attribute
-入 I-attribute
-库 I-attribute
-风 I-attribute
-险 I-attribute
-级 O
-风 O
-险 O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-资 B-entity
-金 I-entity
-释 I-entity
-放 I-entity
-？ O
-
 采 B-entity
 购 I-entity
 计 I-entity
@@ -10541,40 +5643,6 @@
 么 O
 危 O
 险 O
-？ O
-
-哪 O
-个 O
-业 O
-务 O
-流 O
-程 O
-有 O
-业 B-entity
-务 I-entity
-人 I-entity
-员 I-entity
-职 I-entity
-业 I-entity
-素 I-entity
-养 I-entity
-风 O
-险 O
-
-包 O
-含 O
-业 B-entity
-务 I-entity
-洽 I-entity
-谈 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-是 O
-什 O
-么 O
 ？ O
 
 合 B-entity
@@ -10658,34 +5726,6 @@
 思 O
 ？ O
 
-什 O
-么 O
-业 O
-务 O
-有 O
-采 B-attribute
-购 I-attribute
-审 I-attribute
-批 I-attribute
-等 O
-级 O
-风 O
-险 O
-
-包 O
-含 O
-折 B-entity
-扣 I-entity
-的 O
-业 O
-务 O
-环 O
-节 O
-有 O
-哪 O
-些 O
-？ O
-
 怎 O
 么 O
 解 O
@@ -10706,20 +5746,6 @@
 是 O
 什 O
 么 O
-？ O
-
-哪 O
-些 O
-业 O
-务 O
-有 O
-物 B-entity
-流 I-entity
-服 I-entity
-务 I-entity
-商 I-entity
-准 I-entity
-入 I-entity
 ？ O
 
 在 B-entity
@@ -10758,25 +5784,6 @@
 负 O
 责 O
 的 O
-？ O
-
-毛 B-entity
-利 I-entity
-核 I-entity
-算 I-entity
-业 O
-务 O
-包 O
-含 O
-的 O
-中 B-attribute
-等 O
-级 O
-风 O
-险 O
-有 O
-哪 O
-些 O
 ？ O
 
 销 B-entity

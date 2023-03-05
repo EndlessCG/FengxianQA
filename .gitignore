@@ -132,6 +132,7 @@ dmypy.json
 
 .vscode-upload.json
 
+temp_files/
 input/pretrained_BERT
 input/data/fengxian/ner/cached*
 input/data/fengxian/sim/cached*
