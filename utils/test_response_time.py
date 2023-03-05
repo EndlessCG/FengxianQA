@@ -3,6 +3,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import time
 from matplotlib import rcParams
+import sys
 rcParams['font.family'] = 'SimHei'
 
 time_profile_ninputs = [500]
@@ -27,8 +28,6 @@ def plot_avg_time(times, topic):
     plt.ylabel("平均请求时间(s)")
     plt.savefig(topic)
 
-<<<<<<< Updated upstream
-=======
 def faq_once():
     faq_questions = load_faq_questions("input/data/fengxian/faq/train_data")
     agent = FengxianQA()
@@ -39,7 +38,6 @@ def kbqa_once():
     agent = FengxianQA()
     agent.do_qa(questions[0])
 
->>>>>>> Stashed changes
 def main():
     agent = FengxianQA()
     questions = load_sim_questions("input/data/fengxian/sim/train.txt")
@@ -49,30 +47,15 @@ def main():
         for q in tqdm(questions[:ninput]):
             t_start = time.time()
             _ = agent.do_qa(q)
-<<<<<<< Updated upstream
-        t_end = time.time()
-        times[ninput] = (t_end - t_start) / ninput
-    plot_avg_time(times, "./kbqa_avgtime.png")
-    times = {}
-=======
             t_end = time.time()
             times.append(t_end - t_start)
     print("kbqa", times)
     # plot_avg_time(times, "./kbqa_avgtime.png")
     times = []
->>>>>>> Stashed changes
     for ninput in time_profile_ninputs:
         for q in tqdm(faq_questions[:ninput]):
             t_start = time.time()
             _ = agent.do_qa(q)
-<<<<<<< Updated upstream
-        t_end = time.time()
-        times[ninput] = (t_end - t_start) / ninput
-    plot_avg_time(times, "./faq_avgtime.png")
-
-if __name__ == '__main__':
-    main()
-=======
             t_end = time.time()
             times.append(t_end - t_start)
     print("faq", times)
@@ -85,4 +68,3 @@ if __name__ == '__main__':
         kbqa_once()
     else:
         main()
->>>>>>> Stashed changes
