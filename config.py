@@ -1,6 +1,6 @@
 fengxian_qa_config = dict(
     # FengxianQA配置
-    verbose=True, # 是否输出fengxian_qa过程中的信息
+    verbose=False, # 是否输出fengxian_qa过程中的信息
                    # 如希望关闭所有信息输出，请将此处，kbqa_runner_config和faq_runner_config的verbose全部设为False
 )
 
@@ -35,11 +35,78 @@ faq_runner_config = dict(
         charset="utf8mb4", # mysql用字符集
     ),
     verbose=False, # 是否启用FAQ输出（暂无效果）
-    admit_threshold=0.6, # 使用FAQ回答的最低FAQ信心值
+    admit_threshold=0.8, # 使用FAQ回答的最低FAQ信心值
     table_name="t_nlp_qa_faq", # mysql表名
     vocab_file="input/data/fengxian/faq/vocab", # FAQ词汇文件路径
     model_dir="models/FAQ/finetune_model/", # 训练好的模型路径
     id2label_file="models/FAQ/finetune_model/id2label.has_init" # FAQ id2label文件路径
+)
+
+ner_model_config=dict(
+
+    # NER模型训练与测试配置
+    # 此处配置仅影响NER模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
+    train=dict(
+        # 参数定义请参考models/NER/NER_main.py或运行python -m models.NER.NER_main --help
+        data_dir="input/data/fengxian/ner",
+        vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
+        model_config="input/pretrained_BERT/bert-base-chinese-config.json",
+        output_dir="models/NER/ner_output",
+        pre_train_model="input/pretrained_BERT/bert-base-chinese-model.bin",
+        max_seq_length=50,
+        train_batch_size=32,
+        eval_batch_size=32,
+        gradient_accumulation_steps=4,
+        num_train_epochs=5,
+    ),
+)
+
+sim_model_config=dict(
+
+    # SIM模型训练配置
+    # 此处配置仅影响SIM模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
+    train=dict(
+        # 参数定义请参考models/SIM/SIM_main.py或运行python -m models.SIM.SIM_main --help
+        data_dir="input/data/fengxian/sim",
+        vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
+        model_config="input/pretrained_BERT/bert-base-chinese-config.json",
+        output_dir="models/SIM/ner_output",
+        pre_train_model="input/pretrained_BERT/bert-base-chinese-model.bin",
+        max_seq_length=50,
+        train_batch_size=32,
+        eval_batch_size=32,
+        gradient_accumulation_steps=4,
+        num_train_epochs=5,
+    ),
+)
+
+faq_model_config=dict(
+
+    # FAQ模型训练配置
+    # 此处配置仅影响FAQ模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
+    pretrain=dict(
+        # 参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main pretrain --help
+        train_file="input/data/fengxian/faq/pre_train_data",
+        vocab_file="input/data/fengxian/faq/vocab",
+        model_save_dir="models/FAQ/pretrain_model",
+    ),
+    finetune=dict(
+        # 参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main finetune --help
+        train_file="input/data/fengxian/faq/train_data",
+        dev_file="input/data/fengxian/faq/dev_data",
+        vocab_file="input/data/fengxian/faq/vocab",
+        output_id2label_file="models/FAQ/finetune_model/id2label.has_init",
+        model_save_dir="models/FAQ/finetune_model",
+        batch_size=32,
+        epoch=30,
+    ),
+    eval=dict(
+        # 参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main eval --help
+        
+    ),
+    predict=dict(
+        # 参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main predict --help
+    ),
 )
 
 ner_model_config=dict(

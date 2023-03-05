@@ -146,6 +146,7 @@ models/FAQ/data/*
 !models/FAQ/data/process
 !models/FAQ/data/file
 !models/FAQ/data/vocab
+temp_files/
 *.tmp
 *.png
 .DS_Store

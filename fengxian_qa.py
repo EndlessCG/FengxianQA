@@ -30,6 +30,9 @@ class FengxianQA:
             kbqa_answer = self.kbqa_runner.do_qa(question)
             return kbqa_answer
 
+    def do_qa_without_faq(self, question):
+            return self.kbqa_runner.do_qa(question)
+    
     def interact(self):
         while True:
             print("====="*10)
