@@ -1,15 +1,17 @@
-实 B-entity
-物 I-entity
-管 I-entity
-理 I-entity
-有 O
-哪 O
-些 O
-等 O
-级 O
+销 B-entity
+售 I-entity
+结 I-entity
+算 I-entity
 的 O
 风 O
 险 O
+都 O
+是 O
+什 O
+么 O
+等 O
+级 O
+的 O
 ？ O
 
 哪 O

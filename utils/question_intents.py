@@ -34,7 +34,7 @@ QUESTION_INTENTS = {
         'display': '实体约束求实体',
         'query': "match (n)-[r]->(n1) \
                   where n1.`名称`='{}' and type(r)='{}' \
-                  return n.`名称`",
+                  return distinct n.`名称`",
         'query_slots': [('e', 0), ('l', 0)],
     },
 
@@ -43,7 +43,7 @@ QUESTION_INTENTS = {
         'answer': ["{}{}{}", "{}的{}是{}"],
         'answer_slots': [[('e', 0), ('l', 0), ('v', 0)], [('v', 0), ('l', 1), ('v', 1)]],
         'display': '两跳求属性',
-        'query': "match (n)-[r]->(n1) where n.`名称` = '{}' and type(r)='{}' return n1.`名称`, n1.`{}`",
+        'query': "match (n)-[r]->(n1) where n.`名称` = '{}' and type(r)='{}' return distinct n1.`名称`, n1.`{}`",
         'query_slots': [('e', 0), ('l', 0), ('l', 1)],
     },
 
@@ -52,7 +52,7 @@ QUESTION_INTENTS = {
         'answer': ["{}{}{}", "{}{}{}"],
         'answer_slots': [[('e', 0), ('l', 0), ('v', 0)], [('v', 0), ('l', 1), ('v', 1)]],
         'display': '两跳求实体',
-        'query': "match (n)-[r]->(n1)-[r1]->(n2) where n.`名称` = '{}' and type(r)='{}' and type(r1)='{}' return n1.`名称`, n2.`名称`",
+        'query': "match (n)-[r]->(n1)-[r1]->(n2) where n.`名称` = '{}' and type(r)='{}' and type(r1)='{}' return distinct n1.`名称`, n2.`名称`",
         'query_slots': [('e', 0), ('l', 0), ('l', 1)],
     },
 
@@ -89,8 +89,8 @@ QUESTION_INTENTS = {
     },
 
     'TeNeE': {
-        'answer': ["{}{}{}的是{}"],
-        'answer_slots': [[('l', 0), ('l', 1), ('e', 0), ('v', 0)]],
+        'answer': ["{}{}的是{}"],
+        'answer_slots': [[('l', 0), ('e', 0), ('v', 0)]],
         'display': '含实体约束的实体约束求实体',
         'query': "match (n)-[r]->(n1)-[r1]->(n2) \
               where type(r)='{}' and type(r1)='{}' and n2.`名称`='{}' \
@@ -116,7 +116,8 @@ SUBGRAPHS = {
     'EeNaT': "match (n)-[r]->(n1) \
             where n.`名称`='{entity}' \
             unwind keys(n1) as attr \
-            return distinct type(r)+'[NEDGE]'+attr+'[TARGET]'",
+            with type(r) as tr, attr where not attr='名称' \
+            return distinct tr+'[NEDGE]'+attr+'[TARGET]'",
     'EeNeT': "match (n)-[r]->()-[r1]->() \
               where n.`名称`='{entity}' \
               return distinct type(r)+'[NEDGE]'+type(r1)+'[TARGET]'",

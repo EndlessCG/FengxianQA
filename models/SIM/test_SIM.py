@@ -5,6 +5,8 @@ from utils import KBQA_TOKEN_LIST
 from config import sim_model_config
 
 import torch
+import time
+import numpy as np
 from tqdm import tqdm, trange
 
 config = sim_model_config.get("test", dict())
@@ -21,10 +23,10 @@ tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
 
 features_dict = dict()
 if do_split_tests:
-    # for t_type in ["1hop", "mhop", "unchain1hop", "unchainmhop"]:
-    for t_type in ["mhop"]:
+    for t_type in ["1hop", "mhop", "unchain1hop", "unchainmhop"]:
+    # for t_type in ["mhop"]:
         features_dict[t_type] = torch.load(f'input/data/fengxian/sim/cached_test_{t_type}_50')
-# features_dict["all SIM"] = torch.load('input/data/fengxian/sim/cached_test_50')
+features_dict["all SIM"] = torch.load('input/data/fengxian/sim/cached_test_50')
 
 def do_test(test_type, features):
     all_input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
@@ -50,6 +52,7 @@ def do_test(test_type, features):
     total_sample_num = 0  # 样本总数目
     all_real_label = []   # 记录所有的真实标签列表
     pred_logits = []   # 记录所有的预测标签列表
+    times = []
 
     for batch in tqdm(test_dataloader, desc="testing"):
         model.eval()
@@ -60,7 +63,10 @@ def do_test(test_type, features):
                     'token_type_ids': batch[2],
                     'labels': batch[3],
                     }
+            start = time.time()
             outputs = model(**inputs)
+            end = time.time()
+            times.append(end - start)
             loss, logits = outputs[0], outputs[1]
 
             total_loss += loss * batch[0].shape[0]  # loss * 样本个数
@@ -75,6 +81,7 @@ def do_test(test_type, features):
     question_acc,label_acc = cal_acc(pred_logits, all_real_label)
 
     print(f"TEST TYPE:\t{test_type}")
+    print(f"response time: {np.average(times)} +- {np.std(times)}")
     print("loss",loss.item())
     print("question_acc",question_acc)
     print("label_acc",label_acc)

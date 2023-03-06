@@ -10,8 +10,6 @@ if [ ! -f "input/data/fengxian/faq/train_data" ]; then
 fi
 python -m models.FAQ.FAQ_main pretrain
 python -m models.FAQ.FAQ_main finetune
-echo "Testing FAQ..."
-python -m models.FAQ.FAQ_main eval
 
 # train NER
 cd $bert_kbqa_home
@@ -37,11 +35,15 @@ if [ ! -f "input/pretrained_BERT/bert-base-chinese-model.bin" ] ||
 fi
 echo "Training NER..."
 python -m models.NER.NER_main
-echo "Testing NER..."
-python -m models.NER.test_NER
 
 # train SIM
 echo "Training SIM..."
 python -m models.SIM.SIM_main
+
+# test
+echo "Testing FAQ..."
+python -m models.FAQ.FAQ_main eval
+echo "Testing NER..."
+python -m models.NER.test_NER
 echo "Testing SIM..."
 python -m models.SIM.test_SIM

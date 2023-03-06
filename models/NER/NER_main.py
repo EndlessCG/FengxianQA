@@ -157,9 +157,11 @@ class NerProcessor(DataProcessor):
         return self._create_examples(
             os.path.join(data_dir, "validate.txt"))
 
-    def get_test_examples(self, data_dir):
+    def get_test_examples(self,data_dir, subtest=""):
+        logger.info(f"*******  test {subtest} ********")
+        file_path = "test.txt" if subtest == "" else f"{subtest}.txt"
         return self._create_examples(
-            os.path.join(data_dir, "test.txt"))
+            os.path.join(data_dir, file_path))
 
 
     def get_labels(self):
@@ -197,7 +199,7 @@ class NerProcessor(DataProcessor):
 def load_and_cache_example(args,tokenizer,processor,data_type):
 
 
-    type_list = ['train', 'validate', 'test']
+    type_list = ['train', 'validate', 'test', 'test_1hop', 'test_mhop', 'test_unchain1hop', 'test_unchainmhop']
     if data_type not in type_list:
         raise ValueError("data_type must be one of {}".format(" ".join(type_list)))
 
@@ -214,7 +216,7 @@ def load_and_cache_example(args,tokenizer,processor,data_type):
         elif type_list[2] == data_type:
             examples = processor.get_test_examples(args.data_dir)
         else:
-            raise ValueError("UNKNOW ERROR")
+            examples = processor.get_test_examples(args.data_dir, subtest=data_type)
         features = crf_convert_examples_to_features(examples=examples,tokenizer=tokenizer,max_length=args.max_seq_length,label_list=label_list)
         logger.info("Saving features into cached file %s", cached_features_file)
         torch.save(features, cached_features_file)
@@ -456,7 +458,11 @@ def main():
 
     train_dataset = load_and_cache_example(args,tokenizer,processor,'train')
     eval_dataset = load_and_cache_example(args,tokenizer,processor,'validate')
-    test_dataset = load_and_cache_example(args, tokenizer, processor, 'test')
+    _ = load_and_cache_example(args,tokenizer,processor,'test')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
 
     if args.do_train:
         trains(args,train_dataset,eval_dataset,model)

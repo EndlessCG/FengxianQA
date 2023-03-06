@@ -53,15 +53,14 @@ def split_data(data, rseed=2023, ratio=[0.6, 0.2, 0.2], shuffle=True):
         acc = end_idx
     return datasets
 
-def make_sim_dataset(data, neg_to_pos=3):
+def make_sim_dataset(data, all_sims, neg_to_pos=3):
     filled_data = []
-    all_sims = set([d["sim"] for d in data])
     for pos_data in copy.deepcopy(data):
         pos_data["label"] = 1
         filled_data.append(pos_data)
         
         if neg_to_pos == -1:
-            neg_sample = all_sims
+            neg_sample = copy.deepcopy(all_sims)
             neg_sample.remove(pos_data["sim"])
         else:
             neg_sample = random.sample(all_sims, neg_to_pos)
@@ -165,7 +164,8 @@ def main():
     data = generate_data(trans_dests=[])
     train_data, dev_data, test_data = split_data(data, rseed=202302, ratio=[0.6, 0.2, 0.2], shuffle=True)
     ner_train_set, ner_dev_set, ner_test_set = make_ner_dataset(train_data), make_ner_dataset(dev_data), make_ner_dataset(test_data)
-    sim_train_set, sim_dev_set, sim_test_set = make_sim_dataset(train_data), make_sim_dataset(dev_data), make_sim_dataset(test_data, neg_to_pos=-1)
+    all_sims = set([d["sim"] for d in data])
+    sim_train_set, sim_dev_set, sim_test_set = make_sim_dataset(train_data, all_sims=all_sims), make_sim_dataset(dev_data, all_sims=all_sims), make_sim_dataset(test_data, all_sims=all_sims, neg_to_pos=-1)
     write_ner_dataset(ner_train_set, ner_dev_set, ner_test_set, NER_BASE)
     write_sim_dataset(sim_train_set, sim_dev_set, sim_test_set, SIM_BASE)
 

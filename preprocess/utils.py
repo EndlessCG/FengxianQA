@@ -243,6 +243,30 @@ def get_question_descriptions():
 
         # EeTaA
         [
+            # 业务流程-[业务环节]-负责角色
+            'EeTaA',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                yewuhuanjie, left_on=':END_ID', right_on=':ID', how='inner'
+            ),
+            ["{}业务中由{}负责的有哪些？", "{}里哪些业务由{}负责？", "{}中哪几个环节由{}负责"],
+            [':START_ID', '负责角色'],
+            [(':START_ID', 'entity'), ('负责角色', 'attribute')], # ner
+            '包含[TARGET]负责角色', # path
+        ],
+        [
+            # 业务流程-[业务环节]-负责角色
+            'EeTaA',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                yewuhuanjie, left_on=':END_ID', right_on=':ID', how='inner'
+            ),
+            ["{}负责{}里的哪些业务？", "{}参与{}里哪些业务？", "{}负责{}中哪些部分？", "{}负责哪个{}环节？"],
+            ['负责角色', ':START_ID'],
+            [(':START_ID', 'entity'), ('负责角色', 'attribute')], # ner
+            '包含[TARGET]负责角色', # path
+        ],
+        [
             # 业务环节-[风险]-风险等级
             'EeTaA',
             pd.merge(
@@ -280,8 +304,8 @@ def get_question_descriptions():
             ),
             ["哪些流程由{}负责？", "{}负责哪些业务流程？", 
             "{}参与哪些业务流程？", "哪些业务流程里有{}参与？"],
-            [':ID_y'],
-            [(':ID_y', 'attribute')], # ner
+            ['负责角色'],
+            [('负责角色', 'attribute')], # ner
             '[TARGET]包含[NEGDE]负责角色', # path
         ],
         [
@@ -293,8 +317,8 @@ def get_question_descriptions():
             ),
             ["哪些业务有{}级风险？", "哪些业务包含{}等级风险点？", 
             "什么业务有{}等级风险", "哪些业务会有{}级风险"],
-            [':ID_y'],
-            [(':ID_y', 'attribute')], # ner
+            ['风险等级'],
+            [('风险等级', 'attribute')], # ner
             '[TARGET]包含[NEGDE]风险等级', # path
         ],
         # [

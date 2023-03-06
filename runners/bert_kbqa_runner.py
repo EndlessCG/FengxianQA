@@ -27,28 +27,33 @@ class BertKBQARunner():
                                 neo4j_config['password'])
         
         with torch.no_grad():
-            self._print('加载NER模型...')
-            tokenizer_inputs = ()
-            tokenizer_kwards = {'do_lower_case': False,
-                                'max_len': 40,
-                                'vocab_file': 'input/pretrained_BERT/bert-base-chinese-vocab.txt'}
-            self.ner_processor = NerProcessor()
-            self.sim_processor = SimProcessor()
-            self.tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
-            self.tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
+            self._load_ner_model(ner_config)
+            self._load_sim_model(sim_config)
+            
+    def _load_ner_model(self, ner_config):
+        self._print('加载NER模型...')
+        tokenizer_inputs = ()
+        tokenizer_kwards = {'do_lower_case': False,
+                            'max_len': 40,
+                            'vocab_file': 'input/pretrained_BERT/bert-base-chinese-vocab.txt'}
+        self.ner_processor = NerProcessor()
+        self.sim_processor = SimProcessor()
+        self.tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
+        self.tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
 
-            self.ner_model = self.get_ner_model(config_file=ner_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
-                                           pre_train_model=ner_config.get('pre_train_model','models/ner_output/best_ner.bin'),
-                                           label_num=len(self.ner_processor.get_labels()))
-            self.ner_model = self.ner_model.to(self.device)
-            self.ner_model.eval()
+        self.ner_model = self.get_ner_model(config_file=ner_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
+                                        pre_train_model=ner_config.get('pre_train_model','models/ner_output/best_ner.bin'),
+                                        label_num=len(self.ner_processor.get_labels()))
+        self.ner_model = self.ner_model.to(self.device)
+        self.ner_model.eval()
 
-            self._print('加载SIM模型...')
-            self.sim_model = self.get_sim_model(config_file=sim_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
-                                            pre_train_model=sim_config.get('pre_train_model', 'sim_output/best_sim.bin'),
-                                            label_num=len(self.sim_processor.get_labels()))
-            self.sim_model = self.sim_model.to(self.device)
-            self.sim_model.eval()
+    def _load_sim_model(self, sim_config):
+        self._print('加载SIM模型...')
+        self.sim_model = self.get_sim_model(config_file=sim_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
+                                        pre_train_model=sim_config.get('pre_train_model', 'sim_output/best_sim.bin'),
+                                        label_num=len(self.sim_processor.get_labels()))
+        self.sim_model = self.sim_model.to(self.device)
+        self.sim_model.eval()
 
     def _print(self, *args):
         if self._verbose:

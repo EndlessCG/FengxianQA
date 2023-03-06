@@ -6,7 +6,7 @@ fengxian_qa_config = dict(
 
 kbqa_runner_config = dict(
     # KBQA配置
-    verbose=True, # 是否输出KBQA过程详细信息
+    verbose=False, # 是否输出KBQA过程详细信息
     sim_accept_threshold=0.1, # SIM模型认定有答案的最低信心值
     neo4j=dict(
         neo4j_addr="bolt://localhost:7687", # neo4j地址
@@ -126,6 +126,10 @@ ner_model_config=dict(
         gradient_accumulation_steps=4,
         num_train_epochs=5,
     ),
+    test=dict(
+        model_path='models/NER/ner_output/best_ner.bin',
+        do_split_tests=True,
+    )
 )
 
 sim_model_config=dict(

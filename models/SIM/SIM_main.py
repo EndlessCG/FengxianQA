@@ -320,7 +320,7 @@ def evaluate(args, model, eval_dataset):
     total_loss = 0.       # loss 的总和
     total_sample_num = 0  # 样本总数目
     all_real_label = []   # 记录所有的真实标签列表
-    all_pred_label = []   # 记录所有的预测标签列表
+    all_logits = []   # 记录所有的预测标签列表
     for batch in tqdm(eval_dataloader, desc="Evaluating"):
         model.eval()
         batch = tuple(t.to(args.device) for t in batch)
@@ -338,13 +338,12 @@ def evaluate(args, model, eval_dataset):
 
             # pred = logits.argmax(dim=-1).tolist()     # 得到预测的label转为list
 
-            # all_pred_label.extend(pred)                        # 记录预测的 label
+            all_logits.append(logits)                        # 记录预测的 label
             all_real_label.extend(batch[3].view(-1).tolist())  # 记录真实的label
 
     loss = total_loss / total_sample_num
-
-
-    question_acc,label_acc = cal_acc(logits.softmax(dim=-1), all_real_label)
+    question_acc,label_acc = cal_acc(torch.cat(all_logits).softmax(dim=-1).detach().cpu().numpy(), 
+                                    all_real_label)
 
     model.train()
     return loss,question_acc,label_acc
