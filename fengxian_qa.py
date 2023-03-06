@@ -1,30 +1,38 @@
 from runners.bert_kbqa_runner import BertKBQARunner
 from runners.faq_runner import FAQRunner
-from config import bert_kbqa_config, faq_config
+from config import fengxian_qa_config, kbqa_runner_config, faq_runner_config
 import time
 
 class FengxianQA:
     def __init__(self):
         init_start = time.time()
-        self.kbqa_runner = BertKBQARunner(bert_kbqa_config)
-        self.faq_runner = FAQRunner(faq_config)
+        self.kbqa_runner = BertKBQARunner(kbqa_runner_config)
+        self.faq_runner = FAQRunner(faq_runner_config)
         self.faq_runner.disable_warnings()
+        self._verbose = fengxian_qa_config.get("verbose", "False")
         init_end = time.time()
-        print("初始化用时：", init_end - init_start)
+        self._print("初始化用时：", init_end - init_start)
+
+    def _print(self, *args):
+        if self._verbose:
+            print("FengxianQA:", *args)
 
     def do_qa(self, question):
         if question == "":
             return "请输入问题"
         faq_answer, faq_prob = self.faq_runner.do_qa(question)
-        print("FAQ信心：", faq_prob)
-        if faq_prob > faq_config.get("admit_threshold", 0.8):
-            print("使用FAQ回答")
+        self._print("FAQ信心：", faq_prob)
+        if faq_prob > faq_runner_config.get("admit_threshold", 0.8):
+            self._print("使用FAQ回答")
             return faq_answer
         else:
-            print("使用KBQA回答")
+            self._print("使用KBQA回答")
             kbqa_answer = self.kbqa_runner.do_qa(question)
             return kbqa_answer
 
+    def do_qa_without_faq(self, question):
+            return self.kbqa_runner.do_qa(question)
+    
     def interact(self):
         while True:
             print("====="*10)

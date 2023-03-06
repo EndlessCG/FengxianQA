@@ -16,8 +16,8 @@ def back_trans(content, lan):
     import json
     import time
     import pandas as pd
-    appid = '20221111001447059' # 填写你的appid
-    secretKey = 'gAoSilzZXNQHLyXoM3zA' # 填写你的密钥
+    appid = '20220214001082660' # 填写你的appid
+    secretKey = 'SGBHW7zPHnvP6oYABRiu' # 填写你的密钥
     httpClient = None
     myurl = '/api/trans/vip/translate' #    百度翻译API
     ChineseLang = 'zh' # 原文语种，填写中文 (zh)，也可自动识别 (填auto)
@@ -35,11 +35,18 @@ def back_trans(content, lan):
     httpClient.request('GET', first_url)
     response = httpClient.getresponse()
     result_all = response.read().decode("utf-8")
+    if result_all == "":
+        print("Time exceded for: ", content)
+        return ""
     english_result = json.loads(result_all)
-    english_result = english_result['trans_result'][0]['dst'] # 获取翻译后的英文文本
+    try:
+        english_result = english_result['trans_result'][0]['dst'] # 获取翻译后的英文文本
+    except KeyError:
+        print("Error: ", english_result)
+        return ""
     
     # 百度翻译，请求之间要限制频率，等待一秒
-    time.sleep(1)
+    time.sleep(0.1)
     
     # 翻译回中文，from=EnglishLang，to=ChineseLang
     salt = random.randint(32768, 65536)
@@ -52,8 +59,15 @@ def back_trans(content, lan):
     httpClient.request('GET', second_url)
     response = httpClient.getresponse()
     result_all = response.read().decode("utf-8")
+    if result_all == "":
+        print("Time exceded for: ", content)
+        return ""
     chinese_result = json.loads(result_all)
-    chinese_result = chinese_result['trans_result'][0]['dst'] # 获取翻译后的中文文本
+    try:
+        chinese_result = chinese_result['trans_result'][0]['dst'] # 获取翻译后的中文文本
+    except KeyError:
+        print("Error: ", chinese_result)
+        return ""
     return chinese_result
 
 if __name__ == "__main__":

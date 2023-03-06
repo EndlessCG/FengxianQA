@@ -19,35 +19,45 @@ class BertKBQARunner():
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         transformers.logging.set_verbosity_error()
         self.config = config
-        print('连接数据库...')
+        self._verbose = config.get("verbose", "False")
+        self._print('连接数据库...')
         neo4j_config, ner_config, sim_config = config['neo4j'], config['ner'], config['sim']
         self.graph = Neo4jGraph(neo4j_config['neo4j_addr'], 
                                 neo4j_config['username'], 
                                 neo4j_config['password'])
         
-        print('加载模型...')
         with torch.no_grad():
-            tokenizer_inputs = ()
-            tokenizer_kwards = {'do_lower_case': False,
-                                'max_len': 40,
-                                'vocab_file': 'input/pretrained_BERT/bert-base-chinese-vocab.txt'}
-            self.ner_processor = NerProcessor()
-            self.sim_processor = SimProcessor()
-            self.tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
-            self.tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
+            self._load_ner_model(ner_config)
+            self._load_sim_model(sim_config)
+            
+    def _load_ner_model(self, ner_config):
+        self._print('加载NER模型...')
+        tokenizer_inputs = ()
+        tokenizer_kwards = {'do_lower_case': False,
+                            'max_len': 40,
+                            'vocab_file': 'input/pretrained_BERT/bert-base-chinese-vocab.txt'}
+        self.ner_processor = NerProcessor()
+        self.sim_processor = SimProcessor()
+        self.tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
+        self.tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
 
-            self.ner_model = self.get_ner_model(config_file=ner_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
-                                           pre_train_model=ner_config.get('pre_train_model','models/ner_output/best_ner.bin'),
-                                           label_num=len(self.ner_processor.get_labels()))
-            self.ner_model = self.ner_model.to(self.device)
-            self.ner_model.eval()
+        self.ner_model = self.get_ner_model(config_file=ner_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
+                                        pre_train_model=ner_config.get('pre_train_model','models/ner_output/best_ner.bin'),
+                                        label_num=len(self.ner_processor.get_labels()))
+        self.ner_model = self.ner_model.to(self.device)
+        self.ner_model.eval()
 
-            self.sim_model = self.get_sim_model(config_file=sim_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
-                                            pre_train_model=sim_config.get('pre_train_model', 'sim_output/best_sim.bin'),
-                                            label_num=len(self.sim_processor.get_labels()))
-            self.sim_model = self.sim_model.to(self.device)
-            self.sim_model.eval()
+    def _load_sim_model(self, sim_config):
+        self._print('加载SIM模型...')
+        self.sim_model = self.get_sim_model(config_file=sim_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
+                                        pre_train_model=sim_config.get('pre_train_model', 'sim_output/best_sim.bin'),
+                                        label_num=len(self.sim_processor.get_labels()))
+        self.sim_model = self.sim_model.to(self.device)
+        self.sim_model.eval()
 
+    def _print(self, *args):
+        if self._verbose:
+            print("KBQA:", *args)
 
     def get_ner_model(self, config_file, pre_train_model, label_num=2):
         model = BertCrf(config_name=config_file,
@@ -117,7 +127,7 @@ class BertKBQARunner():
         o_idx = CRF_LABELS.index('O')
 
         if not any(i in pre_tag for i in [b_entity_idx, i_entity_idx, b_attr_idx, i_attr_idx]):
-            print("没有在句子[{}]中发现实体".format(sentence))
+            self._print("没有在句子[{}]中发现实体".format(sentence))
             return '', ''
         
         entity_start_idx, attr_start_idx = -1, -1
@@ -250,9 +260,9 @@ class BertKBQARunner():
         e_mention_list = set(e_mention_list)
         a_mention_list = set(a_mention_list)
         if len(e_mention_list) != 0:
-            print("候选实体：", e_mention_list)
+            self._print("候选实体：", e_mention_list)
         if len(a_mention_list) != 0:
-            print("候选属性：", a_mention_list)
+            self._print("候选属性：", a_mention_list)
         if len(e_mention_list) == 0 and len(a_mention_list) == 0: # 如果问题中不存在实体
             return "未找到该问题中的实体"
 
@@ -282,8 +292,8 @@ class BertKBQARunner():
             # 未找到
             return f"未找到\"{e_mention_list.union(a_mention_list)}\"相关信息"
         
-        print("链接到的实体：", linked_entity)
-        print("链接到的属性：", linked_attribute)
+        self._print("链接到的实体：", linked_entity)
+        self._print("链接到的属性：", linked_attribute)
 
         # 3. Candidate Subgraph Generation
         sgraph_type_idx = {}
@@ -301,7 +311,8 @@ class BertKBQARunner():
             except KeyError:
                 continue
             sgraph_candidates += query_result
-            sgraph_type_idx[sgraph_type] = acc_idx
+            for g in query_result:
+                sgraph_type_idx[g] = sgraph_type
             acc_idx += len(query_result)
     
         # 4. Cadidate Subgraph Selection
@@ -310,17 +321,9 @@ class BertKBQARunner():
         if match_idx == -1:
             return f"未在\"{','.join(linked_entity + linked_attribute)}\"中找到问题相关信息"
         
-        last_intent = ""
-        for type_intent, type_idx in sgraph_type_idx.items():
-            if match_idx < type_idx:
-                intention = last_intent
-                break
-            last_intent = type_intent
-        if match_idx == len(sgraph_type_idx):
-            intention = last_intent
-        
-        print(f"问题类型：{QUESTION_INTENTS[intention].get('display', intention)}")
-        print(f"问题路径：{sgraph_candidates[match_idx]}")
+        intention = sgraph_type_idx[sgraph_candidates[match_idx]]
+        self._print(f"问题类型：{QUESTION_INTENTS[intention].get('display', intention)}")
+        self._print(f"问题路径：{sgraph_candidates[match_idx]}")
 
         # 5. Query Generation
         answer_query = QUESTION_INTENTS[intention]['query']
