@@ -90,10 +90,18 @@ def test_init_time(ntrials):
 
 
 def main():
-    test_init_time(ntrials=10)
+    # test_init_time(ntrials=10)
     agent = FengxianQA()
     questions = load_sim_questions("input/data/fengxian/sim/train.txt")
     faq_questions = load_faq_questions("input/data/fengxian/faq/train_data")
+    times = []
+    for ninput in time_profile_ninputs:
+        for q in tqdm(questions[:ninput]):
+            t_start = time.time()
+            _ = agent.do_qa(q)
+            t_end = time.time()
+            times.append(t_end - t_start)
+    print("full", np.average(times[1:]), "+-", np.std(times[1:]))
     times = []
     for ninput in time_profile_ninputs:
         for q in tqdm(questions[:ninput]):

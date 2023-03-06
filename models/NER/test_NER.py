@@ -27,10 +27,10 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
 features_dict = dict()
-if do_split_tests:
-    for t_type in ["1hop", "mhop", "unchain1hop", "unchainmhop"]:
-    # for t_type in ["mhop"]:
-        features_dict[t_type] = torch.load(f'input/data/fengxian/ner/cached_test_{t_type}_50')
+# if do_split_tests:
+#     for t_type in ["1hop"]:
+#     # for t_type in ["mhop"]:
+#         features_dict[t_type] = torch.load(f'input/data/fengxian/ner/cached_test_{t_type}_50')
 features_dict["all NER"] = torch.load('input/data/fengxian/ner/cached_test_50')
 
 def do_test(test_type, features, duplicate=10):

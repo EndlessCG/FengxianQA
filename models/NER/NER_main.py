@@ -48,7 +48,7 @@ logger = logging.getLogger(__name__)
 # 这里做以下测试，第一 LABELS = ["O", "B-LOC", "I-LOC"] ，因为需要预测的就只有这三个。
 # 第二 LABELS = ["O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "X", "[CLS]", "[SEP]"]
 
-CRF_LABELS = ["O", "B-entity", "I-entity", "B-attribute", "I-attribute"]
+CRF_LABELS = ["O", "B-entity", "I-entity"]
 
 
 def statistical_real_sentences(input_ids:torch.Tensor,mask:torch.Tensor,predict:list)-> list:
@@ -459,10 +459,10 @@ def main():
     train_dataset = load_and_cache_example(args,tokenizer,processor,'train')
     eval_dataset = load_and_cache_example(args,tokenizer,processor,'validate')
     _ = load_and_cache_example(args,tokenizer,processor,'test')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
 
     if args.do_train:
         trains(args,train_dataset,eval_dataset,model)

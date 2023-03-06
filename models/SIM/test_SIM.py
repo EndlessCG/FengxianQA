@@ -22,10 +22,9 @@ tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
 tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
 
 features_dict = dict()
-if do_split_tests:
-    for t_type in ["1hop", "mhop", "unchain1hop", "unchainmhop"]:
-    # for t_type in ["mhop"]:
-        features_dict[t_type] = torch.load(f'input/data/fengxian/sim/cached_test_{t_type}_50')
+# if do_split_tests:
+#     for t_type in ["1hop"]:
+#         features_dict[t_type] = torch.load(f'input/data/fengxian/sim/cached_test_{t_type}_50')
 features_dict["all SIM"] = torch.load('input/data/fengxian/sim/cached_test_50')
 
 def do_test(test_type, features):

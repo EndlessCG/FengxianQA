@@ -7,7 +7,7 @@ fengxian_qa_config = dict(
 kbqa_runner_config = dict(
     # KBQA配置
     verbose=False, # 是否输出KBQA过程详细信息
-    sim_accept_threshold=0.1, # SIM模型认定有答案的最低信心值
+    sim_accept_threshold=0.01, # SIM模型认定有答案的最低信心值
     neo4j=dict(
         neo4j_addr="bolt://localhost:7687", # neo4j地址
         username="neo4j", # neo4j用户名

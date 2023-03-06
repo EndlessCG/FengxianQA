@@ -2,14 +2,14 @@
 bert_kbqa_home=$(cd $(dirname $0); cd ..; pwd)
 
 # train FAQ
-echo "Training FAQ..."
-if [ ! -f "input/data/fengxian/faq/train_data" ]; then
-    python preprocess/FAQ/process_std.py
-    python preprocess/FAQ/data_generate.py
-    python preprocess/FAQ/file_to_mysql.py
-fi
-python -m models.FAQ.FAQ_main pretrain
-python -m models.FAQ.FAQ_main finetune
+# echo "Training FAQ..."
+# if [ ! -f "input/data/fengxian/faq/train_data" ]; then
+#     python preprocess/FAQ/process_std.py
+#     python preprocess/FAQ/data_generate.py
+#     python preprocess/FAQ/file_to_mysql.py
+# fi
+# python -m models.FAQ.FAQ_main pretrain
+# python -m models.FAQ.FAQ_main finetune
 
 # train NER
 cd $bert_kbqa_home
