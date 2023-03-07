@@ -1,5 +1,5 @@
 from .FAQ_model import FAQ
-from utils import merge_arg_and_config
+from utils import merge_arg_and_config, convert_config_paths
 from config import faq_model_config
 import tensorflow as tf
 import sys
@@ -45,7 +45,7 @@ def main():
     pretrain_parser.add_argument("--clip_norm", type=float, default=1, help='Clip normalization rate.')
     pretrain_parser.add_argument("--max_seq_len", type=int, default=100, help="Max seqence length.")
     pretrain_parser.add_argument("--use_queue", type=int, default=0, help="Whether or not using a queue for input.")
-    pretrain_parser.add_argument("--init_checkpoint", type=str, default="", help="Initial checkpoint")
+    pretrain_parser.add_argument("--init_checkpoint_file", type=str, default="", help="Initial checkpoint")
     pretrain_parser.add_argument("--enqueue_thread_num", type=int, default=5, help="Enqueue thread count.")
     # pretrain_parser.add_argument("--representation_type", type=str, default="lstm", help="representation type include:lstm, transformer")
     pretrain_parser.add_argument("--representation_type", type=str, default="transformer", help="representation type include:lstm, transformer")
@@ -72,7 +72,7 @@ def main():
     finetune_parser.add_argument("--dropout_rate", type=float, default=0.1, help="Dropout rate")
     finetune_parser.add_argument("--seed", type=int, default=1, help="Random seed value.")
     finetune_parser.add_argument("--print_step", type=int, default=1000, help="Print log every x step.")
-    finetune_parser.add_argument("--init_checkpoint", type=str, default='models/FAQ/pretrain_model/lm_pretrain.ckpt-10000',  help="Initial checkpoint (usually from a pre-trained model).") 
+    finetune_parser.add_argument("--init_checkpoint_file", type=str, default='models/FAQ/pretrain_model/lm_pretrain.ckpt-10000',  help="Initial checkpoint (usually from a pre-trained model).") 
     finetune_parser.add_argument("--max_len", type=int, default=100, help="Max seqence length.")
     finetune_parser.add_argument("--layer_num", type=int, default=2, help="LSTM layer num.")
 
@@ -101,6 +101,7 @@ def main():
     predict_parser.add_argument("--id2label_file", type=str, default="models/FAQ/finetune_model/id2label.has_init", help="File containing (id, class label) map.")
 
     args = parser.parse_args()
+    convert_config_paths(faq_model_config)
     command = sys.argv[1]
     if command == "pretrain":
         merge_arg_and_config(args, faq_model_config.get("pretrain", []))

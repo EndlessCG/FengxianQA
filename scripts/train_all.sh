@@ -1,5 +1,6 @@
 #! /bin/bash
 bert_kbqa_home=$(cd $(dirname $0); cd ..; pwd)
+cd $bert_kbqa_home
 
 # train FAQ
 echo "Training FAQ..."

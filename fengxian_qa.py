@@ -1,11 +1,14 @@
 from runners.bert_kbqa_runner import BertKBQARunner
 from runners.faq_runner import FAQRunner
 from config import fengxian_qa_config, kbqa_runner_config, faq_runner_config
+from utils import convert_config_paths
 import time
 
 class FengxianQA:
     def __init__(self):
         init_start = time.time()
+        convert_config_paths(kbqa_runner_config)
+        convert_config_paths(faq_runner_config)
         self.kbqa_runner = BertKBQARunner(kbqa_runner_config)
         self.faq_runner = FAQRunner(faq_runner_config)
         self.faq_runner.disable_warnings()

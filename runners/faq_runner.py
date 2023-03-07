@@ -1,5 +1,5 @@
 import tensorflow as tf
-from models.FAQ.FAQ_model import FAQ
+from models.FAQ import FAQ
 import argparse
 
 class FAQRunner():

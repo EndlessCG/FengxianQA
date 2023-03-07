@@ -64,9 +64,9 @@ class FAQ():
         with tf.Session(config=config) as sess:
             sess.run(tf.global_variables_initializer())
 
-            if args.init_checkpoint:
-                tf.logging.info('restore the checkpoint : ' + str(args.init_checkpoint))
-                saver.restore(sess, args.init_checkpoint)
+            if args.init_checkpoint_file:
+                tf.logging.info('restore the checkpoint : ' + str(args.init_checkpoint_file))
+                saver.restore(sess, args.init_checkpoint_file)
 
             total_loss = 0
             num = 0

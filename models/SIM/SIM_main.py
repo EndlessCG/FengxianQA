@@ -42,7 +42,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import classification_report
 
-from utils import KBQA_TOKEN_LIST, merge_arg_and_config
+from utils import KBQA_TOKEN_LIST, merge_arg_and_config, convert_config_paths
 from config import sim_model_config, kbqa_runner_config
 logger = logging.getLogger(__name__)
 
@@ -297,9 +297,9 @@ def evaluate_and_save_model(args,model,eval_dataset,epoch,global_step,best_acc):
                 epoch + 1, args.num_train_epochs,global_step,eval_loss, question_acc,label_acc)
     if question_acc > best_acc:
         best_acc = question_acc
-        torch.save(model.state_dict(), os.path.join(args.output_dir, args.output_model_name))
+        torch.save(model.state_dict(), os.path.join(args.output_dir, args.output_model_file))
         logging.info("save the best model %s , question_acc = %f",
-                     os.path.join(args.output_dir, args.output_model_name),best_acc)
+                     os.path.join(args.output_dir, args.output_model_file),best_acc)
     return best_acc
 
 
@@ -357,13 +357,13 @@ def main():
 
     parser.add_argument("--vob_file", default="input/pretrained_BERT/bert-base-chinese-vocab.txt", type=str, required=False,
                         help="词表文件")
-    parser.add_argument("--model_config", default="input/pretrained_BERT/bert-base-chinese-config.json", type=str, required=False,
+    parser.add_argument("--model_config_file", default="input/pretrained_BERT/bert-base-chinese-config.json", type=str, required=False,
                         help="模型配置文件json文件")
-    parser.add_argument("--pre_train_model", default="input/pretrained_BERT/bert-base-chinese-model.bin", type=str, required=False,
+    parser.add_argument("--pre_train_model_file", default="input/pretrained_BERT/bert-base-chinese-model.bin", type=str, required=False,
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
     parser.add_argument("--output_dir", default="models/SIM/sim_output", type=str, required=False,
                         help="输出结果的文件")
-    parser.add_argument("--output_model_name", default="best_sim.bin", type=str, required=False,
+    parser.add_argument("--output_model_file", default="best_sim.bin", type=str, required=False,
                         help="输出的模型文件名")
 
     # Other parameters
@@ -395,11 +395,12 @@ def main():
                         help="数据集中负例-正例比")
 
     args = parser.parse_args()
+    convert_config_paths(sim_model_config)
     merge_arg_and_config(args, sim_model_config)
     assert os.path.exists(args.data_dir)
     assert os.path.exists(args.vob_file)
-    assert os.path.exists(args.model_config)
-    assert os.path.exists(args.pre_train_model)
+    assert os.path.exists(args.model_config_file)
+    assert os.path.exists(args.pre_train_model_file)
 
 
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -428,11 +429,11 @@ def main():
 
 
 
-    bert_config = BertConfig.from_pretrained(args.model_config)
+    bert_config = BertConfig.from_pretrained(args.model_config_file)
     bert_config.num_labels = len(processor.get_labels()) # [0,1]
     model_kwargs = {'config':bert_config}
 
-    model = BertForSequenceClassification.from_pretrained(args.pre_train_model, **model_kwargs)
+    model = BertForSequenceClassification.from_pretrained(args.pre_train_model_file, **model_kwargs)
     model = model.to(args.device)
     model.resize_token_embeddings(len(tokenizer))
 

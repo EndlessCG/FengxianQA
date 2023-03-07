@@ -309,11 +309,11 @@ def create_finetune_classification_model(input_arg, other_arg_dict):
 
     tvars = tf.trainable_variables()
     initialized_variable_names = {}
-    if input_arg.init_checkpoint:
+    if input_arg.init_checkpoint_file:
         tf.logging.info("init from checkpoint!")
         assignment_map, initialized_variable_names = get_assignment_map_from_checkpoint(tvars,
-                                                                                        input_arg.init_checkpoint)
-        tf.train.init_from_checkpoint(input_arg.init_checkpoint, assignment_map)
+                                                                                        input_arg.init_checkpoint_file)
+        tf.train.init_from_checkpoint(input_arg.init_checkpoint_file, assignment_map)
 
     tf.logging.info("**** Trainable Variables ****")
     for var in tvars:
