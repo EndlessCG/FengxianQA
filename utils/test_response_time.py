@@ -13,7 +13,7 @@ from .operations import load_faq_questions, load_sim_questions
 
 rcParams['font.family'] = 'SimHei'
 
-time_profile_ninputs = [500]
+time_profile_ninputs = [10, 50, 100, 200]
 
 def plot_avg_time(times, topic):
     plt.hist(times)
@@ -94,39 +94,47 @@ def main():
     agent = FengxianQA()
     questions = load_sim_questions("input/data/fengxian/sim/train.txt")
     faq_questions = load_faq_questions("input/data/fengxian/faq/train_data")
-    times = []
     for ninput in time_profile_ninputs:
+        times = []
+        print("ninput:", ninput)
         for q in tqdm(questions[:ninput]):
             t_start = time.time()
             _ = agent.do_qa(q)
             t_end = time.time()
             times.append(t_end - t_start)
-    print("full", np.average(times[1:]), "+-", np.std(times[1:]))
-    times = []
+        print("total time", np.sum(times[1:]))
+        print("full", np.average(times[1:]), "+-", np.std(times[1:]))
     for ninput in time_profile_ninputs:
+        times = []
+        print("ninput:", ninput)
         for q in tqdm(questions[:ninput]):
             t_start = time.time()
             _ = agent.do_qa_without_faq(q)
             t_end = time.time()
             times.append(t_end - t_start)
-    print("kbqa", np.average(times[1:]), "+-", np.std(times[1:]))
+        print("total time", np.sum(times[1:]))
+        print("kbqa", np.average(times[1:]), "+-", np.std(times[1:]))
     # plot_avg_time(times, "./kbqa_avgtime.png")
-    times = []
     for ninput in time_profile_ninputs:
+        times = []
+        print("ninput:", ninput)
         for q in tqdm(questions[:ninput]):
             t_start = time.time()
             _ = agent.kbqa_runner.get_entity(q)
             t_end = time.time()
             times.append(t_end - t_start)
-    print("ner", np.average(times[1:]), "+-", np.std(times[1:]))
-    times = []
+        print("total time", np.sum(times[1:]))
+        print("ner", np.average(times[1:]), "+-", np.std(times[1:]))
     for ninput in time_profile_ninputs:
+        times = []
+        print("ninput:", ninput)
         for q in tqdm(faq_questions[:ninput]):
             t_start = time.time()
             _ = agent.do_qa(q)
             t_end = time.time()
             times.append(t_end - t_start)
-    print("faq", np.average(times[1:]), "+-", np.std(times[1:]))
+        print("total time", np.sum(times[1:]))
+        print("faq", np.average(times[1:]), "+-", np.std(times[1:]))
     # plot_avg_time(times, "./faq_avgtime.png")
 
 if __name__ == '__main__':
