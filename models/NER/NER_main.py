@@ -35,11 +35,12 @@ from tqdm import tqdm, trange
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, TensorDataset
 from transformers import BertForSequenceClassification,BertTokenizer,BertConfig
 from transformers.data.processors.utils import DataProcessor, InputExample
-from .BERT_CRF import BertCrf
-from utils import KBQA_TOKEN_LIST, merge_arg_and_config
-from config import ner_model_config
 from transformers import AdamW, get_linear_schedule_with_warmup
 from sklearn.metrics import classification_report
+
+from .BERT_CRF import BertCrf
+from utils import KBQA_TOKEN_LIST, merge_arg_and_config, convert_config_paths
+from config import ner_model_config
 
 logger = logging.getLogger(__name__)
 #
@@ -399,13 +400,13 @@ def main():
     parser.add_argument("--vob_file", default="input/pretrained_BERT/bert-base-chinese-vocab.txt", type=str, required=False,
                         help="词表文件")
 
-    parser.add_argument("--model_config", default="input/pretrained_BERT/bert-base-chinese-config.json", type=str, required=False,
+    parser.add_argument("--model_config_file", default="input/pretrained_BERT/bert-base-chinese-config.json", type=str, required=False,
                         help="模型配置文件json文件")
     parser.add_argument("--output_dir", default="models/NER/ner_output", type=str, required=False,
                         help="输出结果的文件")
 
     # Other parameters
-    parser.add_argument("--pre_train_model", default="input/pretrained_BERT/bert-base-chinese-model.bin", type=str, required=False,
+    parser.add_argument("--pre_train_model_file", default="input/pretrained_BERT/bert-base-chinese-model.bin", type=str, required=False,
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
 
     parser.add_argument("--max_seq_length", default=50, type=int,
@@ -434,6 +435,7 @@ def main():
                         help="让学习增加到1的步数，在warmup_steps后，再衰减到0")
 
     args = parser.parse_args()
+    convert_config_paths(ner_model_config)
     merge_arg_and_config(args, ner_model_config)
 
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -452,7 +454,7 @@ def main():
     tokenizer = BertTokenizer(*tokenizer_inputs,**tokenizer_kwards)
     tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
 
-    model = BertCrf(config_name= args.model_config,model_name=args.pre_train_model,num_tags = len(processor.get_labels()),batch_first=True)
+    model = BertCrf(config_name= args.model_config_file,model_name=args.pre_train_model_file,num_tags = len(processor.get_labels()),batch_first=True)
     model = model.to(args.device)
 
 

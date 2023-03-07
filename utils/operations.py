@@ -1,5 +1,21 @@
 import argparse
-from copy import deepcopy
+import os
+from copy import deepcopy, copy
+
+KBQA_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+def get_abs_path(rel_path):
+    if os.path.isabs(rel_path):
+        return rel_path
+    else:
+        return os.path.join(KBQA_BASE_DIR, rel_path)
+
+def convert_config_paths(config: dict):
+    for k, v in config.items():
+        if isinstance(v, dict):
+            convert_config_paths(v)
+        elif "file" in k or "path" in k or "dir" in k:
+            config[k] = get_abs_path(v)
 
 def load_sim_questions(sim_path):
     questions = set()

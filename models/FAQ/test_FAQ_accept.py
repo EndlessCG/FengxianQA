@@ -1,5 +1,5 @@
 from tqdm import tqdm
-from utils.operations import load_faq_questions, load_sim_questions
+from utils import load_faq_questions, load_sim_questions
 from runners.faq_runner import FAQRunner
 from config import faq_runner_config
 import numpy as np

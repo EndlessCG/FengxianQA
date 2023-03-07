@@ -10,8 +10,7 @@ import pandas as pd
 # import pymysql
 from tqdm import tqdm, trange
 from itertools import chain
-from utils.neo4j_graph import Neo4jGraph
-from utils import KBQA_TOKEN_LIST
+from utils import Neo4jGraph, KBQA_TOKEN_LIST, get_abs_path
 
 
 class BertKBQARunner():
@@ -35,14 +34,14 @@ class BertKBQARunner():
         tokenizer_inputs = ()
         tokenizer_kwards = {'do_lower_case': False,
                             'max_len': 40,
-                            'vocab_file': 'input/pretrained_BERT/bert-base-chinese-vocab.txt'}
+                            'vocab_file': get_abs_path('input/pretrained_BERT/bert-base-chinese-vocab.txt')}
         self.ner_processor = NerProcessor()
         self.sim_processor = SimProcessor()
         self.tokenizer = BertTokenizer(*tokenizer_inputs, **tokenizer_kwards)
         self.tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
 
         self.ner_model = self.get_ner_model(config_file=ner_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
-                                        pre_train_model=ner_config.get('pre_train_model','models/ner_output/best_ner.bin'),
+                                        pre_train_model=ner_config.get('pre_train_model_file','models/ner_output/best_ner.bin'),
                                         label_num=len(self.ner_processor.get_labels()))
         self.ner_model = self.ner_model.to(self.device)
         self.ner_model.eval()
@@ -50,7 +49,7 @@ class BertKBQARunner():
     def _load_sim_model(self, sim_config):
         self._print('加载SIM模型...')
         self.sim_model = self.get_sim_model(config_file=sim_config.get('config_file', 'input/pretrained_BERT/bert-base-chinese-config.json'),
-                                        pre_train_model=sim_config.get('pre_train_model', 'sim_output/best_sim.bin'),
+                                        pre_train_model=sim_config.get('pre_train_model_file', 'sim_output/best_sim.bin'),
                                         label_num=len(self.sim_processor.get_labels()))
         self.sim_model = self.sim_model.to(self.device)
         self.sim_model.eval()

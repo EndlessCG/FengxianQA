@@ -16,12 +16,12 @@ kbqa_runner_config = dict(
 
     ner=dict(
         config_file='input/pretrained_BERT/bert-base-chinese-config.json', # 模型config文件路径
-        pre_train_model='models/NER/ner_output/best_ner.bin', # 训练过的模型的路径
+        pre_train_model_file='models/NER/ner_output/best_ner.bin', # 训练过的模型的路径
     ),
 
     sim=dict(
         config_file='input/pretrained_BERT/bert-base-chinese-config.json', # 模型config文件路径
-        pre_train_model='models/SIM/sim_output/best_sim.bin', # 训练过的模型的路径
+        pre_train_model_file='models/SIM/sim_output/best_sim.bin', # 训练过的模型的路径
     ),
 )
 
@@ -50,9 +50,9 @@ ner_model_config=dict(
         # 参数定义请参考models/NER/NER_main.py或运行python -m models.NER.NER_main --help
         data_dir="input/data/fengxian/ner",
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
-        model_config="input/pretrained_BERT/bert-base-chinese-config.json",
+        model_config_file="input/pretrained_BERT/bert-base-chinese-config.json",
         output_dir="models/NER/ner_output",
-        pre_train_model="input/pretrained_BERT/bert-base-chinese-model.bin",
+        pre_train_model_file="input/pretrained_BERT/bert-base-chinese-model.bin",
         max_seq_length=50,
         train_batch_size=32,
         eval_batch_size=32,
@@ -69,9 +69,9 @@ sim_model_config=dict(
         # 参数定义请参考models/SIM/SIM_main.py或运行python -m models.SIM.SIM_main --help
         data_dir="input/data/fengxian/sim",
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
-        model_config="input/pretrained_BERT/bert-base-chinese-config.json",
+        model_config_file="input/pretrained_BERT/bert-base-chinese-config.json",
         output_dir="models/SIM/ner_output",
-        pre_train_model="input/pretrained_BERT/bert-base-chinese-model.bin",
+        pre_train_model_file="input/pretrained_BERT/bert-base-chinese-model.bin",
         max_seq_length=50,
         train_batch_size=32,
         eval_batch_size=32,
@@ -117,9 +117,9 @@ ner_model_config=dict(
         # 参数定义请参考models/NER/NER_main.py或运行python -m models.NER.NER_main --help
         data_dir="input/data/fengxian/ner",
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
-        model_config="input/pretrained_BERT/bert-base-chinese-config.json",
+        model_config_file="input/pretrained_BERT/bert-base-chinese-config.json",
         output_dir="models/NER/ner_output",
-        pre_train_model="input/pretrained_BERT/bert-base-chinese-model.bin",
+        pre_train_model_file="input/pretrained_BERT/bert-base-chinese-model.bin",
         max_seq_length=50,
         train_batch_size=32,
         eval_batch_size=32,
@@ -140,10 +140,10 @@ sim_model_config=dict(
         # 参数定义请参考models/SIM/SIM_main.py或运行python -m models.SIM.SIM_main --help
         data_dir="input/data/fengxian/sim",
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
-        model_config="input/pretrained_BERT/bert-base-chinese-config.json",
+        model_config_file="input/pretrained_BERT/bert-base-chinese-config.json",
         output_dir="models/SIM/ner_output",
-        output_model_name="best_sim_neg_to_pos_3.bin",
-        pre_train_model="input/pretrained_BERT/bert-base-chinese-model.bin",
+        output_model_file="best_sim_neg_to_pos_3.bin",
+        pre_train_model_file="input/pretrained_BERT/bert-base-chinese-model.bin",
         max_seq_length=50,
         train_batch_size=32,
         eval_batch_size=32,
