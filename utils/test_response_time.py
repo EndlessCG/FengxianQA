@@ -9,7 +9,7 @@ from matplotlib import rcParams
 from runners.bert_kbqa_runner import BertKBQARunner
 from runners.faq_runner import FAQRunner
 from config import *
-from .operations import load_faq_questions, load_sim_questions
+from .operations import load_faq_questions, load_sim_questions, get_all_sims
 
 rcParams['font.family'] = 'SimHei'
 
@@ -23,12 +23,12 @@ def plot_avg_time(times, topic):
     plt.savefig(topic)
 
 def faq_once():
-    faq_questions = load_faq_questions("input/data/fengxian/faq/train_data")
+    faq_questions = load_faq_questions("input/data/faq/train_data")
     agent = FengxianQA()
     agent.do_qa(faq_questions[0])
 
 def kbqa_once():
-    questions = load_sim_questions("input/data/fengxian/sim/train.txt")
+    questions = load_sim_questions("input/data/sim/train.txt")
     agent = FengxianQA()
     agent.do_qa(questions[0])
 
@@ -92,8 +92,8 @@ def test_init_time(ntrials):
 def main():
     # test_init_time(ntrials=10)
     agent = FengxianQA()
-    questions = load_sim_questions("input/data/fengxian/sim/train.txt")
-    faq_questions = load_faq_questions("input/data/fengxian/faq/train_data")
+    questions = load_sim_questions("input/data/sim/train.txt")
+    faq_questions = load_faq_questions("input/data/faq/train_data")
     for ninput in time_profile_ninputs:
         times = []
         print("ninput:", ninput)
@@ -103,7 +103,7 @@ def main():
             t_end = time.time()
             times.append(t_end - t_start)
         print("total time", np.sum(times[1:]))
-        print("full", np.average(times[1:]), "+-", np.std(times[1:]))
+        print("full", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
     for ninput in time_profile_ninputs:
         times = []
         print("ninput:", ninput)
@@ -113,7 +113,7 @@ def main():
             t_end = time.time()
             times.append(t_end - t_start)
         print("total time", np.sum(times[1:]))
-        print("kbqa", np.average(times[1:]), "+-", np.std(times[1:]))
+        print("kbqa", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
     # plot_avg_time(times, "./kbqa_avgtime.png")
     for ninput in time_profile_ninputs:
         times = []
@@ -124,7 +124,19 @@ def main():
             t_end = time.time()
             times.append(t_end - t_start)
         print("total time", np.sum(times[1:]))
-        print("ner", np.average(times[1:]), "+-", np.std(times[1:]))
+        print("ner", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
+    all_sims = get_all_sims("input/data/sim/train.txt")
+    print(all_sims)
+    for ninput in time_profile_ninputs:
+        times = []
+        print("ninput:", ninput)
+        for q in tqdm(questions[:ninput]):
+            t_start = time.time()
+            _ = agent.kbqa_runner.semantic_matching(q, list(all_sims)[:3], 128)
+            t_end = time.time()
+            times.append(t_end - t_start)
+        print("total time", np.sum(times[1:]))
+        print("sim", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
     for ninput in time_profile_ninputs:
         times = []
         print("ninput:", ninput)
@@ -134,8 +146,7 @@ def main():
             t_end = time.time()
             times.append(t_end - t_start)
         print("total time", np.sum(times[1:]))
-        print("faq", np.average(times[1:]), "+-", np.std(times[1:]))
-    # plot_avg_time(times, "./faq_avgtime.png")
+        print("faq", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
 
 if __name__ == '__main__':
     if '--faq_once' in sys.argv:

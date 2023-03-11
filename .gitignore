@@ -134,8 +134,8 @@ dmypy.json
 
 temp_files/
 input/pretrained_BERT
-input/data/fengxian/ner/cached*
-input/data/fengxian/sim/cached*
+input/data/ner/cached*
+input/data/sim/cached*
 models/SIM/*_output/
 models/NER/*_output/
 models/FAQ/finetune_model

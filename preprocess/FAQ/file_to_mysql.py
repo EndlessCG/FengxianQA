@@ -1,6 +1,6 @@
 import xlrd
 import pymysql
-DATA_BASE = "input/data/fengxian/faq/"
+DATA_BASE = "input/data/faq/"
 
 def getConn(database):
     args = dict(

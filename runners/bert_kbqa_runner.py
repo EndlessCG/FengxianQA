@@ -74,7 +74,7 @@ class BertKBQARunner():
         return model.to(self.device)
 
 
-    def get_entity(self, sentence, max_len=64):
+    def get_entity(self, sentence, max_len=128, get_label_list=False):
         model = self.ner_model
         tokenizer = self.tokenizer
         pad_token = 0
@@ -118,6 +118,9 @@ class BertKBQARunner():
         pre_tag = ret[1][0]
         assert len(pre_tag) == len(sentence_list) or len(pre_tag) == max_len - 2
 
+        if get_label_list:
+            return [CRF_LABELS[t] for t in pre_tag]
+
         pre_tag_len = len(pre_tag)
         b_entity_idx = CRF_LABELS.index('B-entity')
         i_entity_idx = CRF_LABELS.index('I-entity')
@@ -145,7 +148,7 @@ class BertKBQARunner():
         return entity
 
 
-    def semantic_matching(self, question, attribute_list, max_length, top_k=1):
+    def semantic_matching(self, question, attribute_list, max_length, top_k=1, get_sgraph=False):
         model = self.sim_model
         tokenizer = self.tokenizer
         pad_token = 0
@@ -214,6 +217,9 @@ class BertKBQARunner():
                 else:
                     all_logits = torch.cat([all_logits, logits], dim=0)
         # pre_rest = all_logits.argmax(dim=-1)
+        if get_sgraph:
+            # top-k not supported for now
+            return attribute_list[all_logits[:,1].argmax()]
         if self.config.get("sim_accept_threshold", 0.01) > all_logits[:,1].max(dim=0)[0]:
             return torch.tensor(-1)
         else:

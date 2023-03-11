@@ -352,7 +352,7 @@ def evaluate(args, model, eval_dataset):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--data_dir", default="input/data/fengxian/sim", type=str, required=False,
+    parser.add_argument("--data_dir", default="input/data/sim", type=str, required=False,
                         help="数据文件目录，因当有train.text dev.text")
 
     parser.add_argument("--vob_file", default="input/pretrained_BERT/bert-base-chinese-vocab.txt", type=str, required=False,
@@ -367,7 +367,7 @@ def main():
                         help="输出的模型文件名")
 
     # Other parameters
-    parser.add_argument("--max_seq_length", default=50, type=int,
+    parser.add_argument("--max_seq_length", default=128, type=int,
                         help="输入到bert的最大长度，通常不应该超过512")
     parser.add_argument("--do_train", action='store_true',default=True,
                         help="是否进行训练")

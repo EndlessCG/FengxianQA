@@ -5,8 +5,8 @@ from preprocess.FAQ.back_translation import back_trans
 import random
 import os.path as osp
 
-NER_BASE = "input/data/fengxian/ner"
-SIM_BASE = "input/data/fengxian/sim"
+NER_BASE = "input/data/ner"
+SIM_BASE = "input/data/sim"
 
 def generate_data(trans_dests=[]):
     question_descriptions = get_question_descriptions()

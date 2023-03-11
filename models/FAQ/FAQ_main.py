@@ -1,6 +1,6 @@
 from .FAQ_model import FAQ
 from utils import merge_arg_and_config, convert_config_paths
-from config import faq_model_config
+from config import faq_model_config, faq_runner_config
 import tensorflow as tf
 import sys
 import argparse
@@ -26,8 +26,8 @@ def main():
     parser.add_argument("--sql_charset", type=str, default="utf8mb4")
     parser.add_argument("--sql_db", type=str, default="qa100")
 
-    pretrain_parser.add_argument("--train_file", type=str, default="input/data/fengxian/faq/pre_train_data", help="Input train file.")
-    pretrain_parser.add_argument("--vocab_file",   default="input/data/fengxian/faq/vocab", help="Input vocab file.")
+    pretrain_parser.add_argument("--train_file", type=str, default="input/data/faq/pre_train_data", help="Input train file.")
+    pretrain_parser.add_argument("--vocab_file",   default="input/data/faq/vocab", help="Input vocab file.")
     pretrain_parser.add_argument("--model_save_dir", type=str, default="models/FAQ/pretrain_model",  help="Specified the directory in which the model should stored.")
     pretrain_parser.add_argument("--lstm_dim", type=int, default=500, help="Dimension of LSTM cell.")
     pretrain_parser.add_argument("--embedding_dim", type=int, default=1000, help="Dimension of word embedding.")
@@ -58,9 +58,9 @@ def main():
     pretrain_parser.add_argument("--num_attention_heads", type=int, default=12, help="num attention heads")
     pretrain_parser.add_argument("--intermediate_size", type=int, default=1024, help="intermediate_size")
 
-    finetune_parser.add_argument("--train_file", type=str, default="input/data/fengxian/faq/train_data", help="Input train file.")
-    finetune_parser.add_argument("--dev_file", type=str, default="input/data/fengxian/faq/dev_data", help="Input dev file.")
-    finetune_parser.add_argument("--vocab_file", type=str, default="input/data/fengxian/faq/vocab", help="Input vocab file.")
+    finetune_parser.add_argument("--train_file", type=str, default="input/data/faq/train_data", help="Input train file.")
+    finetune_parser.add_argument("--dev_file", type=str, default="input/data/faq/dev_data", help="Input dev file.")
+    finetune_parser.add_argument("--vocab_file", type=str, default="input/data/faq/vocab", help="Input vocab file.")
     finetune_parser.add_argument("--output_id2label_file", type=str, default="models/FAQ/finetune_model/id2label.has_init", help="File containing (id, class label) map.")
     finetune_parser.add_argument("--model_save_dir", type=str, default="models/FAQ/finetune_model", help="Specified the directory in which the model should stored.") 
     finetune_parser.add_argument("--lstm_dim", type=int, default=500, help="Dimension of LSTM cell.")
@@ -86,16 +86,17 @@ def main():
     finetune_parser.add_argument("--num_attention_heads", type=int, default=12, help="num attention heads")
     finetune_parser.add_argument("--intermediate_size", type=int, default=1024, help="intermediate_size")
 
-    eval_parser.add_argument("--input_file", type=str, default="input/data/fengxian/faq/test_data", help="Input file for prediction.")
-    eval_parser.add_argument("--vocab_file", type=str, default="input/data/fengxian/faq/vocab", help="Input train file.")
+    eval_parser.add_argument("--input_file", type=str, default="input/data/faq/test_data", help="Input file for prediction.")
+    eval_parser.add_argument("--vocab_file", type=str, default="input/data/faq/vocab", help="Input train file.")
     eval_parser.add_argument("--model_path", type=str, default="", help="Path to model file.")
     eval_parser.add_argument("--model_dir", type=str, default="models/FAQ/finetune_model", help="Directory which contains model.")
     eval_parser.add_argument("--output_file", type=str, default="models/FAQ/result")
     eval_parser.add_argument("--id2label_file", type=str, default="models/FAQ/finetune_model/id2label.has_init", help="File containing (id, class label) map.")
+    # eval_parser.add_argument("--eval_accept_threshold", type=str, default=faq_runner_config.get("admit_threshold", 0.8), help="Minimum confidence to accept FAQ answer.")
 
     predict_parser.add_argument("--input_sentence", type=str, default="列表页账本和事业部的字段都没有值，出库单详情中账本字段无值", help="Input sentence for prediction.")
-    predict_parser.add_argument("--input_file", type=str, default="input/data/fengxian/faq/ans_data", help="Input file for prediction.")
-    predict_parser.add_argument("--vocab_file", type=str, default="input/data/fengxian/faq/vocab", help="Input train file.")
+    predict_parser.add_argument("--input_file", type=str, default="input/data/faq/ans_data", help="Input file for prediction.")
+    predict_parser.add_argument("--vocab_file", type=str, default="input/data/faq/vocab", help="Input train file.")
     predict_parser.add_argument("--model_path", type=str, default="", help="Path to model file.")
     predict_parser.add_argument("--model_dir", type=str, default="models/FAQ/finetune_model", help="Directory which contains model.")
     predict_parser.add_argument("--id2label_file", type=str, default="models/FAQ/finetune_model/id2label.has_init", help="File containing (id, class label) map.")

@@ -4,20 +4,23 @@ cd $bert_kbqa_home
 
 # train FAQ
 echo "Training FAQ..."
-if [ ! -f "input/data/fengxian/faq/train_data" ]; then
-    python preprocess/FAQ/process_std.py
-    python preprocess/FAQ/data_generate.py
-    python preprocess/FAQ/file_to_mysql.py
-fi
-python -m models.FAQ.FAQ_main pretrain
-python -m models.FAQ.FAQ_main finetune
+# if [ ! -d "input/data/faq" ]; then
+#     mkdir -p input/data/faq/
+# fi
+# if [ ! -f "input/data/faq/train_data" ]; then
+#     python preprocess/FAQ/process_std.py
+#     python preprocess/FAQ/data_generate.py
+#     python preprocess/FAQ/file_to_mysql.py
+# fi
+# python -m models.FAQ.FAQ_main pretrain
+# python -m models.FAQ.FAQ_main finetune
 
 # train NER
 cd $bert_kbqa_home
 bash scripts/clean_cached_data.sh
-if [ ! -d "input/data/fengxian/ner" ]; then
-    mkdir -p input/data/fengxian/ner/
-    mkdir -p input/data/fengxian/sim/
+if [ ! -d "input/data/ner" ]; then
+    mkdir -p input/data/ner/
+    mkdir -p input/data/sim/
     python preprocess/data_generator.py
 fi
 cd $bert_kbqa_home
@@ -41,7 +44,7 @@ python -m models.NER.NER_main
 echo "Training SIM..."
 python -m models.SIM.SIM_main
 
-# test
+# model test
 echo "Testing FAQ..."
 python -m models.FAQ.FAQ_main eval
 echo "Testing NER..."

@@ -35,9 +35,9 @@ faq_runner_config = dict(
         charset="utf8mb4", # mysql用字符集
     ),
     verbose=False, # 是否启用FAQ输出（暂无效果）
-    admit_threshold=0.8, # 使用FAQ回答的最低FAQ信心值
+    admit_threshold=0.3, # 使用FAQ回答的最低FAQ信心值
     table_name="t_nlp_qa_faq", # mysql表名
-    vocab_file="input/data/fengxian/faq/vocab", # FAQ词汇文件路径
+    vocab_file="input/data/faq/vocab", # FAQ词汇文件路径
     model_dir="models/FAQ/finetune_model/", # 训练好的模型路径
     id2label_file="models/FAQ/finetune_model/id2label.has_init" # FAQ id2label文件路径
 )
@@ -48,7 +48,7 @@ ner_model_config=dict(
     # 此处配置仅影响NER模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
     train=dict(
         # 参数定义请参考models/NER/NER_main.py或运行python -m models.NER.NER_main --help
-        data_dir="input/data/fengxian/ner",
+        data_dir="input/data/ner",
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
         model_config_file="input/pretrained_BERT/bert-base-chinese-config.json",
         output_dir="models/NER/ner_output",
@@ -67,7 +67,7 @@ sim_model_config=dict(
     # 此处配置仅影响SIM模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
     train=dict(
         # 参数定义请参考models/SIM/SIM_main.py或运行python -m models.SIM.SIM_main --help
-        data_dir="input/data/fengxian/sim",
+        data_dir="input/data/sim",
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
         model_config_file="input/pretrained_BERT/bert-base-chinese-config.json",
         output_dir="models/SIM/ner_output",
@@ -86,15 +86,15 @@ faq_model_config=dict(
     # 此处配置仅影响FAQ模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
     pretrain=dict(
         # 参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main pretrain --help
-        train_file="input/data/fengxian/faq/pre_train_data",
-        vocab_file="input/data/fengxian/faq/vocab",
+        train_file="input/data/faq/pre_train_data",
+        vocab_file="input/data/faq/vocab",
         model_save_dir="models/FAQ/pretrain_model",
     ),
     finetune=dict(
         # 参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main finetune --help
-        train_file="input/data/fengxian/faq/train_data",
-        dev_file="input/data/fengxian/faq/dev_data",
-        vocab_file="input/data/fengxian/faq/vocab",
+        train_file="input/data/faq/train_data",
+        dev_file="input/data/faq/dev_data",
+        vocab_file="input/data/faq/vocab",
         output_id2label_file="models/FAQ/finetune_model/id2label.has_init",
         model_save_dir="models/FAQ/finetune_model",
         batch_size=32,
@@ -115,7 +115,7 @@ ner_model_config=dict(
     # 此处配置仅影响NER模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
     train=dict(
         # 参数定义请参考models/NER/NER_main.py或运行python -m models.NER.NER_main --help
-        data_dir="input/data/fengxian/ner",
+        data_dir="input/data/ner",
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
         model_config_file="input/pretrained_BERT/bert-base-chinese-config.json",
         output_dir="models/NER/ner_output",
@@ -138,7 +138,7 @@ sim_model_config=dict(
     # 此处配置仅影响SIM模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
     train=dict(
         # 参数定义请参考models/SIM/SIM_main.py或运行python -m models.SIM.SIM_main --help
-        data_dir="input/data/fengxian/sim",
+        data_dir="input/data/sim",
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",
         model_config_file="input/pretrained_BERT/bert-base-chinese-config.json",
         output_dir="models/SIM/ner_output",
@@ -162,15 +162,15 @@ faq_model_config=dict(
     # 此处配置仅影响FAQ模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
     pretrain=dict(
         # 参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main pretrain --help
-        train_file="input/data/fengxian/faq/pre_train_data",
-        vocab_file="input/data/fengxian/faq/vocab",
+        train_file="input/data/faq/pre_train_data",
+        vocab_file="input/data/faq/vocab",
         model_save_dir="models/FAQ/pretrain_model",
     ),
     finetune=dict(
         # 参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main finetune --help
-        train_file="input/data/fengxian/faq/train_data",
-        dev_file="input/data/fengxian/faq/dev_data",
-        vocab_file="input/data/fengxian/faq/vocab",
+        train_file="input/data/faq/train_data",
+        dev_file="input/data/faq/dev_data",
+        vocab_file="input/data/faq/vocab",
         output_id2label_file="models/FAQ/finetune_model/id2label.has_init",
         model_save_dir="models/FAQ/finetune_model",
         batch_size=32,

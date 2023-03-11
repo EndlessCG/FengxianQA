@@ -1,6 +1,6 @@
 #-*- coding : utf-8-*-
 import pandas as pd
-DATA_BASE = "input/data/fengxian/faq/"
+DATA_BASE = "input/data/faq/"
 
 # 生成std_data，类别和标准问题对应关系，包含类别ID、标准问题ID、标准问题文本三列
 def generate_std(file_path):

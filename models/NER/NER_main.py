@@ -394,7 +394,7 @@ def evaluate(args, model, eval_dataset):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", default="input/data/fengxian/ner", type=str, required=False,
+    parser.add_argument("--data_dir", default="input/data/ner", type=str, required=False,
                         help="数据文件目录，因当有train.txt dev.txt")
 
     parser.add_argument("--vob_file", default="input/pretrained_BERT/bert-base-chinese-vocab.txt", type=str, required=False,
@@ -409,7 +409,7 @@ def main():
     parser.add_argument("--pre_train_model_file", default="input/pretrained_BERT/bert-base-chinese-model.bin", type=str, required=False,
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
 
-    parser.add_argument("--max_seq_length", default=50, type=int,
+    parser.add_argument("--max_seq_length", default=128, type=int,
                         help="输入到bert的最大长度，通常不应该超过512")
     parser.add_argument("--do_train", action='store_true',default=True,
                         help="是否进行训练")
@@ -439,6 +439,7 @@ def main():
     merge_arg_and_config(args, ner_model_config)
 
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # args.device = "cpu"
 
     logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                         datefmt='%m/%d/%Y %H:%M:%S',

@@ -1,12 +1,13 @@
 from .BERT_CRF import BertCrf
 from transformers import BertTokenizer
-from .NER_main import NerProcessor,statistical_real_sentences,flatten,CrfInputFeatures
+from .NER_main import NerProcessor,statistical_real_sentences,flatten,CRF_LABELS,CrfInputFeatures
 from config import ner_model_config
 from torch.utils.data import DataLoader, RandomSampler,TensorDataset
 from sklearn.metrics import classification_report
 import torch
 import numpy as np
 import time
+import os
 from tqdm import tqdm, trange
 
 config = ner_model_config.get("test", dict())
@@ -24,14 +25,18 @@ model = BertCrf(config_name= 'input/pretrained_BERT/bert-base-chinese-config.jso
 model.load_state_dict(torch.load(ner_model_config.get("test", dict()).get("model_path")))
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# device = "cpu"
 model = model.to(device)
 
 features_dict = dict()
+raw_input_path_dict = dict()
 # if do_split_tests:
 #     for t_type in ["1hop"]:
 #     # for t_type in ["mhop"]:
-#         features_dict[t_type] = torch.load(f'input/data/fengxian/ner/cached_test_{t_type}_50')
-features_dict["all NER"] = torch.load('input/data/fengxian/ner/cached_test_50')
+#         features_dict[t_type] = torch.load(f'input/data/ner/cached_test_{t_type}_50')
+features_dict["all NER"] = torch.load('input/data/ner/cached_test_128')
+raw_input_path_dict["all NER"] = 'input/data/ner/test.txt'
+temp_output_file = 'models/NER/ner_output/test_result.txt'
 
 def do_test(test_type, features, duplicate=10):
     all_input_ids = torch.tensor([f.input_ids for f in features] * duplicate, dtype=torch.long)
@@ -75,10 +80,22 @@ def do_test(test_type, features, duplicate=10):
     # print(real_token_label)
     # assert real_token_label.shape == pred_token_label.shape
     # ret = classification_report(y_true=real_token_label, y_pred=pred_token_label, digits = 6,output_dict=False)
-    acc = sum([1 if pred_token_label[i] == real_token_label[i] else 0 for i in range(len(pred_token_label))]) / len(pred_token_label)
+    # acc = sum([1 if pred_token_label[i] == real_token_label[i] else 0 for i in range(len(pred_token_label))]) / len(pred_token_label)
+    real_input_list = []
+    with open(raw_input_path_dict[test_type]) as f:
+        for real_input_line in f.readlines():
+            real_input_line_list = real_input_line.split(' ')
+            if len(real_input_line_list) == 2:
+                real_input_list.append(real_input_line_list[0])
+    with open(temp_output_file, 'w+') as f:
+        for pred_token, real_token, raw_input in zip(flatten(pred_token_label), flatten(real_token_label), real_input_list):
+            f.write(f"{raw_input} {CRF_LABELS[real_token]} {CRF_LABELS[pred_token]}\n")
+
     print(f"TEST TYPE:\t{test_type}")
-    print(f"response time: {np.average(times[1:])} +- {np.std(times[1:])}")
-    print(f"Problem ACCURACY:\t{acc}")
+    os.system(f"python utils/conlleval.py {temp_output_file}")
+    # print(f"response time: {np.average(times[1:])} +- {np.std(times[1:])}")
+    # print(f"Problem ACCURACY:\t{acc}")
+    
 
 def main():
     for t_type, features in features_dict.items():

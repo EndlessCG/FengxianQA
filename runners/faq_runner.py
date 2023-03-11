@@ -16,8 +16,8 @@ class FAQRunner():
     def disable_warnings(self):
         tf.logging.set_verbosity(tf.logging.ERROR)
 
-    def do_qa(self, sentence):
-        return self.model.predict(self.args, sentence)
+    def do_qa(self, sentence, get_id=False):
+        return self.model.predict(self.args, sentence, get_id=get_id)
     
     def __del__(self):
         self.model.destroy()

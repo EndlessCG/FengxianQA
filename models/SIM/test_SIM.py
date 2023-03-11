@@ -24,8 +24,8 @@ tokenizer.add_special_tokens(KBQA_TOKEN_LIST)
 features_dict = dict()
 # if do_split_tests:
 #     for t_type in ["1hop"]:
-#         features_dict[t_type] = torch.load(f'input/data/fengxian/sim/cached_test_{t_type}_50')
-features_dict["all SIM"] = torch.load('input/data/fengxian/sim/cached_test_50')
+#         features_dict[t_type] = torch.load(f'input/data/sim/cached_test_{t_type}_50')
+features_dict["all SIM"] = torch.load('input/data/sim/cached_test_128')
 
 def do_test(test_type, features):
     all_input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)

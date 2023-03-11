@@ -17,19 +17,52 @@ def convert_config_paths(config: dict):
         elif "file" in k or "path" in k or "dir" in k:
             config[k] = get_abs_path(v)
 
-def load_sim_questions(sim_path):
-    questions = set()
+def get_all_sims(sim_path):
+    sims = set()
     with open(sim_path, 'r') as f:
         for line in f.readlines():
-            questions.add(line.split('\t')[1])
-    return list(questions)
+            sims.add(line.split('\t')[2])
+    return list(sims)
 
-def load_faq_questions(faq_path):
-    questions = set()
+def load_sim_questions(sim_path, get_answers=False):
+    questions = []
+    with open(sim_path, 'r') as f:
+        for line in f.readlines():
+            question = line.split('\t')[1]
+            sgraph = line.split('\t')[-2]
+            match = line.split('\t')[-1]
+            if match == '1\n' and question not in questions:
+                questions.append([question, sgraph] if get_answers else question)
+    return questions
+
+def load_ner_questions(ner_path, get_answers=False):
+    questions = []
+    with open(ner_path, 'r') as f:
+        question = ""
+        label = []
+        for line in f.readlines():
+            line_list = line.split(' ')
+            if len(line_list) == 2:
+                question += line_list[0]
+                label.append(line_list[1][:-1])
+            elif len(question) != 0 and len(label) != 0:
+                questions.append([question, label] if get_answers else question)
+                question = ""
+                label = []
+    return questions
+
+def load_faq_questions(faq_path, get_answers=False):
+    questions = []
     with open(faq_path, 'r') as f:
         for line in f.readlines():
-            questions.add(''.join(line.split('\t')[-1].split(' ')).split('\n')[0])
-    return list(questions)
+            question = ''.join(line.split('\t')[-1].split(' ')).split('\n')[0]
+            answer = line.split('\t')[0]
+            if question not in questions:
+                if get_answers:
+                    questions.append([question, answer])
+                else:
+                    questions.append(question)
+    return questions
 
 def merge_arg_and_config(merge1, merge2):
     if isinstance(merge1, argparse.Namespace):

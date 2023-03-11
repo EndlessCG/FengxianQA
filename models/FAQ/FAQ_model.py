@@ -214,10 +214,10 @@ class FAQ():
                 "dropout_rate": g.get_tensor_by_name("ph_dropout_rate:0"),
                 "input_mask": g.get_tensor_by_name("ph_input_mask:0")}
 
-    def _print_metrics(self, path):
+    def _print_metrics(self, args):
         label = []
         ans = []
-        with open(path, "r") as f:
+        with open(args.output_file, "r") as f:
             for i in f.readlines():
                 label.append(int(i.split("\t")[0].strip()))
                 ans.append(int(i.split("\t")[-1].split(":")[0].strip()))
@@ -287,9 +287,9 @@ class FAQ():
                                                     sentence, model_res))
 
         fout.close()
-        self._print_metrics(args.output_file)
+        self._print_metrics(args)
     
-    def predict(self, args, input_sentence=""):
+    def predict(self, args, input_sentence="", get_id=False):
         if input_sentence == "" and hasattr(args, 'input_sentence'):
             input_sentence = args.input_sentence
 
@@ -344,10 +344,16 @@ class FAQ():
                 # print(fir_ans_prob)
                 # print("问题：{}".format(args.input_sentence))
                 answer = self._get_answer_by_id(fir_ans_num)
-                if len(answer) < 1 or answer == "nan":
-                    return "No FAQ answer", 0
+                if get_id:
+                    if len(answer) < 1 or answer == "nan":
+                        return -1, 0
+                    else:
+                        return f"{fir_ans_num}", float(fir_ans_prob) # 输出
                 else:
-                    return f"{answer}", float(fir_ans_prob) # 输出
+                    if len(answer) < 1 or answer == "nan":
+                        return "No FAQ answer", 0
+                    else:
+                        return f"{answer}", float(fir_ans_prob) # 输出
 
     def load_model(self, model_path="", model_dir=""):
         if "" == model_path:
