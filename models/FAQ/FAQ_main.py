@@ -16,15 +16,6 @@ def main():
     finetune_parser.set_defaults(func=model.finetune)
     eval_parser = subparsers.add_parser("eval", help="evaluate model")
     eval_parser.set_defaults(func=model.evaluate_model)
-    predict_parser = subparsers.add_parser("predict", help="test model predict")
-    predict_parser.set_defaults(func=model.predict)
-
-    parser.add_argument("--table_name", type=str, default="t_nlp_qa_faq")
-    parser.add_argument("--sql_host", type=str, default="localhost")
-    parser.add_argument("--sql_user", type=str, default="faq")
-    parser.add_argument("--sql_passwd", type=str, default="123456")
-    parser.add_argument("--sql_charset", type=str, default="utf8mb4")
-    parser.add_argument("--sql_db", type=str, default="qa100")
 
     pretrain_parser.add_argument("--train_file", type=str, default="input/data/faq/pre_train_data", help="Input train file.")
     pretrain_parser.add_argument("--vocab_file",   default="input/data/faq/vocab", help="Input vocab file.")
@@ -93,13 +84,6 @@ def main():
     eval_parser.add_argument("--output_file", type=str, default="models/FAQ/result")
     eval_parser.add_argument("--id2label_file", type=str, default="models/FAQ/finetune_model/id2label.has_init", help="File containing (id, class label) map.")
     # eval_parser.add_argument("--eval_accept_threshold", type=str, default=faq_runner_config.get("admit_threshold", 0.8), help="Minimum confidence to accept FAQ answer.")
-
-    predict_parser.add_argument("--input_sentence", type=str, default="列表页账本和事业部的字段都没有值，出库单详情中账本字段无值", help="Input sentence for prediction.")
-    predict_parser.add_argument("--input_file", type=str, default="input/data/faq/ans_data", help="Input file for prediction.")
-    predict_parser.add_argument("--vocab_file", type=str, default="input/data/faq/vocab", help="Input train file.")
-    predict_parser.add_argument("--model_path", type=str, default="", help="Path to model file.")
-    predict_parser.add_argument("--model_dir", type=str, default="models/FAQ/finetune_model", help="Directory which contains model.")
-    predict_parser.add_argument("--id2label_file", type=str, default="models/FAQ/finetune_model/id2label.has_init", help="File containing (id, class label) map.")
 
     args = parser.parse_args()
     convert_config_paths(faq_model_config)

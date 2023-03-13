@@ -391,8 +391,6 @@ def main():
                         help="random seed for initialization")
     parser.add_argument("--warmup_steps", default=0, type=int,
                         help="让学习增加到1的步数，在warmup_steps后，再衰减到0")
-    parser.add_argument("--neg_to_pos", default=3, type=int,
-                        help="数据集中负例-正例比")
 
     args = parser.parse_args()
     convert_config_paths(sim_model_config)
