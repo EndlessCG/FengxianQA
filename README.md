@@ -48,6 +48,9 @@ FAQ数据存放在`input/data/faq/file/qa100.xls`
    answer = QA_bot.do_qa("新业务开展前，需要做哪些准备？")
    ```
 
+8. 也可以运行`python fengxian_qa.py`来交互式测试模型
+  * 若需要查看系统内部“链接到的实体”、“问题路径”等信息，可在config.py的faq_runner_config, kbqa_runner_config, fengxian_qa_config中将verbose设置为True
+
 ## 项目结构
 
 * models
