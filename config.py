@@ -109,7 +109,6 @@ faq_model_config = dict(
         # 更多参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main eval --help
         input_file="input/data/faq/test_data",  # 输入测试数据的路径
         vob_file="input/data/faq/vocab",  # 模型词汇表文件的路径
-        model_path="",  # 模型路径，未给出时将在model_dir给出的模型目录中选取最新checkpoint
         model_dir="models/FAQ/finetune_model/",  # 模型目录
         output_file="models/FAQ/result",  # 预测结果输出文件
         id2label_file="models/FAQ/finetune_model/id2label.has_init",  # 训练时生成的id2label文件路径
