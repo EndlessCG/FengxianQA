@@ -421,10 +421,10 @@ def main():
     train_dataset = load_and_cache_example(args, tokenizer, processor, 'train')
     eval_dataset = load_and_cache_example(args, tokenizer, processor, 'validate')
     _ = load_and_cache_example(args,tokenizer,processor,'test')
-    # _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
-    # _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
-    # _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
-    # _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
+    _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
 
 
 

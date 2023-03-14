@@ -124,19 +124,25 @@ class BertKBQARunner():
         pre_tag_len = len(pre_tag)
         b_entity_idx = CRF_LABELS.index('B-entity')
         i_entity_idx = CRF_LABELS.index('I-entity')
+        b_attr_idx = CRF_LABELS.index('B-attribute')
+        i_attr_idx = CRF_LABELS.index('B-attribute')
         o_idx = CRF_LABELS.index('O')
 
-        if not any(i in pre_tag for i in [b_entity_idx, i_entity_idx]):
+        if not any(i in pre_tag for i in [b_entity_idx, i_entity_idx, b_attr_idx, i_attr_idx]):
             self._print("没有在句子[{}]中发现实体".format(sentence))
             return '', ''
         
         entity_start_idx, attr_start_idx = -1, -1
         if b_entity_idx in pre_tag:
             entity_start_idx = pre_tag.index(b_entity_idx)
+        elif b_attr_idx in pre_tag:
+            attr_start_idx = pre_tag.index(b_attr_idx)
         elif i_entity_idx in pre_tag:
             entity_start_idx = pre_tag.index(i_entity_idx)
+        elif i_attr_idx in pre_tag:
+            attr_start_idx = pre_tag.index(b_attr_idx)
         
-        entity = ""
+        entity, attribute = "", ""
         if entity_start_idx != -1:    
             entity += sentence_list[entity_start_idx]
             for i in range(entity_start_idx + 1, pre_tag_len):
@@ -145,7 +151,15 @@ class BertKBQARunner():
                 else:
                     break
         
-        return entity
+        if attr_start_idx != -1:
+            attribute += sentence_list[attr_start_idx]
+            for i in range(attr_start_idx + 1, pre_tag_len):
+                if pre_tag[i] == i_attr_idx:
+                    attribute += sentence_list[i]
+                else:
+                    break
+        
+        return entity, attribute
 
 
     def semantic_matching(self, question, attribute_list, max_length, top_k=1, get_sgraph=False):
@@ -242,9 +256,11 @@ class BertKBQARunner():
                 e_mention_list.append(e)
                 break
         # NER
-        ner_e_mention = self.get_entity(sentence=question, max_len=40)
+        ner_e_mention, ner_a_mention = self.get_entity(sentence=question, max_len=40)
         if ner_e_mention != '':
             e_mention_list.append(ner_e_mention)
+        if ner_a_mention != '':
+            a_mention_list.append(ner_a_mention)
 
         e_mention_list = set(e_mention_list)
         a_mention_list = set(a_mention_list)
@@ -256,7 +272,7 @@ class BertKBQARunner():
             return "未找到该问题中的实体"
 
         # 2. Entity Linking
-        linked_entity = []
+        linked_entity, linked_attribute = [], []
         for mention in e_mention_list:
             if mention in graph.entity_list:
                 # 完全匹配
@@ -266,12 +282,23 @@ class BertKBQARunner():
                 entity = next((e for e in graph.entity_list if mention in e), None)
                 if entity is not None and not entity in linked_entity:
                     linked_entity.append(entity)
+        
+        for mention in a_mention_list:
+            if mention in graph.attribute_list:
+                # 完全匹配
+                linked_attribute.append(mention)
+            else:
+                # 局部匹配
+                attribute = next((e for e in graph.entity_list if mention in e), None)
+                if attribute is not None and not attribute in linked_attribute:
+                    linked_attribute.append(attribute)
             
-        if len(linked_entity) == 0:
+        if len(linked_attribute) == 0 and len(linked_entity) == 0:
             # 未找到
-            return f"未找到'{e_mention_list.union(a_mention_list)}'相关信息"
+            return f"未找到\"{e_mention_list.union(a_mention_list)}\"相关信息"
         
         self._print("链接到的实体：", linked_entity)
+        self._print("链接到的属性：", linked_attribute)
 
         # 3. Candidate Subgraph Generation
         sgraph_type_idx = {}
@@ -280,6 +307,8 @@ class BertKBQARunner():
         query_slots = {}
         for i, e in enumerate(linked_entity):
             query_slots["entity" + ("" if i == 0 else str(i))] = e
+        for i, a in enumerate(linked_attribute):
+            query_slots["attribute" + ("" if i == 0 else str(i))] = a
         # naive subgraph generation (without pruning)
         for sgraph_type, query in SUBGRAPHS.items():
             try:
@@ -295,7 +324,7 @@ class BertKBQARunner():
         max_sgraph_len = max([len(sg) for sg in sgraph_candidates])
         match_idx = self.semantic_matching(question, sgraph_candidates, max_sgraph_len).item()
         if match_idx == -1:
-            return f"未在\"{','.join(linked_entity)}\"中找到问题相关信息"
+            return f"未在\"{','.join(linked_entity + linked_attribute)}\"中找到问题相关信息"
         
         intention = sgraph_type_idx[sgraph_candidates[match_idx]]
         self._print(f"问题类型：{QUESTION_INTENTS[intention].get('display', intention)}")
@@ -313,6 +342,8 @@ class BertKBQARunner():
         for slot_type, slot_idx in slots:
             if slot_type == 'e':
                 slot_fills.append(linked_entity[slot_idx])
+            elif slot_type == 'a':
+                slot_fills.append(linked_attribute[slot_idx])
             elif slot_type == 'l':
                 slot_fills.append(links[slot_idx])
         answer_query = answer_query.format(*slot_fills)
@@ -334,6 +365,8 @@ class BertKBQARunner():
             for i, (slot_type, slot_idx) in enumerate(slot):
                 if slot_type == 'e':
                     slot_fills.append([linked_entity[slot_idx]])
+                elif slot_type == 'a':
+                    slot_fills.append([linked_attribute[slot_idx]])
                 elif slot_type == 'l':
                     slot_fills.append([links[slot_idx]])
                 elif slot_type == 'v':

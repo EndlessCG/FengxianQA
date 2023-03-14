@@ -26,11 +26,11 @@ def init_ner_test(args):
 
     features_dict = dict()
     raw_input_path_dict = dict()
-    # do_split_tests = config.get("do_split_tests", False)
-    # if do_split_tests:
-    #     for t_type in ["1hop"]:
-    #     # for t_type in ["mhop"]:
-    #         features_dict[t_type] = torch.load(f'input/data/ner/cached_test_{t_type}_50')
+    do_split_tests = args.do_split_tests
+    if do_split_tests:
+        for t_type in ["1hop"]:
+        # for t_type in ["mhop"]:
+            features_dict[t_type] = torch.load(f'input/data/ner/cached_test_{t_type}_50')
     features_dict["all NER"] = torch.load(os.path.join(args.data_dir, f"cached_test_{args.max_seq_length}"))
     raw_input_path_dict["all NER"] = args.raw_data_path
     return model, features_dict, raw_input_path_dict

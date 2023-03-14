@@ -90,7 +90,7 @@ def test_init_time(ntrials):
 
 
 def main():
-    # test_init_time(ntrials=10)
+    test_init_time(ntrials=10)
     agent = FengxianQA()
     questions = load_sim_questions("input/data/sim/train.txt")
     faq_questions = load_faq_questions("input/data/faq/train_data")

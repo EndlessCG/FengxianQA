@@ -136,4 +136,206 @@ def get_question_descriptions():
             [(':START_ID', 'entity')],
             '包含[TARGET]'
         ],
+
+        # TaA
+        [
+            # 风险点-风险等级
+            'TaA',
+            fengxiandian, # charts
+            ["风险等级为{}的风险点有哪些？", "风险等级为{}的风险点有什么？", "{}级别的风险点有哪些？"], # questions
+            ['风险等级'], # question slot fills
+            [('风险等级', 'attribute')], # ner
+            '[TARGET]风险等级', # path
+        ],
+        [
+            # 业务环节-负责角色
+            'TaA',
+            yewuhuanjie,
+            ["{}部门负责的有哪些业务？", "{}负责什么业务？"],
+            ['负责角色'],
+            [('负责角色', 'attribute')], # ner
+            '[TARGET]负责角色', # path
+        ],
+        # [
+        #     # x-含义，预警-x色预警
+        # ],
+
+        # TeE
+        [
+            # 业务环节包含风险
+            'TeE',
+            pd.merge(baohan, yewuhuanjie, left_on=':START_ID', right_on=':ID', how='inner'),
+            ["包含{}的业务环节是什么？", "包含{}的业务环节有哪些？", "什么业务有{}？", "哪些业务有{}？"],
+            [':END_ID'],
+            [(':END_ID', 'entity')], # ner
+            '[TARGET]包含', # path
+        ],
+        [
+            # 业务流程包含业务环节
+            'TeE',
+            pd.merge(baohan, yewuliucheng, left_on=':START_ID', right_on=':ID', how='inner'),
+            ["包含{}的业务环节是什么？", "包含{}的业务环节有哪些？", "什么业务有{}？", "哪些业务有{}？"],
+            [':END_ID'],
+            [(':END_ID', 'entity')], # ner
+            '[TARGET]包含', # path
+        ],
+
+        # EeNaT
+        [
+            # 业务流程包含业务环节-负责角色
+            'EeNaT',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                yewuhuanjie,
+                left_on=':END_ID', right_on=':ID',
+            ),
+            ["{}包含的业务环节由谁负责？", "{}包含的业务环节是哪个部门负责的？", 
+            "{}各环节由谁负责？", 
+            "{}是哪个部门负责的？", "谁负责{}？"],
+            [':START_ID'],
+            [(':START_ID', 'entity')], # ner
+            '包含[NEDGE]负责角色[TARGET]', # path
+        ],
+        [
+            # 业务环节包含风险点-含义
+            'EeNaT',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                yewuhuanjie,
+                left_on=':END_ID', right_on=':ID',
+            ),
+            ["{}包含的业务环节由谁负责？", "{}包含的业务环节是哪个部门负责的？", 
+            "{}各环节由谁负责？", "{}由哪几个部门负责？",
+            "{}是哪个部门负责的？", "谁负责{}？", "哪些部门负责{}？"],
+            [':START_ID'],
+            [(':START_ID', 'entity')], # ner
+            '包含[NEDGE]负责角色[TARGET]', # path
+        ],
+        [
+            # 业务环节包含风险点-风险等级
+            'EeNaT',
+            pd.merge(
+                pd.merge(yewuhuanjie, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                fengxiandian,
+                left_on=':END_ID', right_on=':ID',
+            ),
+            ["{}有什么等级的风险？", "{}有哪些等级的风险？", 
+            "{}的风险都是什么等级的？"],
+            [':START_ID'],
+            [(':START_ID', 'entity')], # ner
+            '包含[NEDGE]风险等级[TARGET]', # path
+        ],
+
+        # EeNeT
+        [
+            # 业务流程包含业务环节包含风险
+            'EeNeT',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                baohan,
+                left_on=':END_ID', right_on=':START_ID',
+            ),
+            ["{}包含的业务环节有哪些风险？", "{}的各环节包含哪些风险点？", "{}流程包含哪些风险点？", "{}包含哪些风险点？"],
+            [':START_ID_x'],
+            [(':START_ID_x', 'entity')], # ner
+            '包含[NEDGE]包含[TARGET]', # path
+        ],
+
+        # EeTaA
+        [
+            # 业务流程-[业务环节]-负责角色
+            'EeTaA',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                yewuhuanjie, left_on=':END_ID', right_on=':ID', how='inner'
+            ),
+            ["{}业务中由{}负责的有哪些？", "{}里哪些业务由{}负责？", "{}中哪几个环节由{}负责"],
+            [':START_ID', '负责角色'],
+            [(':START_ID', 'entity'), ('负责角色', 'attribute')], # ner
+            '包含[TARGET]负责角色', # path
+        ],
+        [
+            # 业务流程-[业务环节]-负责角色
+            'EeTaA',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                yewuhuanjie, left_on=':END_ID', right_on=':ID', how='inner'
+            ),
+            ["{}负责{}里的哪些业务？", "{}参与{}里哪些业务？", "{}负责{}中哪些部分？", "{}负责哪个{}环节？"],
+            ['负责角色', ':START_ID'],
+            [(':START_ID', 'entity'), ('负责角色', 'attribute')], # ner
+            '包含[TARGET]负责角色', # path
+        ],
+        [
+            # 业务环节-[风险]-风险等级
+            'EeTaA',
+            pd.merge(
+                pd.merge(yewuhuanjie, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                fengxiandian, left_on=':END_ID', right_on=':ID', how='inner'
+            ),
+            ["{}业务包含的{}等级风险有哪些？", "{}包含{}等级的风险有哪些？", "{}有哪些{}级风险？"],
+            [':START_ID', '风险等级'],
+            [(':START_ID', 'entity'), ('风险等级', 'attribute')], # ner
+            '包含[TARGET]风险等级', # path
+        ],
+
+        # EeTeE
+        [
+            # 业务流程-[业务环节]-风险点
+            'EeTeE',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                fengxiandian, left_on=':END_ID', right_on=':ID', how='inner'
+            ),
+            ["{}中哪些业务包含{}风险？", "哪些{}工作有{}风险点？", 
+            "{}里什么业务有{}风险？", "{}流程里哪些业务有{}风险？"],
+            [':START_ID', ':ID_y'],
+            [(':START_ID', 'entity'), (':ID_y', 'entity')], # ner
+            '包含[TARGET]包含', # path
+        ],
+
+        # TeNaA
+        [
+            # [业务流程]-业务环节-负责角色
+            'TeNaA',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                yewuhuanjie, left_on=':END_ID', right_on=':ID', how='inner'
+            ),
+            ["哪些流程由{}负责？", "{}负责哪些业务流程？", 
+            "{}参与哪些业务流程？", "哪些业务流程里有{}参与？"],
+            ['负责角色'],
+            [('负责角色', 'attribute')], # ner
+            '[TARGET]包含[NEGDE]负责角色', # path
+        ],
+        [
+            # [业务环节]-风险点-风险等级
+            'TeNaA',
+            pd.merge(
+                pd.merge(yewuhuanjie, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                fengxiandian, left_on=':END_ID', right_on=':ID', how='inner'
+            ),
+            ["哪些业务有{}级风险？", "哪些业务包含{}等级风险点？", 
+            "什么业务有{}等级风险", "哪些业务会有{}级风险"],
+            ['风险等级'],
+            [('风险等级', 'attribute')], # ner
+            '[TARGET]包含[NEGDE]风险等级', # path
+        ],
+        # [
+        #     # [业务流程]-风险点-含义
+        # ]
+        # TeNeE
+        [
+            # [业务流程]-业务环节-风险点
+            'TeNeE',
+            pd.merge(
+                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                baohan, left_on=':END_ID', right_on=':START_ID', how='inner'
+            ),
+            ["哪些业务流程包含{}风险？", "哪些业务流程可能有{}风险？",
+            "什么业务流程会有{}风险？", "哪个业务流程有{}风险"],
+            [':END_ID_y'],
+            [(':END_ID_y', 'entity')], # ner
+            '[TARGET]包含[NEDGE]包含', # path
+        ]
     ]
