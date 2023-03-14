@@ -4,12 +4,13 @@
 1. 安装Python和cudnn，cudatoolkit（推荐Python=3.7）
 2. 运行 `pip install -r requirements.txt` 安装Python依赖
 3. 在 `config.py` 中进行配置，注意在faq_runner_config中设置mysql数据库信息，以及在kbqa_runner_config中设置neo4j数据库信息
-4. 运行 `bash scripts/train_all.sh` 训练所有模型
+4. 运行 `python -m preprocess.FAQ.file_to_mysql`将FAQ数据导入到MySQL数据库中
+5. 运行 `bash scripts/train_all.sh` 训练所有模型
     * （可选）运行`bash scripts/test_all.sh`测试模型、模块以及系统的准确率
-5. 将FengxianQA添加至PYTHONPATH环境变量中
+6. 将FengxianQA添加至PYTHONPATH环境变量中
     * 可以使用`export PYTHONPATH=$PYTHONPATH:<FengxianQA路径>`，但仅在当前命令窗口生效
     * 也可以使用`echo "export PYTHONPATH=$PYTHONPATH:<FengxianQA路径>" >> ~/.bashrc; source ~/.bashrc`，该命令会在每次打开命令窗口后更新PYTHONPATH，从而保证FengxianQA在Python的import查询路径中。
-6. 在其它应用中调用FengxianQA： 
+7. 在其它应用中调用FengxianQA： 
     ```Python
     from FengxianQA import FengxianQA
     QA_bot = FengxianQA()
@@ -41,6 +42,9 @@
     * train_all.sh         训练FAQ, NER以及SIM模型
     * test_all.sh          测试三个模型、两个模块以及系统的性能、系统的响应时间
 * preprocess 用于生成训练数据，训练完成后部署时可删除
+    * 风控实体关系表        知识图谱原数据
+    * FAQ
+        * file_to_mysql.py     将FAQ数据上传至MySQL脚本
     * data_generator.py    训练数据生成脚本
     * util.py              训练数据生成工具库
 * utils 工具库
