@@ -2,7 +2,7 @@ import pandas as pd
 import random
 import jieba
 import synonyms
-DATA_BASE = "input/data/fengxian/faq/"
+DATA_BASE = "input/data/faq/"
 
 # 同义词替换(Synonyms Replace)
 def sr(num, dataset):

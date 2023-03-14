@@ -352,7 +352,7 @@ def evaluate(args, model, eval_dataset):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--data_dir", default="input/data/fengxian/sim", type=str, required=False,
+    parser.add_argument("--data_dir", default="input/data/sim", type=str, required=False,
                         help="数据文件目录，因当有train.text dev.text")
 
     parser.add_argument("--vob_file", default="input/pretrained_BERT/bert-base-chinese-vocab.txt", type=str, required=False,
@@ -367,7 +367,7 @@ def main():
                         help="输出的模型文件名")
 
     # Other parameters
-    parser.add_argument("--max_seq_length", default=50, type=int,
+    parser.add_argument("--max_seq_length", default=128, type=int,
                         help="输入到bert的最大长度，通常不应该超过512")
     parser.add_argument("--do_train", action='store_true',default=True,
                         help="是否进行训练")
@@ -391,12 +391,11 @@ def main():
                         help="random seed for initialization")
     parser.add_argument("--warmup_steps", default=0, type=int,
                         help="让学习增加到1的步数，在warmup_steps后，再衰减到0")
-    parser.add_argument("--neg_to_pos", default=3, type=int,
-                        help="数据集中负例-正例比")
 
+    config = sim_model_config.get("train", dict())
     args = parser.parse_args()
-    convert_config_paths(sim_model_config)
-    merge_arg_and_config(args, sim_model_config)
+    convert_config_paths(config)
+    merge_arg_and_config(args, config)
     assert os.path.exists(args.data_dir)
     assert os.path.exists(args.vob_file)
     assert os.path.exists(args.model_config_file)
@@ -422,10 +421,10 @@ def main():
     train_dataset = load_and_cache_example(args, tokenizer, processor, 'train')
     eval_dataset = load_and_cache_example(args, tokenizer, processor, 'validate')
     _ = load_and_cache_example(args,tokenizer,processor,'test')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
 
 
 

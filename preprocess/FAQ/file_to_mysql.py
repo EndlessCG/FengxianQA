@@ -1,19 +1,14 @@
 import xlrd
 import pymysql
-DATA_BASE = "input/data/fengxian/faq/"
+from config import faq_runner_config
+DATA_BASE = "input/data/faq/"
 
-def getConn(database):
-    args = dict(
-        host='localhost',
-        user='faq',
-        passwd='123456',
-        db=database,
-        charset='utf8'
-    )
+def getConn():
+    args = faq_runner_config.get("conn")
     conn = pymysql.connect(**args)
     return conn
 
-def excel2mysql(excelName, database, table, drop=True):
+def excel2mysql(excelName, drop=True):
     #下面代码作用：获取到excel中的字段和数据
     excel = xlrd.open_workbook(excelName)
     sheet = excel.sheet_by_index(0)
@@ -22,7 +17,8 @@ def excel2mysql(excelName, database, table, drop=True):
     for i in range(1,row_number):
         data_list.append(sheet.row_values(i))
 
-    conn = getConn(database)
+    conn = getConn()
+    table = faq_runner_config.get("table_name")
     cursor = conn.cursor()
     if drop:
         drop_sql = "drop table if exists {}".format(table)
@@ -41,6 +37,4 @@ def excel2mysql(excelName, database, table, drop=True):
     conn.close()
 
 if __name__ == '__main__':
-    excel2mysql(f"{DATA_BASE}/file/qa100.xls", 
-                database="qa100",
-                table="t_nlp_qa_faq")
+    excel2mysql(f"{DATA_BASE}/file/qa100.xls")

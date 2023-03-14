@@ -25,7 +25,7 @@ class FengxianQA:
             return "请输入问题"
         faq_answer, faq_prob = self.faq_runner.do_qa(question)
         self._print("FAQ信心：", faq_prob)
-        if faq_prob > faq_runner_config.get("admit_threshold", 0.8):
+        if faq_prob > faq_runner_config.get("admit_threshold", 0.3):
             self._print("使用FAQ回答")
             return faq_answer
         else:

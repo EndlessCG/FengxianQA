@@ -49,7 +49,7 @@ logger = logging.getLogger(__name__)
 # 这里做以下测试，第一 LABELS = ["O", "B-LOC", "I-LOC"] ，因为需要预测的就只有这三个。
 # 第二 LABELS = ["O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC", "X", "[CLS]", "[SEP]"]
 
-CRF_LABELS = ["O", "B-entity", "I-entity", "B-attribute", "I-attribute"]
+CRF_LABELS = ["O", "B-entity", "I-entity"]
 
 
 def statistical_real_sentences(input_ids:torch.Tensor,mask:torch.Tensor,predict:list)-> list:
@@ -394,7 +394,7 @@ def evaluate(args, model, eval_dataset):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", default="input/data/fengxian/ner", type=str, required=False,
+    parser.add_argument("--data_dir", default="input/data/ner", type=str, required=False,
                         help="数据文件目录，因当有train.txt dev.txt")
 
     parser.add_argument("--vob_file", default="input/pretrained_BERT/bert-base-chinese-vocab.txt", type=str, required=False,
@@ -409,7 +409,7 @@ def main():
     parser.add_argument("--pre_train_model_file", default="input/pretrained_BERT/bert-base-chinese-model.bin", type=str, required=False,
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
 
-    parser.add_argument("--max_seq_length", default=50, type=int,
+    parser.add_argument("--max_seq_length", default=128, type=int,
                         help="输入到bert的最大长度，通常不应该超过512")
     parser.add_argument("--do_train", action='store_true',default=True,
                         help="是否进行训练")
@@ -434,11 +434,13 @@ def main():
     parser.add_argument("--warmup_steps", default=0, type=int,
                         help="让学习增加到1的步数，在warmup_steps后，再衰减到0")
 
+    config = ner_model_config.get("train")
     args = parser.parse_args()
-    convert_config_paths(ner_model_config)
-    merge_arg_and_config(args, ner_model_config)
+    convert_config_paths(config)
+    merge_arg_and_config(args, config)
 
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # args.device = "cpu"
 
     logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                         datefmt='%m/%d/%Y %H:%M:%S',
@@ -461,10 +463,10 @@ def main():
     train_dataset = load_and_cache_example(args,tokenizer,processor,'train')
     eval_dataset = load_and_cache_example(args,tokenizer,processor,'validate')
     _ = load_and_cache_example(args,tokenizer,processor,'test')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
-    _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_1hop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_mhop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_unchain1hop')
+    # _ = load_and_cache_example(args,tokenizer,processor,'test_unchainmhop')
 
     if args.do_train:
         trains(args,train_dataset,eval_dataset,model)
