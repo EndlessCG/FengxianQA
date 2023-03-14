@@ -434,9 +434,10 @@ def main():
     parser.add_argument("--warmup_steps", default=0, type=int,
                         help="让学习增加到1的步数，在warmup_steps后，再衰减到0")
 
+    config = ner_model_config.get("train")
     args = parser.parse_args()
-    convert_config_paths(ner_model_config)
-    merge_arg_and_config(args, ner_model_config)
+    convert_config_paths(config)
+    merge_arg_and_config(args, config)
 
     args.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # args.device = "cpu"

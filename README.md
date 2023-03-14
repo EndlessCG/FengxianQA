@@ -16,6 +16,11 @@
     QA_bot = FengxianQA()
     answer = QA_bot.do_qa("新业务开展前，需要做哪些准备？")
     ```
+## Mysql数据库构建
+FAQ（常见问题）数据存放在`input/data/faq/file/qa100.xls`
+
+在config.py的faq_runner_config中配置数据库信息后，运行`python -m preprocess.FAQ.file_to_mysql`即可将数据上传至mysql数据库中
+
 
 ## 项目结构
 * models

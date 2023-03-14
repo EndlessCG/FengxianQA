@@ -392,9 +392,10 @@ def main():
     parser.add_argument("--warmup_steps", default=0, type=int,
                         help="让学习增加到1的步数，在warmup_steps后，再衰减到0")
 
+    config = sim_model_config.get("train", dict())
     args = parser.parse_args()
-    convert_config_paths(sim_model_config)
-    merge_arg_and_config(args, sim_model_config)
+    convert_config_paths(config)
+    merge_arg_and_config(args, config)
     assert os.path.exists(args.data_dir)
     assert os.path.exists(args.vob_file)
     assert os.path.exists(args.model_config_file)
