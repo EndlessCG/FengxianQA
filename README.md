@@ -8,7 +8,7 @@
     * （可选）运行`bash scripts/test_all.sh`测试模型、模块以及系统的准确率
 5. 将FengxianQA添加至PYTHONPATH环境变量中
     * 可以使用`export PYTHONPATH=$PYTHONPATH:<FengxianQA路径>`，但仅在当前命令窗口生效
-    * 也可以使用`echo "export PYTHONPATH=$PYTHONPATH:<FengxianQA路径>" >> ~/.bashrc; source ~/.bashrc`
+    * 也可以使用`echo "export PYTHONPATH=$PYTHONPATH:<FengxianQA路径>" >> ~/.bashrc; source ~/.bashrc`，该命令会在每次打开命令窗口后更新PYTHONPATH，从而保证FengxianQA在Python的import查询路径中。
 6. 在其它应用中调用FengxianQA： 
     ```Python
     from FengxianQA import FengxianQA
