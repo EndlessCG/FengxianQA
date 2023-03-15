@@ -15,7 +15,8 @@ def convert_config_paths(config: dict):
         if isinstance(v, dict):
             convert_config_paths(v)
         elif "file" in k or "path" in k or "dir" in k:
-            config[k] = get_abs_path(v)
+            if v != "":
+                config[k] = get_abs_path(v)
 
 def get_all_sims(sim_path):
     sims = set()
