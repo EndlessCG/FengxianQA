@@ -297,9 +297,9 @@ def evaluate_and_save_model(args,model,eval_dataset,epoch,global_step,best_acc):
                 epoch + 1, args.num_train_epochs,global_step,eval_loss, question_acc,label_acc)
     if question_acc > best_acc:
         best_acc = question_acc
-        torch.save(model.state_dict(), os.path.join(args.output_dir, args.output_model_file))
+        torch.save(model.state_dict(), os.path.join(args.output_dir, 'best_sim.bin'))
         logging.info("save the best model %s , question_acc = %f",
-                     os.path.join(args.output_dir, args.output_model_file),best_acc)
+                     os.path.join(args.output_dir, 'best_sim.bin'),best_acc)
     return best_acc
 
 
@@ -361,9 +361,7 @@ def main():
                         help="模型配置文件json文件")
     parser.add_argument("--pre_train_model_file", default="input/pretrained_BERT/bert-base-chinese-model.bin", type=str, required=False,
                         help="预训练的模型文件，参数矩阵。如果存在就加载")
-    parser.add_argument("--output_dir", default="models/SIM/sim_output", type=str, required=False,
-                        help="输出结果的文件")
-    parser.add_argument("--output_model_file", default="best_sim.bin", type=str, required=False,
+    parser.add_argument("--output_dir", default="models/SIM/sim_output/", type=str, required=False,
                         help="输出的模型文件名")
 
     # Other parameters
