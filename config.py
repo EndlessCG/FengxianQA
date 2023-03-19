@@ -94,14 +94,14 @@ faq_model_config = dict(
         vocab_file="input/data/faq/vocab",  # 模型词汇表文件路径
         output_id2label_file="models/FAQ/finetune_model/id2label.has_init",  # 输出id2label文件路径
         model_save_dir="models/FAQ/finetune_model",  # 保存输出模型的路径
-        opt_type="adam",  # 优化器类型'learning_rate=1e-5, # 优化器学习率
+        opt_type="adam",  # 优化器类型
         learning_rate=1e-4,  # 优化器学习率
         dropout_rate=0.1,  # dropout率
         seed=1,  # 初始化所用随机数种子
         print_step=1000,  # 打印log的间隔步数
         init_checkpoint_file="models/FAQ/pretrain_model/lm_pretrain.ckpt-10000",  # 训练起点checkpoint文件
         batch_size=64,  # 微调 batch size
-        epoch=30,  # 微调时的迭代数
+        epoch=50,  # 微调时的迭代数
         max_len=128,  # 最大输入序列长度
     ),
     eval=dict(

@@ -43,6 +43,7 @@ def parse_args():
     parser.add_argument("--vob_file", default='input/pretrained_BERT/bert-base-chinese-vocab.txt', help="待测试模型词汇表路径")
     parser.add_argument("--model_config_file", default="input/pretrained_BERT/bert-base-chinese-config.json", help="待测试模型配置文件路径")
     parser.add_argument("--max_seq_length", default=128, help="最大序列长度")
+    parser.add_argument("--do_split_tests", default=True, help="是否进行分类型问题测试")
     args = parser.parse_args()
     config = ner_model_config.get("test", dict())
     convert_config_paths(config)
