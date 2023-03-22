@@ -89,8 +89,8 @@ faq_model_config = dict(
     ),
     finetune=dict(
         # 更多参数定义请参考models/FAQ/FAQ_main.py或运行python -m models.FAQ.FAQ_main finetune --help
-        train_file="input/data/faq/train_data",  # 输入微调数据的路径
-        dev_file="input/data/faq/dev_data",  # 训练时测试的数据路径
+        train_file="input/data/faq/no_commas_large_neg2pos_1/train_data",  # 输入微调数据的路径
+        dev_file="input/data/faq/no_commas_large_neg2pos_1/dev_data",  # 训练时测试的数据路径
         vocab_file="input/data/faq/vocab",  # 模型词汇表文件路径
         output_id2label_file="models/FAQ/finetune_model/id2label.has_init",  # 输出id2label文件路径
         model_save_dir="models/FAQ/finetune_model",  # 保存输出模型的路径
@@ -101,7 +101,7 @@ faq_model_config = dict(
         print_step=1000,  # 打印log的间隔步数
         init_checkpoint_file="models/FAQ/pretrain_model/lm_pretrain.ckpt-10000",  # 训练起点checkpoint文件
         batch_size=64,  # 微调 batch size
-        epoch=50,  # 微调时的迭代数
+        epoch=20,  # 微调时的迭代数
         max_len=128,  # 最大输入序列长度
     ),
     eval=dict(
@@ -157,5 +157,13 @@ faq_runner_config = dict(
     table_name="t_nlp_qa_faq",  # mysql表名
     vocab_file="input/data/faq/vocab",  # FAQ词汇文件路径
     model_dir="models/FAQ/finetune_model/",  # 训练好的模型路径
-    id2label_file="models/FAQ/finetune_model/id2label.has_init"  # FAQ id2label文件路径
+    id2label_file="models/FAQ/finetune_model/id2label.has_init",  # FAQ id2label文件路径
+    test=dict(
+        accept_thresholds=["any"],
+        sim_test_file="input/data/sim/test.txt",
+        faq_test_file="input/data/faq/no_commas_large_neg2pos_1/test_data",
+        n_mixed_inputs=1800,
+        test_types=["mixed-faq-acc"],
+        print_probs=False,
+    )
 )

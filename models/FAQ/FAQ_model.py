@@ -343,17 +343,15 @@ class FAQ():
                 fir_ans_prob = model_res.split(":")[1].split()[0].strip()
                 # print(fir_ans_prob)
                 # print("问题：{}".format(args.input_sentence))
-                answer = self._get_answer_by_id(fir_ans_num)
                 if get_id:
-                    if len(answer) < 1 or answer == "nan":
-                        return -1, 0
-                    else:
-                        return f"{fir_ans_num}", float(fir_ans_prob) # 输出
+                    return f"{fir_ans_num}", float(fir_ans_prob) # 输出
+                if fir_ans_num == -1:
+                    return "No FAQ answer", float(fir_ans_prob)
+                answer = self._get_answer_by_id(fir_ans_num)
+                if len(answer) < 1 or answer == "nan":
+                    return "No FAQ answer", 0
                 else:
-                    if len(answer) < 1 or answer == "nan":
-                        return "No FAQ answer", 0
-                    else:
-                        return f"{answer}", float(fir_ans_prob) # 输出
+                    return f"{answer}", float(fir_ans_prob) # 输出
 
     def load_model(self, model_path="", model_dir=""):
         if "" == model_path:

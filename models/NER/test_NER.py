@@ -28,9 +28,9 @@ def init_ner_test(args):
     raw_input_path_dict = dict()
     do_split_tests = args.do_split_tests
     if do_split_tests:
-        for t_type in ["1hop"]:
-        # for t_type in ["mhop"]:
-            features_dict[t_type] = torch.load(f'input/data/ner/cached_test_{t_type}_50')
+        for t_type in ["1hop", "mhop", "unchain1hop", "unchainmhop"]:
+            features_dict[t_type] = torch.load(f'input/data/ner/cached_test_{t_type}_{args.max_seq_length}')
+            raw_input_path_dict[t_type] = f"input/data/ner/test_{t_type}.txt"
     features_dict["all NER"] = torch.load(os.path.join(args.data_dir, f"cached_test_{args.max_seq_length}"))
     raw_input_path_dict["all NER"] = args.raw_data_path
     return model, features_dict, raw_input_path_dict

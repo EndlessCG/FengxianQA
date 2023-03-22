@@ -1,11 +1,17 @@
+import os
 import pandas as pd
 import random
 import jieba
-import synonyms
-DATA_BASE = "input/data/faq/"
+from tqdm import tqdm
+
+from preprocess.FAQ.chatgpt_synonym import get_synonyms
+from utils.operations import load_sim_questions
+from config import sim_model_config 
+DATA_BASE = "input/data/faq/no_commas_large_neg2pos_1/"
 
 # 同义词替换(Synonyms Replace)
 def sr(num, dataset):
+    import synonyms
     times = 0
     data_n = []
     total_same = 0
@@ -87,6 +93,7 @@ def sr(num, dataset):
 
 # 随机插入-随机抽一个词，在该词的同义词集合中选一个，随机插入到原句子中的随机位置
 def ri(num, dataset):
+    import synonyms
     data_n = []
     times = 0
     times_before = -1
@@ -197,7 +204,8 @@ def rs(num, dataset):
 
 
 # 生成训练集、验证集、测试集（利用数据增强），包含标准问题ID、扩展问题ID、扩展问题文本三列
-def generate_datasets():
+def generate_datasets(strategy='baidufanyi'):
+    assert strategy in ['openai', 'baidufanyi'], 'Invalid strategy'
     to_write_train = ""
     to_write_dev = ""
     to_write_test = ""
@@ -212,17 +220,25 @@ def generate_datasets():
     from back_translation import back_trans
     with open(f'{DATA_BASE}/std_data', 'r') as f:
         data = f.readlines()
-        for i in data:
+        for i in tqdm(data):
             l = i.split('\t')
             biao_id = l[1]
             to_text = " ".join(l[2:])
             text = to_text.replace("\n", "").replace(" ", "")
 
-            generate_list = sr(5, [text])
-            generate_list.extend(ri(5, [text]))
-            generate_list.extend(rs(5, [text]))
-            generate_list.extend([back_trans(text, c) for c in ['en','jp','kor','spa','fra']])
+            if strategy == 'baidufanyi':
+                import synonyms
+                generate_list = sr(5, [text])
+                generate_list.extend(ri(5, [text]))
+                generate_list.extend(rs(5, [text]))
+                generate_list.extend([back_trans(text, c) for c in ['en','jp','kor','spa','fra']])
 
+            elif strategy == 'openai':
+                generate_list = []
+                synonyms = get_synonyms(text.replace("，", ""), 50)
+                if synonyms is not None:
+                    generate_list.extend(synonyms)
+            
             generate_list = [" ".join(list(q)) for q in generate_list if len(q) >= 3]
             fir_split = int(train_split * len(generate_list))
             sec_split = fir_split + int(dev_split * len(generate_list))
@@ -252,6 +268,70 @@ def generate_datasets():
             kuo_id += 1
         f.write(to_write_test)
 
+def expand_neg_questions(file_name, sim_file_name):
+    to_write_train = ""
+    to_write_dev = ""
+    to_write_test = ""
+    train_list = []
+    dev_list = []
+    test_list = []
+    train_split = 0.8
+    dev_split = 0.1
+    train_number = []
+    dev_number = []
+    test_number = []
+    generate_dict = {}
+
+    if isinstance(file_name, str):
+        file_name = [file_name]
+    if isinstance(sim_file_name, str):
+        sim_file_name = [sim_file_name]
+    
+    for file in file_name:
+        with open(file, "r") as f:
+            for line in f.readlines():
+                question = line.split('\t')[-1].replace(" ", "").replace("\n", "")
+                id_ = line.split('\t')[0]
+                generate_dict.setdefault(id_, []).append(' '.join(question))
+    
+    for file in sim_file_name:
+        questions = [' '.join(q) for q in load_sim_questions(file)]
+        generate_dict.setdefault(-1, []).extend(questions)
+
+    for id_, questions in generate_dict.items():
+        fir_split = int(train_split * len(questions))
+        sec_split = fir_split + int(dev_split * len(questions))
+        train_list.extend(questions[:fir_split])
+        dev_list.extend(questions[fir_split:sec_split])
+        test_list.extend(questions[sec_split:])
+        train_number.extend([id_] * len(questions[:fir_split]))
+        dev_number.extend([id_] * len(questions[fir_split:sec_split]))
+        test_number.extend([id_] * len(questions[sec_split:]))
+
+    with open(f'{DATA_BASE}/train_data', 'w') as f:
+        kuo_id = 0
+        for j in range(len(train_list)):
+            to_write_train += str(train_number[j]) + "\t" + str(kuo_id) + "\t" + train_list[j].replace("\n", "") + "\n"
+            kuo_id += 1
+        f.write(to_write_train)
+    with open(f'{DATA_BASE}/dev_data', 'w') as f:
+        kuo_id = 0
+        for j in range(len(dev_list)):
+            to_write_dev += str(dev_number[j]) + "\t" + str(kuo_id) + "\t" + dev_list[j].replace("\n", "") + "\n"
+            kuo_id += 1
+        f.write(to_write_dev)
+    with open(f'{DATA_BASE}/test_data', 'w') as f:
+        kuo_id = 0
+        for j in range(len(test_list)):
+            to_write_test += str(test_number[j]) + "\t" + str(kuo_id) + "\t" + test_list[j].replace("\n", "") + "\n"
+            kuo_id += 1
+        f.write(to_write_test)
+
 if __name__ == "__main__":
-    generate_datasets()
+    expand_neg_questions(["input/data/faq/no_commas_large/train_data",
+    "input/data/faq/no_commas_large/dev_data",
+    "input/data/faq/no_commas_large/test_data"],
+    ["input/data/sim/train.txt",
+    "input/data/sim/validate.txt",
+    "input/data/sim/test.txt"])
 

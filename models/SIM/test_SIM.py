@@ -18,8 +18,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def init_sim_test(args):
     features_dict = dict()
     if args.do_split_tests:
-        for t_type in ["1hop"]:
-            features_dict[t_type] = torch.load(f'input/data/sim/cached_test_{t_type}_50')
+        for t_type in ["1hop", "mhop", "unchain1hop", "unchainmhop"]:
+            features_dict[t_type] = torch.load(f'input/data/sim/cached_test_{t_type}_{args.max_seq_length}')
     features_dict["all SIM"] = torch.load(os.path.join(args.data_dir, f"cached_test_{args.max_seq_length}"))
     return features_dict
 
