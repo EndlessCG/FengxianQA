@@ -2,59 +2,96 @@ from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import f1_score
 
-from utils import load_faq_questions, load_sim_questions
+from utils import load_faq_questions, load_sim_questions, merge_arg_and_config, convert_config_paths
 from .faq_runner import FAQRunner
 from config import faq_runner_config
+import argparse
 
-ACCEPT_THRESHOLDS = [faq_runner_config.get("admit_threshold", 0.3)]
-N_MIXED_INPUTS = 500
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--accept_thresholds",
+                        default=np.arange(0.1, 0.9, 0.1))
+    parser.add_argument("--sim_test_file", default="input/data/sim/test.txt")
+    parser.add_argument("--faq_test_file", default="input/data/faq/test_data")
+    parser.add_argument("--n_mixed_inputs", default=500)
+    parser.add_argument("--test_types", default=["refuse-acc", "accept-acc", "mixed-accept-f1", "mixed_faq_acc"])
+    config = faq_runner_config.get("test", dict())
+    args = parser.parse_args()
+    convert_config_paths(config)
+    merge_arg_and_config(args, config)
+    return args
+
+
 def main():
+    args = parse_args()
+    accept_thresholds = args.accept_thresholds
+    n_mixed_inputs = args.n_mixed_inputs
+
     model = FAQRunner(faq_runner_config)
-    sim_problems = load_sim_questions("input/data/sim/test.txt")
-    faq_problems = load_faq_questions("input/data/faq/test_data", get_answers=True)
-    mixed_problems = sim_problems[:N_MIXED_INPUTS//2] + faq_problems[:N_MIXED_INPUTS//2]
+    sim_problems = load_sim_questions(args.sim_test_file)
+    faq_problems = load_faq_questions(args.faq_test_file, get_answers=True)
+    mixed_problems = sim_problems[:min(n_mixed_inputs//2, len(sim_problems) - 1)] + \
+                     faq_problems[:min(n_mixed_inputs//2, len(faq_problems) - 1)]
     np.random.shuffle(mixed_problems)
     result_dict = {}
-    for threshold in ACCEPT_THRESHOLDS:
-        results = []
-        for sim_problem in tqdm(sim_problems):
-            _, confidence = model.do_qa(sim_problem)
-            results.append(1 if confidence < threshold else 0)
-        print("Threshold:", threshold, "Refuse-or-not accuracy:", sum(results) / len(results))
-        result_dict.setdefault("refuse-acc", []).append(sum(results) / len(results))
 
-        results = []
-        for faq_problem in tqdm(faq_problems):
-            _, confidence = model.do_qa(faq_problem[0])
-            results.append(1 if confidence > threshold else 0)
-        print("Threshold:", threshold, "Accept-or-not accuracy:", sum(results) / len(results))
-        result_dict.setdefault("accept-acc", []).append(sum(results) / len(results))
-        
-        results, labels = [], []
-        for mixed_problem in tqdm(mixed_problems):
-            if isinstance(mixed_problem, str):
-                # kbqa problem
-                labels.append(0)
-                _, confidence = model.do_qa(mixed_problem)
-            else:
-                # faq problem
-                labels.append(1)
-                _, confidence = model.do_qa(mixed_problem[0])
-            results.append(1 if confidence > threshold else 0)
-        print("Threshold:", threshold, "Mixed accept-or-refuse F1:", f1_score(y_pred=results, y_true=labels))
-        result_dict.setdefault("mixed-accept-f1", []).append(f1_score(y_pred=results, y_true=labels))
+    for threshold in accept_thresholds:
+        if "refuse-acc" in args.test_types:
+            results = []
+            confidences = []
+            for sim_problem in tqdm(sim_problems):
+                _, confidence = model.do_qa(sim_problem)
+                results.append(1 if confidence < threshold else 0)
+                confidences.append(confidence)
+            print("Threshold:", threshold, "Refuse-or-not accuracy:",
+                  sum(results) / len(results))
+            if args.print_probs:
+                print("Actual confidences:", confidences)
+            result_dict.setdefault("refuse-acc", []).append(sum(results) / len(results))
 
-        results, labels = [], []
-        for mixed_problem in tqdm(mixed_problems):
-            if isinstance(mixed_problem, str):
-                # kbqa problem
-                labels.append(-1)
-                pred_id, confidence = model.do_qa(mixed_problem, get_id=True)
-            else:
-                # faq problem
-                labels.append(mixed_problem[1])
-                pred_id, confidence = model.do_qa(mixed_problem[0], get_id=True)
-            results.append(-1 if confidence < threshold else pred_id)
+        if "accept-acc" in args.test_types:
+            results = []
+            confidences = []
+            for faq_problem in tqdm(faq_problems):
+                _, confidence = model.do_qa(faq_problem[0])
+                results.append(1 if confidence > threshold else 0)
+                confidences.append(confidence)
+            print("Threshold:", threshold, "Accept-or-not accuracy:",
+                  sum(results) / len(results))
+            if args.print_probs:
+                print("Actual confidences:", confidences)
+            result_dict.setdefault("accept-acc", []).append(sum(results) / len(results))
+
+        if "mixed-accept-f1" in args.test_types:
+            results, labels = [], []
+            for mixed_problem in tqdm(mixed_problems):
+                if isinstance(mixed_problem, str):
+                    # kbqa problem
+                    labels.append(0)
+                    _, confidence = model.do_qa(mixed_problem)
+                else:
+                    # faq problem
+                    labels.append(1)
+                    _, confidence = model.do_qa(mixed_problem[0])
+                results.append(1 if confidence > threshold else 0)
+            print("Threshold:", threshold, "Mixed accept-or-refuse F1:",
+                  f1_score(y_pred=results, y_true=labels))
+            result_dict.setdefault("mixed-accept-f1", []).append(f1_score(y_pred=results, y_true=labels))
+
+        if "mixed-faq-acc" in args.test_types:
+            results, labels = [], []
+            for mixed_problem in tqdm(mixed_problems):
+                if isinstance(mixed_problem, str):
+                    # kbqa problem
+                    labels.append("-1")
+                    pred_id, confidence = model.do_qa(
+                        mixed_problem, get_id=True)
+                else:
+                    # faq problem
+                    labels.append(mixed_problem[1])
+                    pred_id, confidence = model.do_qa(mixed_problem[0], get_id=True)
+                results.append(-1 if confidence < threshold else pred_id)
         print("Threshold:", threshold, "Mixed FAQ accuracy:", sum([1 if results[i] == labels[i] else 0 for i in range(len(results))]) / len(results))
         result_dict.setdefault("mixed-faq-acc", []).append(sum([1 if results[i] == labels[i] else 0 for i in range(len(results))]) / len(results))
     print(result_dict)
