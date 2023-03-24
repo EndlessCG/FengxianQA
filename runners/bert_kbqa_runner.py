@@ -14,13 +14,13 @@ from utils import Neo4jGraph, KBQA_TOKEN_LIST, get_abs_path
 
 
 class BertKBQARunner():
-    def __init__(self, config):
+    def __init__(self, config, neo4j_config):
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         transformers.logging.set_verbosity_error()
         self.config = config
         self._verbose = config.get("verbose", "False")
         self._print('连接数据库...')
-        neo4j_config, ner_config, sim_config = config['neo4j'], config['ner'], config['sim']
+        ner_config, sim_config = config['ner'], config['sim']
         self.graph = Neo4jGraph(neo4j_config['neo4j_addr'], 
                                 neo4j_config['username'], 
                                 neo4j_config['password'])

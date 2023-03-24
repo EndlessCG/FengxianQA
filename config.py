@@ -1,6 +1,12 @@
 # FengxianQA项目配置文件
 # 若部分参数未在本文件中定义，将采用对应模块原文件中给出的默认值
 
+neo4j_config=dict(
+    neo4j_addr="bolt://localhost:7687",  # neo4j地址
+    username="neo4j",  # neo4j用户名
+    password="123456",  # neo4j密码
+)
+
 # 以下为模型配置，仅在模型训练与测试时有效，应在模型训练前配置
 ner_model_config = dict(
     # NER模型训练与测试配置
@@ -34,6 +40,21 @@ ner_model_config = dict(
     )
 )
 
+el_model_config = dict(
+    train=dict(
+        train_file="input/data/el/train.txt",
+        dev_file="input/data/el/validate.txt",
+        output_dir="models/EL/el_output/",
+        w2v_corpus_path="input/data/el/tencent-ailab-embedding-zh-d100-v0.2.0/tencent-ailab-embedding-zh-d100-v0.2.0.txt",
+        w2v_load_path="models/EL/el_output/w2v_model.bin",
+        w2v_save_path="models/EL/el_output/w2v_model.bin",
+    ),
+    test=dict(
+        test_file="input/data/el/test.txt",
+        w2v_load_path="models/EL/el_output/w2v_model.bin",
+        model_path="models/EL/el_output/best_el.bin"
+    )
+)
 sim_model_config = dict(
     # SIM模型训练配置
     # 此处配置仅影响SIM模型训练与测试过程，与FengxianQA推理（即do_qa）过程无关
@@ -126,11 +147,6 @@ kbqa_runner_config = dict(
     # KBQA配置
     verbose=False,  # 是否输出KBQA过程详细信息
     sim_accept_threshold=0.01,  # SIM模型认定有答案的最低信心值
-    neo4j=dict(
-        neo4j_addr="bolt://localhost:7687",  # neo4j地址
-        username="neo4j",  # neo4j用户名
-        password="123456",  # neo4j密码
-    ),
 
     ner=dict(
         config_file='input/pretrained_BERT/bert-base-chinese-config.json',  # BERT预训练模型配置文件路径

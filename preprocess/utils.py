@@ -1,5 +1,11 @@
 import pandas as pd
+import os
+import json
+import requests
+import random
+import string
 
+OPENAI_URL = "https://api.openai-proxy.com/v1/chat/completions"
 CSV_PATHS = {
     # entity
     "fengxiandian": "preprocess/风控实体关系表/entity_fengxiandian.csv",
@@ -10,6 +16,78 @@ CSV_PATHS = {
     # relation
     "baohan": "preprocess/风控实体关系表/relationship_baohan.csv",
 }
+RANDOM_FARM = string.ascii_lowercase + string.digits
+
+def do_request(headers, payload, n_extend):
+    all_questions = []
+    retry = 0
+    while(len(all_questions) != n_extend) and retry < 10:
+        all_questions.clear()
+        try:
+            raw = requests.request("POST", OPENAI_URL, headers=headers, data=payload, timeout=60)
+        except requests.ReadTimeout:
+            print("Timeout")
+            raw = None
+
+        if raw is not None:
+            try:
+                response = eval(raw.text)
+            except:
+                response = {'code':-1, 'message': raw.text}
+            print(eval(payload)["content"])
+            print(response)
+            if response['code'] != 200:
+                print(f"Request failed for with {response['code']} {response['message']}")
+                retry += 1
+                continue
+            
+            if '、' in response['data'] and '\n' not in response['data']:
+                all_questions.append(response['data'].split('、'))
+            else:
+                for question in response['data'].split('\n'):
+                    if question == '':
+                        continue
+                    all_questions.append(question.split(' ')[-1])
+        
+        if raw is None or all_questions is None or len(all_questions) != n_extend:
+            retry += 1
+            print(f"Retrying with invalid output {all_questions}")
+    if retry == 5:
+        print(f"!!! Not able to generate valid output for {payload}")
+    return all_questions
+
+def get_synonyms(sentence, n_extend, input_type='word'):
+    all_questions = []
+    sessionId = ''.join(random.choice(RANDOM_FARM) for i in range(20))
+    question = [
+        {
+            'sentence': f"原句：{sentence}\n输出{min(n_extend, 10)}个中文同义句，省略原句中的部分信息，尽量缩短句子：",
+            'word': f"输出“{sentence}”的{min(n_extend, 10)}个中文同义词，每行输出一个："
+        },
+        {
+            'sentence': f"再输出\"{sentence}\"的{min(n_extend, 10)}个中文同义句，省略原句中的部分信息，尽量缩短句子：",
+            'word': f"再输出“{sentence}”的{min(n_extend, 10)}个中文同义词，每行输出一个："
+        }
+    ]
+    payload = json.dumps({
+        "apiKey": os.getenv("OPENAI_API_KEY"),
+        "sessionId": sessionId,
+        "content": question[0][input_type]
+    })
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    all_questions.extend(do_request(headers, payload, min(n_extend, 10)))
+    n_extend -= 10
+    while n_extend > 0:
+        payload = json.dumps({
+            "apiKey": os.getenv("OPENAI_API_KEY"),
+            "sessionId": sessionId,
+            "content": question[1][input_type]
+        })
+        all_questions.extend(do_request(headers, payload, min(n_extend, 10)))
+        n_extend -= 10
+    return all_questions
 
 def get_question_descriptions():
     # 处理风险点
