@@ -90,7 +90,7 @@ def test_init_time(ntrials):
 
 
 def main():
-    test_init_time(ntrials=10)
+    # test_init_time(ntrials=10)
     agent = FengxianQA()
     questions = load_sim_questions("input/data/sim/train.txt")
     faq_questions = load_faq_questions("input/data/faq/train_data")
@@ -137,6 +137,17 @@ def main():
             times.append(t_end - t_start)
         print("total time", np.sum(times[1:]))
         print("sim", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
+    for ninput in time_profile_ninputs:
+        times = []
+        print("ninput:", ninput)
+        for q in tqdm(questions[:ninput]):
+            entity, attribute = agent.kbqa_runner.get_entity(q)
+            t_start = time.time()
+            _ = agent.kbqa_runner.fuzzy_entity_linking(entity, attribute, q)
+            t_end = time.time()
+            times.append(t_end - t_start)
+        print("total time", np.sum(times[1:]))
+        print("el", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
     for ninput in time_profile_ninputs:
         times = []
         print("ninput:", ninput)

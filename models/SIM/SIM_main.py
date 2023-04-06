@@ -74,7 +74,7 @@ def cal_acc(pred_logits, real_label):
         pred_logits = pred_logits[:, 1].reshape(-1, split_size)
         pred_values, pred_idx = pred_logits.max(dim=-1)
         # 可能性最大的问题==0且可能性>0.1
-        question_acc = ((pred_idx == 0) & (pred_values > kbqa_runner_config.get("sim_accept_threshold", 0.1))).sum().float() / float(pred_idx.shape[0])
+        question_acc = (pred_idx == 0).sum().float() / float(pred_idx.shape[0])
         return question_acc.item(),label_acc.item()
     else:
         print("SIM cal_acc: pos & neg samples in dataset not formally aligned, disabling question_acc")

@@ -226,6 +226,8 @@ class FAQ():
         print("f1：", f1_score(label, ans, average='macro'))
 
     def _get_answer_by_id(self, pred_id):
+        if pred_id == -1:
+            return "_NO_FAQ_ANSWER"
         id2answer_query = f"SELECT answer from {self.table_name} WHERE `id`={pred_id}"
         cursor = self.sql_conn.cursor()
         cursor.execute(id2answer_query)
@@ -343,15 +345,10 @@ class FAQ():
                 fir_ans_prob = model_res.split(":")[1].split()[0].strip()
                 # print(fir_ans_prob)
                 # print("问题：{}".format(args.input_sentence))
-                if get_id:
-                    return f"{fir_ans_num}", float(fir_ans_prob) # 输出
-                if fir_ans_num == -1:
-                    return "No FAQ answer", float(fir_ans_prob)
                 answer = self._get_answer_by_id(fir_ans_num)
-                if len(answer) < 1 or answer == "nan":
-                    return "No FAQ answer", 0
-                else:
-                    return f"{answer}", float(fir_ans_prob) # 输出
+                if get_id:
+                    return f"{fir_ans_num}", f"{answer}", float(fir_ans_prob) # 输出
+                return f"{answer}", float(fir_ans_prob) # 输出
 
     def load_model(self, model_path="", model_dir=""):
         if "" == model_path:

@@ -21,5 +21,7 @@ class Neo4jGraph():
         get_all_a_query = 'match (n) return [k IN KEYS(n) | n[k]]'
         self.entity_list = sorted(self.execute_query(get_all_e_query), key=lambda x: len(x), reverse=True)
         self.attribute_list = self.execute_query(get_all_a_query)
-        self.attribute_list = list(set(sum(self.attribute_list, [])))
+        self.attribute_list = sum(self.attribute_list, [])
+        self.attribute_list = [i if isinstance(l, list) else l for l in self.attribute_list for i in l]
+        self.attribute_list = list(set(self.attribute_list))
         self.attribute_list = sorted(self.attribute_list, key=lambda x: len(x), reverse=True)

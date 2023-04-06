@@ -3,6 +3,7 @@ from gensim.models import KeyedVectors
 from gensim.summarization.bm25 import BM25
 import jieba
 import pickle
+import argparse
 import os
 import os.path as osp
 import numpy as np
@@ -12,16 +13,20 @@ from xgboost import XGBClassifier
 from sklearn.metrics import f1_score
 
 class EL():
-    def __init__(self, args, neo4j_graph):
-        self.args = args
-        print("Loading w2v model...")
-        if hasattr(args, "w2v_load_path") and osp.exists(args.w2v_load_path):
-            self.w2v_model = pickle.load(open(args.w2v_load_path, 'rb'))
+    def __init__(self, config, neo4j_graph):
+        if isinstance(config, argparse.Namespace):
+            self.args = config
         else:
-            self.w2v_model = KeyedVectors.load_word2vec_format(args.w2v_corpus_path, binary=False)
-            if not os.path.exists(osp.dirname(args.w2v_save_path)):
-                os.makedirs(osp.dirname(args.w2v_save_path))
-            pickle.dump(self.w2v_model, open(args.w2v_save_path, 'wb'), protocol=4)
+            self.args = argparse.Namespace(**config)
+            self._verbose = config.get("verbose", "True")
+        print("Loading w2v model...This might take several minutes...")
+        if hasattr(self.args, "w2v_load_path") and osp.exists(self.args.w2v_load_path):
+            self.w2v_model = pickle.load(open(self.args.w2v_load_path, 'rb'))
+        else:
+            self.w2v_model = KeyedVectors.load_word2vec_format(self.args.w2v_corpus_path, binary=False)
+            if not os.path.exists(osp.dirname(self.args.w2v_save_path)):
+                os.makedirs(osp.dirname(self.args.w2v_save_path))
+            pickle.dump(self.w2v_model, open(self.args.w2v_save_path, 'wb'), protocol=4)
         self.graph = neo4j_graph
         self.full_entity_list = self.graph.entity_list + self.graph.attribute_list
         print("Tokenizing entity list...")
@@ -30,8 +35,11 @@ class EL():
         self.bm25_model = BM25(tok_entity_list)
         xgb.set_config(verbosity=2)
         self.el_model = XGBClassifier()
-        print('w2v', type(self.w2v_model))
     
+    def _print(self, args):
+        if self._verbose:
+            print("EL:", *args)
+
     def _string_similarity(self, mention, entity):
         # Jaccard similarity
         tok_mention = jieba.lcut(mention)
@@ -41,8 +49,8 @@ class EL():
         return len(intersection) / len(union)
     
     def _word2vec_similarity(self, s1, s2):
-        cut_s1, cleaned_s1 = jieba.lcut(s1), []
-        cut_s2, cleaned_s2 = jieba.lcut(s2), []
+        cut_s1, cleaned_s1 = jieba.lcut(s1.replace(' ', '')), []
+        cut_s2, cleaned_s2 = jieba.lcut(s2.replace(' ', '')), []
         for w1 in cut_s1:
             if w1 not in self.w2v_model:
                 cleaned_s1.extend(list(w1))
@@ -128,14 +136,16 @@ class EL():
         print(f"Test accuracy: {acc}")
         print(f"Test F1 Score: {f1}")
     
-    def get_entity(self, mentions, question, top_k=1):
+    def get_entity(self, mentions, question, candidate_entities, top_k=1, best_entitiy_only=True):
         results = []
         for mention in mentions:
-            m_results = []
-            for entity in self.full_entity_list:
-                features = self._calc_features(mention, entity, question)
-                m_results.append([entity, self.el_model.predict(features)])
-            results.append()
+            m_results, features = [], []
+            for entity in candidate_entities:
+                features.append(self._calc_features(mention, entity, question))
+            m_results = [prob[1] for prob in self.el_model.predict_proba(features)]
+            entity_prob_list = [[e, r] for e, r in zip(candidate_entities, m_results)]
+            results.append(sorted(entity_prob_list, key=lambda x: x[1], reverse=True)[:top_k])
+        if best_entitiy_only:
+            return [] if results == [] else [r[0][0] for r in results]
+        return results
             
-            
-        

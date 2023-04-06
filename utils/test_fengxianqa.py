@@ -35,14 +35,14 @@ def main():
                 faq_pred, confidence = agent.faq_runner.do_qa(question)
                 ner_pred = agent.kbqa_runner.get_entity(question, get_label_list=True)
                 sim_pred = agent.kbqa_runner.semantic_matching(question, all_sims, 128, get_sgraph=True)
-                if confidence < FAQ_THRESHOLD and ner_pred == ner_answer and sim_pred == sim_answer:
+                if faq_pred == '_NO_FAQ_ANSWER' and ner_pred == ner_answer and sim_pred == sim_answer:
                     kbqa_correct_cnt += 1
                 kbqa_cnt += 1
             elif len(q) == 2:
                 # faq questions
                 question, answer = q
-                faq_pred, confidence = agent.faq_runner.do_qa(question, get_id=True)
-                if confidence > FAQ_THRESHOLD and faq_pred == answer:
+                faq_pred, _, confidence = agent.faq_runner.do_qa(question, get_id=True)
+                if faq_pred == answer:
                     faq_correct_cnt += 1
                 faq_cnt += 1
         print("Threshold", FAQ_THRESHOLD)

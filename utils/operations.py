@@ -58,11 +58,24 @@ def load_faq_questions(faq_path, get_answers=False):
         for line in f.readlines():
             question = ''.join(line.split('\t')[-1].split(' ')).split('\n')[0]
             answer = line.split('\t')[0]
-            if question not in questions:
+            if question not in questions and answer != "-1":
                 if get_answers:
                     questions.append([question, answer])
                 else:
                     questions.append(question)
+    return questions
+
+def load_el_questions(el_path):
+    questions = {}
+    with open(el_path, 'r') as f:
+        for line in f.readlines():
+            if len(line.split('\t')) != 5:
+                print(f"invalid el data {line}")
+                continue
+            mention, entity, question, label, original = line.split('\t')
+            if label == '1':
+                original = original.replace('\n', '')
+                questions.setdefault(original, []).append([mention, question, entity])
     return questions
 
 def merge_arg_and_config(merge1, merge2):
