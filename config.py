@@ -1,6 +1,12 @@
 # FengxianQA项目配置文件
 # 若部分参数未在本文件中定义，将采用对应模块原文件中给出的默认值
 
+neo4j_config=dict(
+    neo4j_addr="bolt://localhost:7687",  # neo4j地址
+    username="neo4j",  # neo4j用户名
+    password="123456",  # neo4j密码
+)
+
 # 以下为模型配置，仅在模型训练与测试时有效，应在模型训练前配置
 ner_model_config = dict(
     # NER模型训练与测试配置
@@ -31,6 +37,22 @@ ner_model_config = dict(
         vob_file="input/pretrained_BERT/bert-base-chinese-vocab.txt",  # BERT预训练模型词汇表路径
         model_config_file="input/pretrained_BERT/bert-base-chinese-config.json",  # BERT预训练模型配置文件路径
         max_seq_length=128,  # 最大序列长度
+    )
+)
+
+el_model_config = dict(
+    train=dict(
+        train_file="input/data/el/train.txt",
+        dev_file="input/data/el/validate.txt",
+        output_dir="models/EL/el_output/",
+        w2v_corpus_path="input/data/el/tencent-ailab-embedding-zh-d100-v0.2.0-s/tencent-ailab-embedding-zh-d100-v0.2.0-s.txt",
+        w2v_load_path="models/EL/el_output/w2v_model.bin",
+        w2v_save_path="models/EL/el_output/w2v_model.bin",
+    ),
+    test=dict(
+        test_file="input/data/el/test.txt",
+        w2v_load_path="models/EL/el_output/w2v_model.bin",
+        model_path="models/EL/el_output/best_el.bin"
     )
 )
 
@@ -118,29 +140,32 @@ faq_model_config = dict(
 # 以下为模块配置，仅在系统运行时有效，与模型训练与测试过程无关
 fengxian_qa_config = dict(
     # FengxianQA配置
-    verbose=False,  # 是否输出fengxian_qa过程中的信息
+    verbose=True,  # 是否输出fengxian_qa过程中的信息
     # 如希望关闭所有信息输出，请将此处，kbqa_runner_config和faq_runner_config的verbose全部设为False
 )
 
 kbqa_runner_config = dict(
     # KBQA配置
-    verbose=False,  # 是否输出KBQA过程详细信息
+    verbose=True,  # 是否输出KBQA过程详细信息
     sim_accept_threshold=0.01,  # SIM模型认定有答案的最低信心值
-    neo4j=dict(
-        neo4j_addr="bolt://localhost:7687",  # neo4j地址
-        username="neo4j",  # neo4j用户名
-        password="123456",  # neo4j密码
-    ),
+    entity_linking_method="fuzzy", # 实体链接方法，可选"fuzzy"（使用EL模型）或"naive"（使用字符串匹配）
 
     ner=dict(
+        max_seq_len=128,  # 最大输入序列长度（建议与ner_model_config相同）
         config_file='input/pretrained_BERT/bert-base-chinese-config.json',  # BERT预训练模型配置文件路径
         pre_train_model_file='models/NER/ner_output/best_ner.bin',  # 训练好的实体识别模型路径
     ),
 
     sim=dict(
+        max_seq_len=128,  # 最大输入序列长度（建议与sim_model_config相同）
         config_file='input/pretrained_BERT/bert-base-chinese-config.json',  # BERT预训练模型配置文件路径
         pre_train_model_file='models/SIM/sim_output/best_sim.bin',  # 训练好的句子分类模型路径
     ),
+
+    el=dict(
+        pre_train_model_file='models/EL/el_output/best_el.bin',
+        w2v_load_path="models/EL/el_output/w2v_model.bin",
+    )
 )
 
 faq_runner_config = dict(
@@ -152,7 +177,7 @@ faq_runner_config = dict(
         db="qa100",  # mysql数据库名
         charset="utf8mb4",  # mysql字符集
     ),
-    verbose=False,  # 是否启用FAQ输出
+    verbose=True,  # 是否启用FAQ输出
     admit_threshold=0.3,  # 使用FAQ回答的最低FAQ信心值
     table_name="t_nlp_qa_faq",  # mysql表名
     vocab_file="input/data/faq/vocab",  # FAQ词汇文件路径
@@ -162,8 +187,6 @@ faq_runner_config = dict(
         accept_thresholds=["any"],
         sim_test_file="input/data/sim/test.txt",
         faq_test_file="input/data/faq/no_commas_large_neg2pos_1/test_data",
-        n_mixed_inputs=1800,
-        test_types=["mixed-faq-acc"],
-        print_probs=False,
+        n_mixed_inputs=9999999,
     )
 )

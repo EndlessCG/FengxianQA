@@ -198,8 +198,6 @@ class NerProcessor(DataProcessor):
 
 
 def load_and_cache_example(args,tokenizer,processor,data_type):
-
-
     type_list = ['train', 'validate', 'test', 'test_1hop', 'test_mhop', 'test_unchain1hop', 'test_unchainmhop']
     if data_type not in type_list:
         raise ValueError("data_type must be one of {}".format(" ".join(type_list)))

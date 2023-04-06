@@ -4,7 +4,7 @@ import random
 import jieba
 from tqdm import tqdm
 
-from preprocess.FAQ.chatgpt_synonym import get_synonyms
+from preprocess.utils import get_synonyms
 from utils.operations import load_sim_questions
 from config import sim_model_config 
 DATA_BASE = "input/data/faq/no_commas_large_neg2pos_1/"

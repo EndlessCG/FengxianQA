@@ -44,6 +44,19 @@ python -m models.NER.NER_main
 echo "Training SIM..."
 python -m models.SIM.SIM_main
 
+# train EL
+if [ ! -d "input/data/el/tencent*" ]; then
+    mkdir -p input/data/el/
+    cd input/data/el/
+    temp_file="tencent-s.tar.gz"
+    wget https://ai.tencent.com/ailab/nlp/en/data/tencent-ailab-embedding-zh-d100-v0.2.0-s.tar.gz -O $temp_file
+    tar -xvf $temp_file
+    rm $temp_file
+    cd $bert_kbqa_home
+fi
+echo "Training EL..."
+python -m models.EL.EL_main
+
 # model test
 echo "Testing FAQ..."
 python -m models.FAQ.FAQ_main eval
@@ -51,3 +64,5 @@ echo "Testing NER..."
 python -m models.NER.test_NER
 echo "Testing SIM..."
 python -m models.SIM.test_SIM
+echo "Tesing EL..."
+python -m models.EL.test_EL

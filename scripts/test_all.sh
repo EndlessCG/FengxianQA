@@ -9,6 +9,8 @@ echo "Testing NER..."
 python -m models.NER.test_NER
 echo "Testing SIM..."
 python -m models.SIM.test_SIM
+echo "Tesing EL..."
+python -m models.EL.test_EL
 
 # runner test
 echo "Testing FAQ runner..."

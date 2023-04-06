@@ -1,3 +1,5 @@
+import pickle
+from models.EL.EL_model import EL
 from models.NER.BERT_CRF import BertCrf
 from models.NER.NER_main import NerProcessor, CRF_LABELS
 from models.SIM.SIM_main import SimProcessor, SimInputFeatures
@@ -14,13 +16,13 @@ from utils import Neo4jGraph, KBQA_TOKEN_LIST, get_abs_path
 
 
 class BertKBQARunner():
-    def __init__(self, config):
+    def __init__(self, config, neo4j_config):
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         transformers.logging.set_verbosity_error()
         self.config = config
         self._verbose = config.get("verbose", "False")
         self._print('连接数据库...')
-        neo4j_config, ner_config, sim_config = config['neo4j'], config['ner'], config['sim']
+        ner_config, sim_config, el_config = config['ner'], config['sim'], config['el']
         self.graph = Neo4jGraph(neo4j_config['neo4j_addr'], 
                                 neo4j_config['username'], 
                                 neo4j_config['password'])
@@ -28,6 +30,8 @@ class BertKBQARunner():
         with torch.no_grad():
             self._load_ner_model(ner_config)
             self._load_sim_model(sim_config)
+        if config["entity_linking_method"] == "fuzzy":
+            self._load_el_model(el_config)
             
     def _load_ner_model(self, ner_config):
         self._print('加载NER模型...')
@@ -54,6 +58,11 @@ class BertKBQARunner():
         self.sim_model = self.sim_model.to(self.device)
         self.sim_model.eval()
 
+    def _load_el_model(self, el_config):
+        self._print('加载EL模型...')
+        self.el_model = EL(el_config, neo4j_graph=self.graph)
+        self.el_model.load_model(el_config["pre_train_model_file"])
+
     def _print(self, *args):
         if self._verbose:
             print("KBQA:", *args)
@@ -74,6 +83,40 @@ class BertKBQARunner():
         return model.to(self.device)
 
 
+    def _decode_ner_tags(self, pre_tag, sentence):
+        if any(i in pre_tag for i in CRF_LABELS):
+            b_entity_idx = 'B-entity'
+            i_entity_idx = 'I-entity'
+            b_attr_idx = 'B-attribute'
+            i_attr_idx = 'I-attribute'
+        else:
+            b_entity_idx = CRF_LABELS.index('B-entity')
+            i_entity_idx = CRF_LABELS.index('I-entity')
+            b_attr_idx = CRF_LABELS.index('B-attribute')
+            i_attr_idx = CRF_LABELS.index('I-attribute')
+        
+        entity_list, attribute_list = [], []
+
+        # allow I label class error
+        status = 'o'
+        for char, tag in zip(sentence, pre_tag):
+            if tag == b_entity_idx:
+                status = 'e'
+                entity_list.append(char)
+            elif tag == b_attr_idx:
+                status = 'a'
+                attribute_list.append(char)
+            elif tag in [i_entity_idx, i_attr_idx]:
+                if status == 'e':
+                    entity_list[-1] += char
+                elif status == 'a':
+                    attribute_list[-1] += char
+            else:
+                status = 'o'
+        if len(entity_list) == 0 and len(attribute_list) == 0:
+            self._print("没有在句子[{}]中发现实体".format(sentence))
+        return entity_list, attribute_list            
+        
     def get_entity(self, sentence, max_len=128, get_label_list=False):
         model = self.ner_model
         tokenizer = self.tokenizer
@@ -120,45 +163,8 @@ class BertKBQARunner():
 
         if get_label_list:
             return [CRF_LABELS[t] for t in pre_tag]
-
-        pre_tag_len = len(pre_tag)
-        b_entity_idx = CRF_LABELS.index('B-entity')
-        i_entity_idx = CRF_LABELS.index('I-entity')
-        b_attr_idx = CRF_LABELS.index('B-attribute')
-        i_attr_idx = CRF_LABELS.index('B-attribute')
-        o_idx = CRF_LABELS.index('O')
-
-        if not any(i in pre_tag for i in [b_entity_idx, i_entity_idx, b_attr_idx, i_attr_idx]):
-            self._print("没有在句子[{}]中发现实体".format(sentence))
-            return '', ''
         
-        entity_start_idx, attr_start_idx = -1, -1
-        if b_entity_idx in pre_tag:
-            entity_start_idx = pre_tag.index(b_entity_idx)
-        elif b_attr_idx in pre_tag:
-            attr_start_idx = pre_tag.index(b_attr_idx)
-        elif i_entity_idx in pre_tag:
-            entity_start_idx = pre_tag.index(i_entity_idx)
-        elif i_attr_idx in pre_tag:
-            attr_start_idx = pre_tag.index(b_attr_idx)
-        
-        entity, attribute = "", ""
-        if entity_start_idx != -1:    
-            entity += sentence_list[entity_start_idx]
-            for i in range(entity_start_idx + 1, pre_tag_len):
-                if pre_tag[i] == i_entity_idx:
-                    entity += sentence_list[i]
-                else:
-                    break
-        
-        if attr_start_idx != -1:
-            attribute += sentence_list[attr_start_idx]
-            for i in range(attr_start_idx + 1, pre_tag_len):
-                if pre_tag[i] == i_attr_idx:
-                    attribute += sentence_list[i]
-                else:
-                    break
-        
+        entity, attribute = self._decode_ner_tags(pre_tag, sentence)
         return entity, attribute
 
 
@@ -234,11 +240,49 @@ class BertKBQARunner():
         if get_sgraph:
             # top-k not supported for now
             return attribute_list[all_logits[:,1].argmax()]
-        if self.config.get("sim_accept_threshold", 0.01) > all_logits[:,1].max(dim=0)[0]:
-            return torch.tensor(-1)
-        else:
-            return torch.topk(all_logits[:,1], k=top_k).indices
+        return torch.topk(all_logits[:,1], k=top_k).indices
 
+    def fuzzy_entity_linking(self, e_mention_list, a_mention_list, question, e_candidate_entities=None, a_candidate_entities=None):
+        if e_candidate_entities is None:
+            e_candidate_entities = self.graph.entity_list
+        if a_candidate_entities is None:
+            a_candidate_entities =  self.graph.attribute_list
+        linked_entity = self.el_model.get_entity(e_mention_list, question, e_candidate_entities)
+        linked_attribute = self.el_model.get_entity(a_mention_list, question, a_candidate_entities)
+        return linked_entity, linked_attribute
+
+    def naive_entity_linking(self, e_mention_list, a_mention_list, e_candidate_entities=None, a_candidate_entities=None):
+        linked_entity, linked_attribute = [], []
+        if e_candidate_entities is None:
+            e_candidate_entities = self.graph.entity_list
+        if a_candidate_entities is None:
+            a_candidate_entities =  self.graph.attribute_list
+        for mention in e_mention_list:
+            if mention in e_candidate_entities:
+                # 完全匹配
+                linked_entity.append(mention)
+            else:
+                # 局部匹配
+                entity = next((e for e in self.graph.entity_list if mention in e), None)
+                if entity is not None and not entity in linked_entity:
+                    linked_entity.append(entity)
+        
+        for mention in a_mention_list:
+            if mention in a_candidate_entities:
+                # 完全匹配
+                linked_attribute.append(mention)
+            else:
+                # 局部匹配
+                attribute = next((e for e in self.graph.entity_list if mention in e), None)
+                if attribute is not None and not attribute in linked_attribute:
+                    linked_attribute.append(attribute)
+            
+        if len(linked_attribute) == 0 and len(linked_entity) == 0:
+            # 未找到
+            return f"未找到\"{e_mention_list.union(a_mention_list)}\"相关信息"
+        
+        return linked_entity, linked_attribute
+    
     def subgraph_generation(self):
         self.subgraph_candidates = []
         for query in SUBGRAPHS.values():
@@ -256,11 +300,11 @@ class BertKBQARunner():
                 e_mention_list.append(e)
                 break
         # NER
-        ner_e_mention, ner_a_mention = self.get_entity(sentence=question, max_len=40)
-        if ner_e_mention != '':
-            e_mention_list.append(ner_e_mention)
-        if ner_a_mention != '':
-            a_mention_list.append(ner_a_mention)
+        ner_e_mention, ner_a_mention = self.get_entity(sentence=question, max_len=self.config["ner"]["max_seq_len"])
+        if ner_e_mention != []:
+            e_mention_list.extend(ner_e_mention)
+        if ner_a_mention != []:
+            a_mention_list.extend(ner_a_mention)
 
         e_mention_list = set(e_mention_list)
         a_mention_list = set(a_mention_list)
@@ -272,33 +316,15 @@ class BertKBQARunner():
             return "未找到该问题中的实体"
 
         # 2. Entity Linking
-        linked_entity, linked_attribute = [], []
-        for mention in e_mention_list:
-            if mention in graph.entity_list:
-                # 完全匹配
-                linked_entity.append(mention)
-            else:
-                # 局部匹配
-                entity = next((e for e in graph.entity_list if mention in e), None)
-                if entity is not None and not entity in linked_entity:
-                    linked_entity.append(entity)
-        
-        for mention in a_mention_list:
-            if mention in graph.attribute_list:
-                # 完全匹配
-                linked_attribute.append(mention)
-            else:
-                # 局部匹配
-                attribute = next((e for e in graph.entity_list if mention in e), None)
-                if attribute is not None and not attribute in linked_attribute:
-                    linked_attribute.append(attribute)
-            
-        if len(linked_attribute) == 0 and len(linked_entity) == 0:
-            # 未找到
-            return f"未找到\"{e_mention_list.union(a_mention_list)}\"相关信息"
-        
-        self._print("链接到的实体：", linked_entity)
-        self._print("链接到的属性：", linked_attribute)
+        method = self.config.get("entity_linking_method", "fuzzy")
+        if method == "fuzzy":
+            linked_entity, linked_attribute = self.fuzzy_entity_linking(e_mention_list, a_mention_list, question)
+        elif method == "naive":
+            linked_entity, linked_attribute = self.naive_entity_linking(e_mention_list, a_mention_list)
+        if len(linked_entity) != 0:
+            self._print("链接到的实体：", linked_entity)
+        if len(linked_attribute) != 0:
+            self._print("链接到的属性：", linked_attribute)
 
         # 3. Candidate Subgraph Generation
         sgraph_type_idx = {}
@@ -321,8 +347,7 @@ class BertKBQARunner():
             acc_idx += len(query_result)
     
         # 4. Cadidate Subgraph Selection
-        max_sgraph_len = max([len(sg) for sg in sgraph_candidates])
-        match_idx = self.semantic_matching(question, sgraph_candidates, max_sgraph_len).item()
+        match_idx = self.semantic_matching(question, sgraph_candidates, self.config["sim"]["max_seq_len"]).item()
         if match_idx == -1:
             return f"未在\"{','.join(linked_entity + linked_attribute)}\"中找到问题相关信息"
         
@@ -379,8 +404,9 @@ class BertKBQARunner():
             
             if v_cnt > 1:
                 slot_fills_df = pd.DataFrame(slot_fills).T.fillna(method='pad')
-                answer_list.extend([answer_template.format(*row) for _, row in slot_fills_df.iterrows()])
+                slot_fills_df = slot_fills_df.groupby(0, group_keys=False).apply(lambda x: [x[0].iloc[0], x[1].iloc[0], '，'.join(x[2])])
+                answer_list.extend([answer_template.format(*row) for _, row in slot_fills_df.iteritems()])
             else:
-                answer_list.append(answer_template.format(*["，".join(s) for s in slot_fills]))
+                answer_list.append(answer_template.format(*["，".join(set(s)) for s in slot_fills]))
         
         return "。".join(answer_list) + "。"

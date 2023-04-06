@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import xlrd
 import pymysql
 from config import faq_runner_config
@@ -21,15 +22,18 @@ def excel2mysql(excelName, drop=True):
     table = faq_runner_config.get("table_name")
     cursor = conn.cursor()
     if drop:
+        print(f"Dropping existing {table}...")
         drop_sql = "drop table if exists {}".format(table)
         cursor.execute(drop_sql)
+    print(f"Creating {table}...")
     create_sql = f"CREATE TABLE IF NOT EXISTS `{table}`( \
                 `id` BIGINT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY, \
                 `question` VARCHAR(1024) NOT NULL, \
                 `answer` VARCHAR(4096) NOT NULL) \
                 ENGINE=InnoDB default charset=utf8mb4;"
     cursor.execute(create_sql)
-    for _id, data in enumerate(data_list):
+    print(f"Inserting data...")
+    for _id, data in tqdm(enumerate(data_list)):
         new_data = ["'{}'".format(i) for i in data]
         insert_sql = "insert into {} values({})".format(table, ','.join([str(_id + 1)] + new_data))
         cursor.execute(insert_sql)

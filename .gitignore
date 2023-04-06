@@ -1,4 +1,3 @@
-.vscode
 .idea
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -134,10 +133,14 @@ dmypy.json
 
 temp_files/
 input/pretrained_BERT
+input/data/temp_data.bin
 input/data/ner/cached*
 input/data/sim/cached*
+input/data/el/cached*
+input/data/el/tencent*
 models/SIM/*_output/
 models/NER/*_output/
+models/EL/*_output/
 models/FAQ/finetune_model
 models/FAQ/pretrain_model
 models/FAQ/results/

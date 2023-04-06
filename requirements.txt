@@ -7,11 +7,12 @@ protobuf==3.20.*
 tensorflow-gpu==1.14.0
 torch
 pandas
+xgboost==1.6.2
+gensim==3.8.3
 tqdm
 jieba
 smartopen # 可选
 synonyms
-openai==0.27.2
 scikit-learn
 pymysql
 xlrd

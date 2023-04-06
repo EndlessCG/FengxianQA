@@ -1,6 +1,6 @@
 from runners.bert_kbqa_runner import BertKBQARunner
 from runners.faq_runner import FAQRunner
-from config import fengxian_qa_config, kbqa_runner_config, faq_runner_config
+from config import fengxian_qa_config, kbqa_runner_config, faq_runner_config, neo4j_config
 from utils import convert_config_paths
 import time
 
@@ -9,7 +9,7 @@ class FengxianQA:
         init_start = time.time()
         convert_config_paths(kbqa_runner_config)
         convert_config_paths(faq_runner_config)
-        self.kbqa_runner = BertKBQARunner(kbqa_runner_config)
+        self.kbqa_runner = BertKBQARunner(kbqa_runner_config, neo4j_config)
         self.faq_runner = FAQRunner(faq_runner_config)
         self.faq_runner.disable_warnings()
         self._verbose = fengxian_qa_config.get("verbose", "False")
@@ -23,9 +23,9 @@ class FengxianQA:
     def do_qa(self, question):
         if question == "":
             return "请输入问题"
-        faq_answer, faq_prob = self.faq_runner.do_qa(question)
-        self._print("FAQ信心：", faq_prob)
-        if faq_prob > faq_runner_config.get("admit_threshold", 0.3):
+        faq_id, faq_answer, faq_prob = self.faq_runner.do_qa(question, get_id=True)
+        self._print("FAQ结果:", faq_id, "置信度:", faq_prob)
+        if faq_answer != "_NO_FAQ_ANSWER":
             self._print("使用FAQ回答")
             return faq_answer
         else:

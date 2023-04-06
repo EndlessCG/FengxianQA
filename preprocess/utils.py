@@ -1,5 +1,11 @@
 import pandas as pd
+import os
+import json
+import requests
+import random
+import string
 
+OPENAI_URL = "https://api.openai-proxy.com/v1/chat/completions"
 CSV_PATHS = {
     # entity
     "fengxiandian": "preprocess/风控实体关系表/entity_fengxiandian.csv",
@@ -10,6 +16,90 @@ CSV_PATHS = {
     # relation
     "baohan": "preprocess/风控实体关系表/relationship_baohan.csv",
 }
+RANDOM_FARM = string.ascii_lowercase + string.digits
+
+def parse_response(data):
+    questions = []
+    if '、' in data and '\n' not in data:
+        questions = data.split('、')
+    else:
+        splitted_res = data.split('\n')
+        if len(splitted_res) == 6 and any(s in splitted_res[0] for s in ['抱歉', '以下', '5个', '同义词']): 
+            splitted_res = splitted_res[1:]
+        for question in splitted_res:
+            if question == '':
+                continue
+            questions.append(question.replace(' ', '').split('.')[-1])
+    return questions
+
+def do_request(original, n_extend, full_sentence, input_type='word'):
+    all_questions = [original]
+    retry = 0
+    sessionId = ''.join(random.choice(RANDOM_FARM) for i in range(20))
+    question = [
+        {
+            'sentence': f"原句：{original}\n输出{min(n_extend, 10)}个中文同义句，省略原句中的部分信息，尽量缩短句子：",
+            'word': f"输出“{full_sentence}”一句中“{original}”一词的{min(n_extend, 10)}个中文同义词，每行输出一个："
+        },
+        {
+            'sentence': f"再输出\"{original}\"的{min(n_extend, 10)}个中文同义句，省略原句中的部分信息，尽量缩短句子：",
+            'word': f"再输出“{full_sentence}”一句中“{original}”一词的{min(n_extend, 10)}个中文同义词，每行输出一个："
+        }
+    ]
+    payload_init = json.dumps({
+        "apiKey": os.getenv("OPENAI_API_KEY"),
+        "sessionId": sessionId,
+        "content": question[0][input_type]
+    })
+    payload_next = json.dumps({
+            "apiKey": os.getenv("OPENAI_API_KEY"),
+            "sessionId": sessionId,
+            "content": question[1][input_type]
+        })
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    extended = 0
+    while extended < n_extend:
+        tmp_questions = []
+        while retry < 5:
+            payload = payload_init if extended == 0 else payload_next
+            sessionId = ''.join(random.choice(RANDOM_FARM) for i in range(20))
+            tmp_questions.clear()
+            try:
+                raw = requests.request("POST", OPENAI_URL, headers=headers, data=payload, timeout=60)
+            except requests.ReadTimeout:
+                print("Timeout")
+                raw = None
+
+            if raw is not None:
+                try:
+                    response = eval(raw.text)
+                except:
+                    response = {'code':-1, 'message': raw.text}
+                print(eval(payload)["content"])
+                print(response)
+                if response['code'] != 200:
+                    print(f"Request failed for with {response['code']} {response['message']}")
+                    retry += 1
+                    continue
+            
+                questions = parse_response(response['data'])
+                tmp_questions.extend(questions)     
+        
+            if raw is None or tmp_questions is None or len(tmp_questions) != min(n_extend, 10) or '' in all_questions or any('？' in q for q in all_questions):
+                retry += 1
+                print(f"Retrying with invalid output {tmp_questions}")
+            else:
+                break
+        if retry == 5:
+            print(f"!!! Not able to generate valid output for {payload}")
+            n_extend -= 10
+        else:
+            all_questions.extend(tmp_questions)
+            n_extend -= 10
+    return all_questions
 
 def get_question_descriptions():
     # 处理风险点
@@ -195,21 +285,22 @@ def get_question_descriptions():
             [':START_ID'],
             [(':START_ID', 'entity')], # ner
             '包含[NEDGE]负责角色[TARGET]', # path
+            3
         ],
         [
             # 业务环节包含风险点-含义
             'EeNaT',
             pd.merge(
-                pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
-                yewuhuanjie,
+                pd.merge(yewuhuanjie, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
+                fengxiandian,
                 left_on=':END_ID', right_on=':ID',
             ),
-            ["{}包含的业务环节由谁负责？", "{}包含的业务环节是哪个部门负责的？", 
-            "{}各环节由谁负责？", "{}由哪几个部门负责？",
-            "{}是哪个部门负责的？", "谁负责{}？", "哪些部门负责{}？"],
+            ["{}包含的风险点含义是什么？", "{}的风险点都是什么意思？", 
+            "{}有哪些风险点？分别是什么意思？", "{}的风险点及含义"],
             [':START_ID'],
             [(':START_ID', 'entity')], # ner
-            '包含[NEDGE]负责角色[TARGET]', # path
+            '包含[NEDGE]含义[TARGET]', # path
+            3
         ],
         [
             # 业务环节包含风险点-风险等级
@@ -224,6 +315,7 @@ def get_question_descriptions():
             [':START_ID'],
             [(':START_ID', 'entity')], # ner
             '包含[NEDGE]风险等级[TARGET]', # path
+            3
         ],
 
         # EeNeT
@@ -239,6 +331,7 @@ def get_question_descriptions():
             [':START_ID_x'],
             [(':START_ID_x', 'entity')], # ner
             '包含[NEDGE]包含[TARGET]', # path
+            3
         ],
 
         # EeTaA
