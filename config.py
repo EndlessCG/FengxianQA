@@ -165,6 +165,7 @@ kbqa_runner_config = dict(
     el=dict(
         pre_train_model_file='models/EL/el_output/best_el.bin',
         w2v_load_path="models/EL/el_output/w2v_model.bin",
+        w2v_corpus_path="input/data/el/tencent-ailab-embedding-zh-d100-v0.2.0-s/tencent-ailab-embedding-zh-d100-v0.2.0-s.txt",
     )
 )
 
@@ -189,4 +190,8 @@ faq_runner_config = dict(
         faq_test_file="input/data/faq/no_commas_large_neg2pos_1/test_data",
         n_mixed_inputs=9999999,
     )
+)
+
+chatglm_runner_config = dict(
+    repo_name="THUDM/chatglm-6b"
 )
