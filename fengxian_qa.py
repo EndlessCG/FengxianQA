@@ -1,6 +1,7 @@
 from runners.bert_kbqa_runner import BertKBQARunner
 from runners.faq_runner import FAQRunner
-from config import fengxian_qa_config, kbqa_runner_config, faq_runner_config, neo4j_config
+from runners.chatglm_runner import ChatGLMRunner
+from config import fengxian_qa_config, kbqa_runner_config, faq_runner_config, chatglm_runner_config, neo4j_config
 from utils import convert_config_paths
 import time
 
@@ -9,8 +10,10 @@ class FengxianQA:
         init_start = time.time()
         convert_config_paths(kbqa_runner_config)
         convert_config_paths(faq_runner_config)
+        convert_config_paths(chatglm_runner_config)
         self.kbqa_runner = BertKBQARunner(kbqa_runner_config, neo4j_config)
         self.faq_runner = FAQRunner(faq_runner_config)
+        self.chatglm_runner = ChatGLMRunner(chatglm_runner_config)
         self.faq_runner.disable_warnings()
         self._verbose = fengxian_qa_config.get("verbose", "False")
         init_end = time.time()
@@ -28,10 +31,14 @@ class FengxianQA:
         if faq_answer != "_NO_FAQ_ANSWER":
             self._print("使用FAQ回答")
             return faq_answer
-        else:
+        kbqa_ret, kbqa_answer = self.kbqa_runner.do_qa(question)
+        if kbqa_ret == 0:
             self._print("使用KBQA回答")
-            kbqa_answer = self.kbqa_runner.do_qa(question)
             return kbqa_answer
+        chatglm_answer = self.chatglm_runner.do_qa(question)
+        self._print("使用ChatGLM回答")
+        return chatglm_answer
+        
 
     def do_qa_without_faq(self, question):
             return self.kbqa_runner.do_qa(question)

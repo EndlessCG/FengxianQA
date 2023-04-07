@@ -10,7 +10,6 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, Tenso
 import torch
 import pandas as pd
 # import pymysql
-from tqdm import tqdm, trange
 from itertools import chain
 from utils import Neo4jGraph, KBQA_TOKEN_LIST, get_abs_path
 
@@ -313,7 +312,7 @@ class BertKBQARunner():
         if len(a_mention_list) != 0:
             self._print("候选属性：", a_mention_list)
         if len(e_mention_list) == 0 and len(a_mention_list) == 0: # 如果问题中不存在实体
-            return "未找到该问题中的实体"
+            return -1, "未找到该问题中的实体"
 
         # 2. Entity Linking
         method = self.config.get("entity_linking_method", "fuzzy")
@@ -349,7 +348,7 @@ class BertKBQARunner():
         # 4. Cadidate Subgraph Selection
         match_idx = self.semantic_matching(question, sgraph_candidates, self.config["sim"]["max_seq_len"]).item()
         if match_idx == -1:
-            return f"未在\"{','.join(linked_entity + linked_attribute)}\"中找到问题相关信息"
+            return -1, f"未在\"{','.join(linked_entity + linked_attribute)}\"中找到问题相关信息"
         
         intention = sgraph_type_idx[sgraph_candidates[match_idx]]
         self._print(f"问题类型：{QUESTION_INTENTS[intention].get('display', intention)}")
@@ -374,7 +373,7 @@ class BertKBQARunner():
         answer_query = answer_query.format(*slot_fills)
         values = graph.execute_query(answer_query)
         if values == [None] or any([v is None for v in chain.from_iterable(values)]):
-            return f"未找到问题相关信息"
+            return -1, f"未找到问题相关信息"
         
         # 6. Answer Generation
         answer_templates = QUESTION_INTENTS[intention]['answer']
@@ -409,4 +408,4 @@ class BertKBQARunner():
             else:
                 answer_list.append(answer_template.format(*["，".join(set(s)) for s in slot_fills]))
         
-        return "。".join(answer_list) + "。"
+        return 0, "。".join(answer_list) + "。"
