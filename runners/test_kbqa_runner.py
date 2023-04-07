@@ -49,6 +49,9 @@ def main():
     for i in tqdm(range(len(sim_questions))):
         question, sim_answer = sim_questions[i]
         _, ner_answer = ner_questions[i]
+        if question not in el_questions:
+            print(f"No question {question} in EL dataset")
+            continue
         _, _, el_entity = el_questions[question][0]
         total_cnt += 1
         if test_once(question, ner_answer, sim_answer, el_entity):
