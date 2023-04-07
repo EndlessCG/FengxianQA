@@ -101,7 +101,9 @@ class EL():
     
         with open(path, 'r') as f:
             for line in tqdm(f.readlines()):
-                mention, entity, question, label = line.split('\t')
+                if line == '\n':
+                    continue
+                mention, entity, question, label, _ = line.split('\t')
                 if not entity:
                     # invalid data
                     continue
