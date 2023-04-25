@@ -1,3 +1,4 @@
+import time
 import pandas as pd
 import os
 import json
@@ -35,7 +36,7 @@ def parse_response(data):
 def do_request(original, n_extend, full_sentence, input_type='word'):
     all_questions = [original]
     retry = 0
-    sessionId = ''.join(random.choice(RANDOM_FARM) for i in range(20))
+    # sessionId = ''.join(random.choice(RANDOM_FARM) for i in range(20))
     question = [
         {
             'sentence': f"原句：{original}\n输出{min(n_extend, 10)}个中文同义句，省略原句中的部分信息，尽量缩短句子：",
@@ -47,25 +48,27 @@ def do_request(original, n_extend, full_sentence, input_type='word'):
         }
     ]
     payload_init = json.dumps({
-        "apiKey": os.getenv("OPENAI_API_KEY"),
-        "sessionId": sessionId,
-        "content": question[0][input_type]
+        "model": "gpt-3.5-turbo",
+        "messages": [{"role": "user", "content": question[0][input_type]}],
     })
     payload_next = json.dumps({
-            "apiKey": os.getenv("OPENAI_API_KEY"),
-            "sessionId": sessionId,
-            "content": question[1][input_type]
-        })
+        "model": "gpt-3.5-turbo",
+        "messages": [{"role": "user", "content": question[1][input_type]}],
+    })
     headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {os.getenv("OPENAI_API_KEY")}'
     }
 
     extended = 0
     while extended < n_extend:
         tmp_questions = []
-        while retry < 5:
+        while retry < 2:
+            print("pending 20s")
+            time.sleep(20)
+            print("pending ended")
             payload = payload_init if extended == 0 else payload_next
-            sessionId = ''.join(random.choice(RANDOM_FARM) for i in range(20))
+            # sessionId = ''.join(random.choice(RANDOM_FARM) for i in range(20))
             tmp_questions.clear()
             try:
                 raw = requests.request("POST", OPENAI_URL, headers=headers, data=payload, timeout=60)
@@ -76,16 +79,14 @@ def do_request(original, n_extend, full_sentence, input_type='word'):
             if raw is not None:
                 try:
                     response = eval(raw.text)
+                    print(response["choices"][0]["message"]["content"])
+                    # print(response)
                 except:
-                    response = {'code':-1, 'message': raw.text}
-                print(eval(payload)["content"])
-                print(response)
-                if response['code'] != 200:
-                    print(f"Request failed for with {response['code']} {response['message']}")
+                    print(f"Request failed with {raw.text}")
                     retry += 1
                     continue
             
-                questions = parse_response(response['data'])
+                questions = parse_response(response["choices"][0]["message"]["content"])
                 tmp_questions.extend(questions)     
         
             if raw is None or tmp_questions is None or len(tmp_questions) != min(n_extend, 10) or '' in all_questions or any('？' in q for q in all_questions):
@@ -93,7 +94,7 @@ def do_request(original, n_extend, full_sentence, input_type='word'):
                 print(f"Retrying with invalid output {tmp_questions}")
             else:
                 break
-        if retry == 5:
+        if retry == 2:
             print(f"!!! Not able to generate valid output for {payload}")
             n_extend -= 10
         else:
@@ -370,6 +371,7 @@ def get_question_descriptions():
             [':START_ID', '风险等级'],
             [(':START_ID', 'entity'), ('风险等级', 'attribute')], # ner
             '包含[TARGET]风险等级', # path
+            3
         ],
 
         # EeTeE
@@ -378,13 +380,14 @@ def get_question_descriptions():
             'EeTeE',
             pd.merge(
                 pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
-                fengxiandian, left_on=':END_ID', right_on=':ID', how='inner'
+                baohan, left_on=':END_ID', right_on=':START_ID', how='inner'
             ),
-            ["{}中哪些业务包含{}风险？", "哪些{}工作有{}风险点？", 
-            "{}里什么业务有{}风险？", "{}流程里哪些业务有{}风险？"],
-            [':START_ID', ':ID_y'],
-            [(':START_ID', 'entity'), (':ID_y', 'entity')], # ner
+            ["{}中哪些业务包含{}？", "哪些{}工作有{}？", 
+            "{}里什么业务有{}？", "{}流程里哪些业务有{}？"],
+            [':START_ID_x', ':END_ID_y'],
+            [(':START_ID_x', 'entity'), (':END_ID_y', 'entity')], # ner
             '包含[TARGET]包含', # path
+            3
         ],
 
         # TeNaA
@@ -425,8 +428,8 @@ def get_question_descriptions():
                 pd.merge(yewuliucheng, baohan, left_on=':ID', right_on=':START_ID', how='inner'),
                 baohan, left_on=':END_ID', right_on=':START_ID', how='inner'
             ),
-            ["哪些业务流程包含{}风险？", "哪些业务流程可能有{}风险？",
-            "什么业务流程会有{}风险？", "哪个业务流程有{}风险"],
+            ["哪些业务流程包含{}？", "哪些业务流程可能有{}？",
+            "什么业务流程会有{}？", "哪个业务流程有{}"],
             [':END_ID_y'],
             [(':END_ID_y', 'entity')], # ner
             '[TARGET]包含[NEDGE]包含', # path

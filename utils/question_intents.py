@@ -21,7 +21,7 @@ QUESTION_INTENTS = {
     'TaA': {
         'answer': ["{}为{}的是{}"],
         'answer_slots': [[('l', 0), ('a', 0), ('v', 0)]],
-        'display': '属性约束求实体',
+        'display': '单跳属性约束',
         'query': "match (n) \
                   where n.`{}`='{}' \
                   return distinct n.`名称`",
@@ -31,7 +31,7 @@ QUESTION_INTENTS = {
     'TeE': {
         'answer': ["{}{}的是{}"],
         'answer_slots': [[('l', 0), ('e', 0), ('v', 0)]],
-        'display': '实体约束求实体',
+        'display': '单跳实体约束',
         'query': "match (n)-[r]->(n1) \
                   where n1.`名称`='{}' and type(r)='{}' \
                   return distinct n.`名称`",
@@ -58,30 +58,30 @@ QUESTION_INTENTS = {
 
     # (e)-(e1)-(a) ret e1 ex.业务准备中由运营中心负责的有哪些环节？
     'EeTaA': {
-        'answer': ["{}{}{}", "{}为{}的是{}"],
-        'answer_slots': [[('e', 0), ('l', 0), ('v', 0)], [('l', 1), ('a', 0), ('v', 1)]],
-        'display': '单跳+属性约束求实体',
+        'answer': ["{}{}且{}为{}的是{}"],
+        'answer_slots': [('e', 0), ('l', 0), ('l', 1), ('a', 0), ('v', 0)],
+        'display': '双向实体+属性约束',
         'query': "match (n)-[r]->(n1) \
-                  where n.`名称`='{}' and n1.`{}`='{}'\
+                  where n.`名称`='{}' and type(r)='{}' and n1.`{}`='{}'\
                   return distinct n1.`名称`",
-        'query_slots': [('e', 0), ('l', 0), ('a', 0)],
+        'query_slots': [('e', 0), ('l', 0), ('l', 1), ('a', 0)],
     },
 
     # (e)-(e1)-(e2) ret e1 ex.业务准备中有合规性风险的是哪个环节？
     'EeTeE': {
-        'answer': ["{}{}{}", "{}{}的是{}"],
-        'answer_slots': [[('e', 0), ('l', 0), ('v', 0)], [('l', 1), ('e', 1), ('v', 1)]],
-        'display': '单跳+实体约束求实体',
+        'answer': ["{}{}且{}{}的是{}"],
+        'answer_slots': [('e', 0), ('l', 0), ('l', 1), ('e', 1), ('v', 0)],
+        'display': '双向实体约束',
         'query': "match (n)-[r]->(n1)-[r1]->(n2) \
-              where n.`名称`='{}' and n2.`名称`='{}' \
+              where n.`名称`='{}' and n2.`名称`='{}' and type(r)='{}' and type(r1)='{}' \
               return distinct n1.`名称`",
-        'query_slots': [('e', 0), ('e', 1)],
+        'query_slots': [('e', 0), ('e', 1), ('l', 0), ('l', 1)],
     },
 
     'TeNaA': {
-        'answer': ["{}{}为{}的是{}"],
-        'answer_slots': [[('l', 0), ('l', 1), ('a', 0), ('v', 0)]],
-        'display': '含属性约束的实体约束求实体',
+        'answer': ["{}为{}的是{}"],
+        'answer_slots': [[('l', 1), ('a', 0), ('v', 0)]],
+        'display': '双跳属性约束',
         'query': "match (n)-[r]->(n1) \
               where type(r)='{}' and n1.`{}`='{}' \
               return distinct n.`名称`",
@@ -91,7 +91,7 @@ QUESTION_INTENTS = {
     'TeNeE': {
         'answer': ["{}{}的是{}"],
         'answer_slots': [[('l', 0), ('e', 0), ('v', 0)]],
-        'display': '含实体约束的实体约束求实体',
+        'display': '双跳实体约束',
         'query': "match (n)-[r]->(n1)-[r1]->(n2) \
               where type(r)='{}' and type(r1)='{}' and n2.`名称`='{}' \
               return distinct n1.`名称`",
@@ -123,7 +123,7 @@ SUBGRAPHS = {
               return distinct type(r)+'[NEDGE]'+type(r1)+'[TARGET]'",
     'EeTaA': "match (n)-[r]->(n1) \
               where n.`名称`='{entity}' \
-              unwind [k in keys(n) where n[k]='{attribute}'] as k \
+              unwind [k in keys(n1) where n1[k]='{attribute}'] as k \
               return distinct type(r)+'[TARGET]'+k",
     'EeTeE': "match (n)-[r]->(n1)-[r1]->(n2) \
               where n.`名称`='{entity}' and n2.`名称`='{entity1}' \

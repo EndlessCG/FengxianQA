@@ -193,5 +193,7 @@ faq_runner_config = dict(
 )
 
 chatglm_runner_config = dict(
-    repo_name="THUDM/chatglm-6b"
+    repo_name="THUDM/chatglm-6b",
+    verbose=True,
+    use_local_chatglm=True
 )

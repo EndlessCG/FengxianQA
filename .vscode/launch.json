@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "profile el",
+            "type": "python",
+            "request": "launch",
+            "module": "cProfile",
+            "args": [
+                "-o", "el_profile.prof", "-m", "utils.test_response_time", "--el_once"
+            ],
+            "justMyCode": true
+        },
+        {
             "name": "Data gen",
             "type": "python",
             "request": "launch",
@@ -17,6 +27,34 @@
             "request": "launch",
             "module": "runners.test_kbqa_runner",
             "justMyCode": true
-        }
+        },
+        {
+            "name": "train EL",
+            "type": "python",
+            "request": "launch",
+            "module": "models.EL.EL_main",
+            "justMyCode": true
+        },
+        {
+            "name": "test EL",
+            "type": "python",
+            "request": "launch",
+            "module": "models.EL.test_EL",
+            "justMyCode": true
+        },
+        {
+            "name": "main",
+            "type": "python",
+            "request": "launch",
+            "module": "fengxian_qa",
+            "justMyCode": true
+        },
+        {
+            "name": "EL feature ablation",
+            "type": "python",
+            "request": "launch",
+            "module": "models.EL.EL_ablation_test",
+            "justMyCode": true
+        },
     ]
 }

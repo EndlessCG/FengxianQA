@@ -127,30 +127,31 @@ def _get_synonyms_series(entity_synonyms, temp_result=[], result_list=[]):
 def make_el_dataset(data, neg_to_pos=1):
     assert neg_to_pos >= 1, "Not supported"
     filled_data = []
-    all_mentions = []
+    all_entities = []
     
     for item in data:
-        for el in item['el']:
-            all_mentions.append(el[1])
-            for mentions in el[-1]:
-                all_mentions.append(mentions)
+        for ner in item['ner']:
+            all_entities.append(ner[0])
     
-    all_mentions = list(set(all_mentions))
+    all_entities = list(set(all_entities))
     for item in data:
-        for _ in range(item["repeat"]):
-            raw_question, entity, original_question, _ = item['el'][0]
+        for _ in range(item["repeat"]):  
             entity_synonyms = [el[-1] for el in item['el']]
             synonyms_series = _get_synonyms_series(entity_synonyms, [], [])
             for series in synonyms_series:
-                for mention in series:
-                    filled_data.append([item["qtype"], mention, entity, raw_question.format(*series), 1, original_question])
-                    neg_mentions = random.sample(all_mentions, neg_to_pos)
-                    for neg_mention in neg_mentions:
-                        while mention == neg_mention:
-                            neg_mention = random.sample(all_mentions, 1)
-                        temp_series = copy.deepcopy(series)
-                        temp_series[temp_series.index(mention)] = neg_mention
-                        filled_data.append([item["qtype"], neg_mention, entity, raw_question.format(*temp_series), 0, original_question])
+                for i, mention in enumerate(series):
+                    raw_question, entity, original_question, _ = item['el'][i]
+                    if mention == entity:
+                        filled_data.append([item["qtype"], mention, entity, raw_question.format(*series), 2, original_question])
+                    else:
+                        filled_data.append([item["qtype"], mention, entity, raw_question.format(*series), 1, original_question])
+                    neg_entities = random.sample(all_entities, neg_to_pos)
+                    for neg_entity in neg_entities:
+                        while neg_entity == entity:
+                            neg_entity = random.sample(all_entities, 1)[0]
+                            if neg_entity in neg_entities:
+                                continue
+                        filled_data.append([item["qtype"], mention, neg_entity, raw_question.format(*series), 0, original_question])
     return filled_data
 
 def write_ner_dataset(train, dev, test, base_dir, split_test=True):
@@ -243,12 +244,12 @@ def write_el_dataset(train, dev, test, base_dir, split_test=True):
 def main():
     # data = generate_data(trans_dests=[])
     # torch.save(data, 'input/data/temp_data.bin')
-    data = torch.load('input/data/temp_data.bin')
+    data = torch.load('/home/gyc/bert-kbqa-test/bert-kbqa/input/data/temp_data.bin')
     train_data, dev_data, test_data = split_data(data, rseed=202302, ratio=[0.6, 0.2, 0.2], shuffle=True)
     ner_train_set, ner_dev_set, ner_test_set = make_ner_dataset(train_data), make_ner_dataset(dev_data), make_ner_dataset(test_data)
     all_sims = set([d["sim"] for d in data])
     sim_train_set, sim_dev_set, sim_test_set = make_sim_dataset(train_data, all_sims=all_sims), make_sim_dataset(dev_data, all_sims=all_sims), make_sim_dataset(test_data, all_sims=all_sims, neg_to_pos=-1)
-    el_train_set, el_dev_set, el_test_set = make_el_dataset(train_data), make_el_dataset(dev_data), make_el_dataset(test_data)
+    el_train_set, el_dev_set, el_test_set = make_el_dataset(train_data), make_el_dataset(dev_data, neg_to_pos=20), make_el_dataset(test_data, neg_to_pos=20)
     write_ner_dataset(ner_train_set, ner_dev_set, ner_test_set, NER_BASE)
     write_sim_dataset(sim_train_set, sim_dev_set, sim_test_set, SIM_BASE)
     write_el_dataset(el_train_set, el_dev_set, el_test_set, EL_BASE)

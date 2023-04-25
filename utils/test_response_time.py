@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import time
 import sys
 from matplotlib import rcParams
+import torch
 
 from runners.bert_kbqa_runner import BertKBQARunner
 from runners.faq_runner import FAQRunner
@@ -13,7 +14,7 @@ from .operations import load_faq_questions, load_sim_questions, get_all_sims
 
 rcParams['font.family'] = 'SimHei'
 
-time_profile_ninputs = [10, 50, 100, 200]
+time_profile_ninputs = [500]
 
 def plot_avg_time(times, topic):
     plt.hist(times)
@@ -31,6 +32,13 @@ def kbqa_once():
     questions = load_sim_questions("input/data/sim/train.txt")
     agent = FengxianQA()
     agent.do_qa(questions[0])
+
+def el_once():
+    questions = load_sim_questions("input/data/sim/train.txt")
+    agent = FengxianQA()
+    for q in questions[:10]:
+        entity, attribute = agent.kbqa_runner.get_entity(q)
+        _ = agent.kbqa_runner.fuzzy_entity_linking(entity, attribute, q)
 
 def test_init_time(ntrials):
     kbqa_init_time, faq_init_time, faq_model_init_time, ner_init_time, sim_init_time = [], [], [], [], []
@@ -91,52 +99,53 @@ def test_init_time(ntrials):
 
 def main():
     # test_init_time(ntrials=10)
+    # torch.jit.optimized_execution(False)
     agent = FengxianQA()
     questions = load_sim_questions("input/data/sim/train.txt")
     faq_questions = load_faq_questions("input/data/faq/train_data")
-    for ninput in time_profile_ninputs:
-        times = []
-        print("ninput:", ninput)
-        for q in tqdm(questions[:ninput]):
-            t_start = time.time()
-            _ = agent.do_qa(q)
-            t_end = time.time()
-            times.append(t_end - t_start)
-        print("total time", np.sum(times[1:]))
-        print("full", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
-    for ninput in time_profile_ninputs:
-        times = []
-        print("ninput:", ninput)
-        for q in tqdm(questions[:ninput]):
-            t_start = time.time()
-            _ = agent.do_qa_without_faq(q)
-            t_end = time.time()
-            times.append(t_end - t_start)
-        print("total time", np.sum(times[1:]))
-        print("kbqa", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
+    # for ninput in time_profile_ninputs:
+    #     times = []
+    #     print("ninput:", ninput)
+    #     for q in tqdm(questions[:ninput]):
+    #         t_start = time.time()
+    #         _ = agent.do_qa(q)
+    #         t_end = time.time()
+    #         times.append(t_end - t_start)
+    #     print("total time", np.sum(times[1:]))
+    #     print("kbqa+faq", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
+    # for ninput in time_profile_ninputs:
+    #     times = []
+    #     print("ninput:", ninput)
+    #     for q in tqdm(questions[:ninput]):
+    #         t_start = time.time()
+    #         _ = agent.only_kbqa(q)
+    #         t_end = time.time()
+    #         times.append(t_end - t_start)
+    #     print("total time", np.sum(times[1:]))
+    #     print("kbqa", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
     # plot_avg_time(times, "./kbqa_avgtime.png")
-    for ninput in time_profile_ninputs:
-        times = []
-        print("ninput:", ninput)
-        for q in tqdm(questions[:ninput]):
-            t_start = time.time()
-            _ = agent.kbqa_runner.get_entity(q)
-            t_end = time.time()
-            times.append(t_end - t_start)
-        print("total time", np.sum(times[1:]))
-        print("ner", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
-    all_sims = get_all_sims("input/data/sim/train.txt")
-    print(all_sims)
-    for ninput in time_profile_ninputs:
-        times = []
-        print("ninput:", ninput)
-        for q in tqdm(questions[:ninput]):
-            t_start = time.time()
-            _ = agent.kbqa_runner.semantic_matching(q, list(all_sims)[:3], 128)
-            t_end = time.time()
-            times.append(t_end - t_start)
-        print("total time", np.sum(times[1:]))
-        print("sim", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
+    # for ninput in time_profile_ninputs:
+    #     times = []
+    #     print("ninput:", ninput)
+    #     for q in tqdm(questions[:ninput]):
+    #         t_start = time.time()
+    #         _ = agent.kbqa_runner.get_entity(q)
+    #         t_end = time.time()
+    #         times.append(t_end - t_start)
+    #     print("total time", np.sum(times[1:]))
+    #     print("ner", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
+    # all_sims = get_all_sims("input/data/sim/train.txt")
+    # print(all_sims)
+    # for ninput in time_profile_ninputs:
+    #     times = []
+    #     print("ninput:", ninput)
+    #     for q in tqdm(questions[:ninput]):
+    #         t_start = time.time()
+    #         _ = agent.kbqa_runner.semantic_matching(q, list(all_sims)[:3], 128)
+    #         t_end = time.time()
+    #         times.append(t_end - t_start)
+    #     print("total time", np.sum(times[1:]))
+    #     print("sim", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
     for ninput in time_profile_ninputs:
         times = []
         print("ninput:", ninput)
@@ -148,21 +157,34 @@ def main():
             times.append(t_end - t_start)
         print("total time", np.sum(times[1:]))
         print("el", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
-    for ninput in time_profile_ninputs:
-        times = []
-        print("ninput:", ninput)
-        for q in tqdm(faq_questions[:ninput]):
-            t_start = time.time()
-            _ = agent.do_qa(q)
-            t_end = time.time()
-            times.append(t_end - t_start)
-        print("total time", np.sum(times[1:]))
-        print("faq", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
+    # for ninput in time_profile_ninputs:
+    #     times = []
+    #     print("ninput:", ninput)
+    #     for q in tqdm(faq_questions[:ninput]):
+    #         t_start = time.time()
+    #         _ = agent.only_chatglm(q)
+    #         t_end = time.time()
+    #         times.append(t_end - t_start)
+    #     print(times)
+    #     print("total time", np.sum(times[1:]))
+    #     print("chatglm", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
+    # for ninput in time_profile_ninputs:
+    #     times = []
+    #     print("ninput:", ninput)
+    #     for q in tqdm(faq_questions[:ninput]):
+    #         t_start = time.time()
+    #         _ = agent.do_qa(q)
+    #         t_end = time.time()
+    #         times.append(t_end - t_start)
+    #     print("total time", np.sum(times[1:]))
+    #     print("faq", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
 
 if __name__ == '__main__':
     if '--faq_once' in sys.argv:
         faq_once()
     elif '--kbqa_once' in sys.argv:
         kbqa_once()
+    elif '--el_once' in sys.argv:
+        el_once()
     else:
         main()

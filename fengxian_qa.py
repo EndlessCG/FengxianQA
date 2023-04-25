@@ -40,8 +40,11 @@ class FengxianQA:
         return chatglm_answer
         
 
-    def do_qa_without_faq(self, question):
-            return self.kbqa_runner.do_qa(question)
+    def only_kbqa(self, question):
+        return self.kbqa_runner.do_qa(question)
+    
+    def only_chatglm(self, question):
+        return self.chatglm_runner.do_qa(question)
     
     def interact(self):
         while True:

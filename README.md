@@ -12,7 +12,7 @@
 
 知识图谱数据导入命令（前提：所有数据必须放在neo4j图数据库的import目录下）：
 
-./neo4j-admin import --database=graph.db --nodes="../import/entity_fengxiandian.csv" --nodes="../import/entity_yewuhuanjie.csv" --nodes="../import/entity_yewuliucheng.csv" --nodes="../import/entity_mingci.csv" --nodes="../import/entity_yujing.csv" --relationships="../import/relationship_baohan.csv" --relationships="../import/relationship_sheji.csv"
+./neo4j-admin import --database=graph.db --nodes="../import/entity_fengxiandian.csv" --nodes="../import/entity_yewuhuanjie.csv" --nodes="../import/entity_yewuliucheng.csv" --nodes="../import/entity_mingci.csv" --nodes="../import/entity_yujing.csv" --relationships="../import/relationship_baohan.csv"
 
 
 ### MySql数据库构建

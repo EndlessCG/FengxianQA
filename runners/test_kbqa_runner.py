@@ -11,18 +11,21 @@ el_questions = load_el_questions('input/data/el/test.txt')
 all_sims = get_all_sims('input/data/sim/train.txt')
 assert len(sim_questions) == len(ner_questions)
 
-def test_once(question, ner_answer, sim_answer, el_entity):
+def test_once(question, ner_answer, sim_answer, el_entity=None):
     pred_entity_list, pred_attribute_list = runner.get_entity(question)
     real_entity_list, real_attribute_list = runner._decode_ner_tags(ner_answer, question)
     sim_pred = runner.semantic_matching(question, all_sims, 128, get_sgraph=True)
-    el_pred_e, el_pred_a = runner.fuzzy_entity_linking(pred_entity_list, pred_attribute_list, question=question)
         
     ner_correct = pred_entity_list == real_entity_list and pred_attribute_list == real_attribute_list
     sim_correct = sim_pred == sim_answer
-    el_correct = el_entity in el_pred_e or el_entity in el_pred_a
-    if ner_correct and sim_correct and el_correct:
-        return True
-    return False
+    correct = ner_correct and sim_correct
+    
+    if kbqa_runner_config.get("entity_linking_method", "fuzzy") == "fuzzy":
+        el_pred_e, el_pred_a = runner.fuzzy_entity_linking(pred_entity_list, pred_attribute_list, question=question)
+        el_correct = el_entity in el_pred_e or el_entity in el_pred_a
+        correct = correct and el_correct
+    
+    return correct
 
 def test_once_el_sample(question, ner_answer, sim_answer, el_entity, el_mention, original_question):
     pred_entity_list, pred_attribute_list = runner.get_entity(question)
@@ -49,18 +52,24 @@ def main():
     for i in tqdm(range(len(sim_questions))):
         question, sim_answer = sim_questions[i]
         _, ner_answer = ner_questions[i]
-        if question not in el_questions:
-            print(f"No question {question} in EL dataset")
-            continue
-        _, _, el_entity = el_questions[question][0]
+        
+        if kbqa_runner_config.get("entity_linking_method", "fuzzy") == "fuzzy":
+            # Do EL test
+            if question not in el_questions:
+                print(f"No question {question} in EL dataset")
+                continue
+            _, _, el_entity = el_questions[question][0]
+            for el_mention, el_question, el_entity in el_questions[question][1:]:
+                # ner_answer[0] += el_mention
+                total_cnt += 1
+                if test_once_el_sample(el_question, ner_answer, sim_answer, el_entity, el_mention, question):
+                    correct_cnt += 1
+        else:
+            el_entity = None
+        
         total_cnt += 1
         if test_once(question, ner_answer, sim_answer, el_entity):
             correct_cnt += 1
-        for el_mention, el_question, el_entity in el_questions[question][1:]:
-            # ner_answer[0] += el_mention
-            total_cnt += 1
-            if test_once_el_sample(el_question, ner_answer, sim_answer, el_entity, el_mention, question):
-                correct_cnt += 1
 
     kbqa_accuracy = correct_cnt / total_cnt
     print("KBQA accuracy", kbqa_accuracy)

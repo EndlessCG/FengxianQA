@@ -15,6 +15,8 @@
 统 I-entity
 开 I-entity
 户 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -31,6 +33,8 @@
 购 I-entity
 审 I-entity
 批 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -81,6 +85,8 @@
 购 I-entity
 发 I-entity
 票 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -89,6 +95,8 @@
 据 I-entity
 收 I-entity
 取 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -105,6 +113,8 @@
 存 I-entity
 超 I-entity
 期 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -136,6 +146,8 @@
 权 I-entity
 签 I-entity
 约 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -190,6 +202,8 @@
 令 I-entity
 传 I-entity
 递 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -207,6 +221,8 @@
 关 I-entity
 证 I-entity
 明 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -223,6 +239,8 @@
 据 I-entity
 收 I-entity
 取 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -246,6 +264,8 @@
 险 I-entity
 识 I-entity
 别 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -296,6 +316,8 @@
 期 I-entity
 超 I-entity
 额 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -315,6 +337,8 @@
 存 I-entity
 超 I-entity
 期 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 哪 O
@@ -352,6 +376,8 @@
 户 I-entity
 退 I-entity
 款 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -371,6 +397,8 @@
 户 I-entity
 管 I-entity
 理 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 什 O
@@ -397,6 +425,8 @@
 同 I-entity
 条 I-entity
 款 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -406,6 +436,8 @@
 商 I-entity
 准 I-entity
 入 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -441,6 +473,8 @@
 同 I-entity
 一 I-entity
 人 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -453,6 +487,8 @@
 业 I-entity
 素 I-entity
 养 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -476,6 +512,8 @@
 款 I-entity
 方 I-entity
 式 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 哪 O
@@ -489,6 +527,8 @@
 期 I-entity
 交 I-entity
 货 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 哪 O
@@ -500,6 +540,8 @@
 存 I-entity
 超 I-entity
 期 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -513,6 +555,8 @@
 同 I-entity
 一 I-entity
 人 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -533,6 +577,8 @@
 款 I-entity
 方 I-entity
 式 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -589,6 +635,8 @@
 款 I-entity
 处 I-entity
 理 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -603,6 +651,8 @@
 的 I-entity
 节 I-entity
 点 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -639,6 +689,8 @@
 权 I-entity
 签 I-entity
 约 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -683,6 +735,8 @@
 库 I-entity
 准 I-entity
 入 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -699,6 +753,8 @@
 算 I-entity
 价 I-entity
 格 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -719,6 +775,8 @@
 商 I-entity
 准 I-entity
 入 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -819,6 +877,8 @@
 或 I-entity
 欠 I-entity
 发 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 什 O
@@ -830,6 +890,8 @@
 算 I-entity
 价 I-entity
 格 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 哪 O
@@ -856,6 +918,8 @@
 责 I-entity
 授 I-entity
 权 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -937,6 +1001,8 @@
 批 I-entity
 付 I-entity
 款 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 哪 O
@@ -990,6 +1056,8 @@
 息 I-entity
 获 I-entity
 取 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 什 O
@@ -1005,6 +1073,8 @@
 业 I-entity
 素 I-entity
 养 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -1036,6 +1106,8 @@
 同 I-entity
 条 I-entity
 款 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -1085,6 +1157,8 @@
 金 I-entity
 释 I-entity
 放 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -1104,6 +1178,8 @@
 户 I-entity
 管 I-entity
 理 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -1112,6 +1188,8 @@
 算 I-entity
 价 I-entity
 格 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -1131,6 +1209,8 @@
 物 I-entity
 出 I-entity
 库 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 地 B-attribute
@@ -1151,6 +1231,8 @@
 联 I-entity
 关 I-entity
 系 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -1208,6 +1290,8 @@
 关 I-entity
 证 I-entity
 明 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 哪 O
@@ -1223,6 +1307,8 @@
 项 I-entity
 管 I-entity
 理 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 什 O
@@ -1236,6 +1322,8 @@
 期 I-entity
 交 I-entity
 货 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 什 O
@@ -1259,6 +1347,8 @@
 方 I-entity
 准 I-entity
 入 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -1278,6 +1368,8 @@
 联 I-entity
 关 I-entity
 系 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O
@@ -1304,6 +1396,8 @@
 款 I-entity
 处 I-entity
 理 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -1327,6 +1421,8 @@
 展 I-entity
 业 I-entity
 务 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -1359,6 +1455,8 @@
 同 I-entity
 结 I-entity
 案 I-entity
+风 I-entity
+险 I-entity
 的 O
 业 O
 务 O
@@ -1382,6 +1480,8 @@
 业 I-entity
 素 I-entity
 养 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 什 O
@@ -1406,6 +1506,8 @@
 金 I-entity
 释 I-entity
 放 I-entity
+风 I-entity
+险 I-entity
 ？ O
 
 包 O

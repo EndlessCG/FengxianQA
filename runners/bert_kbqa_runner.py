@@ -278,7 +278,8 @@ class BertKBQARunner():
             
         if len(linked_attribute) == 0 and len(linked_entity) == 0:
             # 未找到
-            return f"未找到\"{e_mention_list.union(a_mention_list)}\"相关信息"
+            self._print(f"未找到\"{e_mention_list.union(a_mention_list)}\"相关信息")
+            return [], []
         
         return linked_entity, linked_attribute
     
@@ -324,6 +325,8 @@ class BertKBQARunner():
             self._print("链接到的实体：", linked_entity)
         if len(linked_attribute) != 0:
             self._print("链接到的属性：", linked_attribute)
+        if len(linked_entity) == len(linked_attribute) == 0:
+            return -1, "未链接到该问题中的实体"
 
         # 3. Candidate Subgraph Generation
         sgraph_type_idx = {}
@@ -344,7 +347,8 @@ class BertKBQARunner():
             for g in query_result:
                 sgraph_type_idx[g] = sgraph_type
             acc_idx += len(query_result)
-    
+        self._print(f"候选路径：", sgraph_candidates)
+
         # 4. Cadidate Subgraph Selection
         match_idx = self.semantic_matching(question, sgraph_candidates, self.config["sim"]["max_seq_len"]).item()
         if match_idx == -1:
