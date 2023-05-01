@@ -142,11 +142,13 @@ fengxian_qa_config = dict(
     # FengxianQA配置
     verbose=True,  # 是否输出fengxian_qa过程中的信息
     # 如希望关闭所有信息输出，请将此处，kbqa_runner_config和faq_runner_config的verbose全部设为False
+    faq_threshold=0.2  # 使用FAQ模块答案的最低信心值
 )
 
 kbqa_runner_config = dict(
     # KBQA配置
     verbose=True,  # 是否输出KBQA过程详细信息
+    sim_el_threshold=0,  # 实体链接认定有实体的最低输出
     sim_accept_threshold=0.01,  # SIM模型认定有答案的最低信心值
     entity_linking_method="fuzzy", # 实体链接方法，可选"fuzzy"（使用EL模型）或"naive"（使用字符串匹配）
 

@@ -246,8 +246,8 @@ class BertKBQARunner():
             e_candidate_entities = self.graph.entity_list
         if a_candidate_entities is None:
             a_candidate_entities =  self.graph.attribute_list
-        linked_entity = self.el_model.get_entity(e_mention_list, question, e_candidate_entities)
-        linked_attribute = self.el_model.get_entity(a_mention_list, question, a_candidate_entities)
+        linked_entity = self.el_model.get_entity(e_mention_list, question, e_candidate_entities, el_threshold=self.config.get("sim_el_threshold", 0))
+        linked_attribute = self.el_model.get_entity(a_mention_list, question, a_candidate_entities, el_threshold=self.config.get("sim_el_threshold", 0))
         return linked_entity, linked_attribute
 
     def naive_entity_linking(self, e_mention_list, a_mention_list, e_candidate_entities=None, a_candidate_entities=None):

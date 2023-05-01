@@ -113,16 +113,16 @@ def main():
     #         times.append(t_end - t_start)
     #     print("total time", np.sum(times[1:]))
     #     print("kbqa+faq", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
-    # for ninput in time_profile_ninputs:
-    #     times = []
-    #     print("ninput:", ninput)
-    #     for q in tqdm(questions[:ninput]):
-    #         t_start = time.time()
-    #         _ = agent.only_kbqa(q)
-    #         t_end = time.time()
-    #         times.append(t_end - t_start)
-    #     print("total time", np.sum(times[1:]))
-    #     print("kbqa", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
+    for ninput in time_profile_ninputs:
+        times = []
+        print("ninput:", ninput)
+        for q in tqdm(questions[:ninput]):
+            t_start = time.time()
+            _ = agent.only_kbqa(q)
+            t_end = time.time()
+            times.append(t_end - t_start)
+        print("total time", np.sum(times[1:]))
+        print("kbqa", 1000 * np.average(times[1:]), "+-", 1000 * np.std(times[1:]))
     # plot_avg_time(times, "./kbqa_avgtime.png")
     # for ninput in time_profile_ninputs:
     #     times = []

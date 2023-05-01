@@ -13,7 +13,7 @@ class FengxianQA:
         convert_config_paths(chatglm_runner_config)
         self.kbqa_runner = BertKBQARunner(kbqa_runner_config, neo4j_config)
         self.faq_runner = FAQRunner(faq_runner_config)
-        self.chatglm_runner = ChatGLMRunner(chatglm_runner_config)
+        # self.chatglm_runner = ChatGLMRunner(chatglm_runner_config)
         self.faq_runner.disable_warnings()
         self._verbose = fengxian_qa_config.get("verbose", "False")
         init_end = time.time()
@@ -28,16 +28,17 @@ class FengxianQA:
             return "请输入问题"
         faq_id, faq_answer, faq_prob = self.faq_runner.do_qa(question, get_id=True)
         self._print("FAQ结果:", faq_id, "置信度:", faq_prob)
-        if faq_answer != "_NO_FAQ_ANSWER":
+        if faq_answer != "_NO_FAQ_ANSWER" and faq_prob > fengxian_qa_config.get("faq_threshold", 0.2):
             self._print("使用FAQ回答")
             return faq_answer
         kbqa_ret, kbqa_answer = self.kbqa_runner.do_qa(question)
         if kbqa_ret == 0:
             self._print("使用KBQA回答")
             return kbqa_answer
-        chatglm_answer = self.chatglm_runner.do_qa(question)
-        self._print("使用ChatGLM回答")
-        return chatglm_answer
+        # chatglm_answer = self.chatglm_runner.do_qa(question)
+        # self._print("使用ChatGLM回答")
+        # return chatglm_answer
+        return "None"
         
 
     def only_kbqa(self, question):

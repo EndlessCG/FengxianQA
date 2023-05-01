@@ -72,8 +72,8 @@ class EL():
         result = self.graph.execute_query(pop_query)
         return 0 if result == [] else result[0]
 
-    def _reg_levenshstein_distance(self, s1, s2):
-        return lev(s1, s2) / max(len(s1), len(s2))
+    def _levenshstein_distance(self, s1, s2):
+        return lev(s1, s2)
 
     def _bm25_similarity(self, sentence, entity_idx):
         tok_sentence = jieba.lcut(sentence)
@@ -89,7 +89,7 @@ class EL():
         e_pop = self._entity_popularity(entity)
         # m_e_bm25_sim = self._bm25_similarity(mention, self._get_e_id(entity))
         m_s_bm25_sim = self._bm25_similarity(question, self._get_e_id(entity))
-        reg_lev_dist = self._reg_levenshstein_distance(mention, entity)
+        reg_lev_dist = self._levenshstein_distance(mention, entity)
         all_features = [string_sim, m_e_w2v_sim, e_pop, m_s_bm25_sim, reg_lev_dist]
         for idx in mask_idx:
             all_features.pop(idx)
@@ -182,16 +182,20 @@ class EL():
         topk_idx = np.argpartition(bm25_dists, -top_k)[-top_k:]           
         return [candidate_entities[idx] for idx in topk_idx]
 
-    def get_entity(self, mentions, question, candidate_entities, top_k=1, best_entitiy_only=True, pre_top_k=10):
+    def get_entity(self, mentions, question, candidate_entities, el_threshold=0, top_k=1, best_entitiy_only=True, pre_top_k=10):
         candidate_entities = self._top_k_bm25(question, candidate_entities, pre_top_k)
         results = []
         for mention in mentions:
-            m_results, features = [], []
-            for entity in candidate_entities:
-                features.append(self._calc_features(mention, entity, question))
-            m_results = self.el_model.predict(features)
-            entity_prob_list = [[e, r] for e, r in zip(candidate_entities, m_results)]
-            results.append(sorted(entity_prob_list, key=lambda x: x[1], reverse=True)[:top_k])
+            if mention in candidate_entities:
+                # perfect matching
+                results.append([[mention, 1]])
+            else:
+                m_results, features = [], []
+                for entity in candidate_entities:
+                    features.append(self._calc_features(mention, entity, question))
+                m_results = self.el_model.predict(features)
+                entity_prob_list = [[e, r] for e, r in zip(candidate_entities, m_results) if r > el_threshold]
+                results.append(sorted(entity_prob_list, key=lambda x: x[1], reverse=True)[:top_k])
         if best_entitiy_only:
             return [] if results == [] else [r[0][0] for r in results]
         return results

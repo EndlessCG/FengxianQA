@@ -54,6 +54,11 @@ FAQ数据存放在`input/data/faq/file/qa100.xls`
 ## 项目结构
 
 * models
+  * EL
+    * EL_model.py     实体链接模型
+    * EL_main.py      训练实体链接模型
+    * test_EL.py      测试实体链接模型
+    * EL_ablation_test.py  实体链接模型特征消融测试
   * NER
     * CRF_model.py    条件随机场模型
     * BERT_CRF.py     BERT+条件随机场
@@ -69,11 +74,13 @@ FAQ数据存放在`input/data/faq/file/qa100.xls`
     * util.py         FAQ模型工具库
 * runners
   * bert_kbqa_runner.py KBQA模块定义
+  * chatglm_runner.py   ChatGLM模块定义
   * faq_runner.py       FAQ模块定义
   * test_kbqa_runner.py KBQA模块测试脚本
   * test_faq_runner.py  FAQ模块测试脚本
 * scripts
   * clean_cached_data.sh 清除训练产生的cached文件模型
+  * clean_dev_file.sh    清除开发过程相关文件
   * train_all.sh         训练FAQ, NER以及SIM模型
   * test_all.sh          测试三个模型、两个模块以及系统的性能、系统的响应时间
 * preprocess 用于生成训练数据，训练完成后部署时可删除
@@ -83,7 +90,7 @@ FAQ数据存放在`input/data/faq/file/qa100.xls`
   * data_generator.py    训练数据生成脚本
   * util.py              训练数据生成工具库
 * utils 工具库
-* fengxian_main.py  FengxianQA类定义
+* fengxian_qa.py  FengxianQA类定义
 * config.py 项目配置文件
 * requirements.txt 项目依赖描述
 
@@ -92,6 +99,7 @@ FAQ数据存放在`input/data/faq/file/qa100.xls`
 * 模型(model)介绍
   * FAQ模型：Bi-LSTM结构的文本分类模型，输入问题原文，输出与问题原文最接近的FAQ数据库中问题的ID
   * NER模型：BERT+CRF结构的命名实体识别模型，输入问题原文，输出问题中每一个字的实体标签
+  * EL模型：Xgboost Ranker实体链接模型，输入原问题、实体提及、候选实体，输出候选实体中与实体提及匹配的实体
   * SIM模型：基于BERT的文本分类模型，输入问题原文和子图，输出二者是否匹配
 * 模块(runner)介绍
   * FAQ（Frequently Asked Questions，常用问题库）模块
@@ -105,4 +113,6 @@ FAQ数据存放在`input/data/faq/file/qa100.xls`
     5. 使用最匹配的子图结构生成查询语句。
     6. 在neo4j数据库中进行查询。
     7. 根据查询结果生成答案。
-* 输入处理流程：输入的问题首先由FAQ模块进行处理，若FAQ模块输出的概率大于config.py中指定的`admit_threshold`，则返回FAQ模块的答案，否则将问题输入KBQA模块，并返回KBQA模块的答案。对于目前版本，`admit_threshold`的最优值为0.3~0.4。
+  * ChatGLM模块
+    1. 使用ChatGLM生成式语言模型生成回答。
+* 输入处理流程：输入的问题首先由FAQ模块进行处理，若FAQ模块除负类外某一类输出的概率大于config.py中指定的`admit_threshold`，则返回FAQ模块的答案，否则将问题输入KBQA模块。若KBQA模块中的各步骤均正常输出，则返回KBQA的答案，否则返回ChatGLM生成的答案。
