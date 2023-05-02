@@ -1,4 +1,4 @@
-# dataset: https://ai.tencent.com/ailab/nlp/en/data/tencent-ailab-embedding-zh-d100-v0.2.0-s.tar.gz
+# word2vec dataset: https://ai.tencent.com/ailab/nlp/en/data/tencent-ailab-embedding-zh-d100-v0.2.0-s.tar.gz
 from gensim.models import KeyedVectors
 from gensim.summarization.bm25 import BM25
 import jieba
@@ -182,14 +182,20 @@ class EL():
         topk_idx = np.argpartition(bm25_dists, -top_k)[-top_k:]           
         return [candidate_entities[idx] for idx in topk_idx]
 
+    def _top_k_w2v(self, mention, candidate_entities, top_k=10):
+        w2v_dists = [self._word2vec_similarity(mention, e) for e in candidate_entities]
+        topk_idx = np.argpartition(w2v_dists, -top_k)[-top_k:]           
+        return [candidate_entities[idx] for idx in topk_idx]
+
+
     def get_entity(self, mentions, question, candidate_entities, el_threshold=0, top_k=1, best_entitiy_only=True, pre_top_k=10):
-        candidate_entities = self._top_k_bm25(question, candidate_entities, pre_top_k)
         results = []
         for mention in mentions:
             if mention in candidate_entities:
                 # perfect matching
                 results.append([[mention, 1]])
             else:
+                candidate_entities = self._top_k_w2v(mention, candidate_entities, pre_top_k)
                 m_results, features = [], []
                 for entity in candidate_entities:
                     features.append(self._calc_features(mention, entity, question))
@@ -197,7 +203,6 @@ class EL():
                 entity_prob_list = [[e, r] for e, r in zip(candidate_entities, m_results) if r > el_threshold]
                 results.append(sorted(entity_prob_list, key=lambda x: x[1], reverse=True)[:top_k])
         if best_entitiy_only:
-            # all(...)包括results为[]的情况
-            return [] if all(len(r) == 0 for r in results) else [r[0][0] for r in results]
+            return [] if any(len(r) == 0 for r in results) else [r[0][0] for r in results]
         return results
             

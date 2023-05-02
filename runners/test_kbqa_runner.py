@@ -1,3 +1,4 @@
+import random
 from utils.operations import load_el_questions
 from .bert_kbqa_runner import BertKBQARunner
 from config import kbqa_runner_config, neo4j_config
@@ -42,11 +43,16 @@ def test_once_el_sample(question, ner_answer, sim_answer, el_entity, el_mention,
     ner_correct = pred_entity_list == real_entity_list and pred_attribute_list == real_attribute_list
     sim_correct = sim_pred == sim_answer
     el_correct = el_entity in el_pred_e or el_entity in el_pred_a
-    if ner_correct and sim_correct and el_correct:
-        return True
-    return False
+    if not ner_correct:
+        return 0
+    if not sim_correct:
+        return 1 
+    if not el_correct:
+        return 2
+    return -1
 
 def main():
+    err_cnts = [0, 0, 0] # ner, sim, el
     correct_cnt = 0
     total_cnt = 0
     for i in tqdm(range(len(sim_questions))):
@@ -58,12 +64,18 @@ def main():
             if question not in el_questions:
                 print(f"No question {question} in EL dataset")
                 continue
-            _, _, el_entity = el_questions[question][0]
-            for el_mention, el_question, el_entity in el_questions[question][1:]:
+            if len(el_questions[question]) > 4:
+                # randomly select 3 EL questions to accelerate testing
+                question_set = random.sample(el_questions[question][1:], 3)
+            for el_mention, el_question, el_entity in question_set:
                 # ner_answer[0] += el_mention
                 total_cnt += 1
-                if test_once_el_sample(el_question, ner_answer, sim_answer, el_entity, el_mention, question):
+                result = test_once_el_sample(el_question, ner_answer, sim_answer, el_entity, el_mention, question)
+                if result == -1:
                     correct_cnt += 1
+                else:
+                    err_cnts[result] += 1
+
         else:
             el_entity = None
         
@@ -73,6 +85,7 @@ def main():
 
     kbqa_accuracy = correct_cnt / total_cnt
     print("KBQA accuracy", kbqa_accuracy)
+    print(f"In {total_cnt} tests, correct {correct_cnt}, ner error {err_cnts[0]}, sim error {err_cnts[1]}, el error {err_cnts[2]}")
         
 
 if __name__ == '__main__':

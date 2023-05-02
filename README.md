@@ -6,7 +6,7 @@
 
 ### Neo4j图数据库构建
 
-知识图谱数据在preprocess下面的风险实体关系表目录中。
+知识图谱数据在input下面的风险实体关系表目录中。
 
 其中，entity_fengxiandian.csv、entity_mingci.csv、entity_yewuhuanjie.csv、entity_yewuliucheng.csv、entity_yujing.csv是实体表，relationship_baohan.csv是关系表。
 
@@ -83,12 +83,9 @@ FAQ数据存放在`input/data/faq/file/qa100.xls`
   * clean_dev_file.sh    清除开发过程相关文件
   * train_all.sh         训练FAQ, NER以及SIM模型
   * test_all.sh          测试三个模型、两个模块以及系统的性能、系统的响应时间
-* preprocess 用于生成训练数据，训练完成后部署时可删除
+* input
   * 风控实体关系表        知识图谱原数据
-  * FAQ
-    * file_to_mysql.py     将FAQ数据上传至MySQL脚本
-  * data_generator.py    训练数据生成脚本
-  * util.py              训练数据生成工具库
+  * data                 训练数据
 * utils 工具库
 * fengxian_qa.py  FengxianQA类定义
 * config.py 项目配置文件
