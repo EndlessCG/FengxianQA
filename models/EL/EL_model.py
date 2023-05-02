@@ -26,9 +26,9 @@ class EL():
             self.w2v_model = pickle.load(open(self.args.w2v_load_path, 'rb'))
         else:
             self.w2v_model = KeyedVectors.load_word2vec_format(self.args.w2v_corpus_path, binary=False)
-            if not os.path.exists(osp.dirname(self.args.w2v_save_path)):
-                os.makedirs(osp.dirname(self.args.w2v_save_path))
-            pickle.dump(self.w2v_model, open(self.args.w2v_save_path, 'wb'), protocol=4)
+            if not os.path.exists(osp.dirname(self.args.w2v_load_path)):
+                os.makedirs(osp.dirname(self.args.w2v_load_path))
+            pickle.dump(self.w2v_model, open(self.args.w2v_load_path, 'wb'), protocol=4)
         self.graph = neo4j_graph
         self.full_entity_list = self.graph.entity_list + self.graph.attribute_list
         print("Tokenizing entity list...")
@@ -55,12 +55,12 @@ class EL():
         cut_s2, cleaned_s2 = jieba.lcut(s2.replace(' ', '')), []
         for w1 in cut_s1:
             if w1 not in self.w2v_model:
-                cleaned_s1.extend(list(w1))
+                cleaned_s1.extend([char for char in w1 if char in self.w2v_model])
             else:
                 cleaned_s1.append(w1)
         for w2 in cut_s2:
             if w2 not in self.w2v_model:
-                cleaned_s2.extend(list(w2))
+                cleaned_s2.extend([char for char in w2 if char in self.w2v_model])
             else:
                 cleaned_s2.append(w2)
         if len(cleaned_s1) == 0 or len(cleaned_s2) == 0:
@@ -101,7 +101,7 @@ class EL():
         
         file_name = osp.basename(path)
         dir_name = osp.dirname(path)
-        cached_path = osp.join(dir_name, f"cached_{file_name}_7feat")
+        cached_path = osp.join(dir_name, f"cached_{file_name}")
         if osp.exists(cached_path):
             try:
                 print(f"Loading cached {cached_path}")
@@ -197,6 +197,7 @@ class EL():
                 entity_prob_list = [[e, r] for e, r in zip(candidate_entities, m_results) if r > el_threshold]
                 results.append(sorted(entity_prob_list, key=lambda x: x[1], reverse=True)[:top_k])
         if best_entitiy_only:
-            return [] if results == [] else [r[0][0] for r in results]
+            # all(...)包括results为[]的情况
+            return [] if all(len(r) == 0 for r in results) else [r[0][0] for r in results]
         return results
             

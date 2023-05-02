@@ -42,17 +42,16 @@ ner_model_config = dict(
 
 el_model_config = dict(
     train=dict(
-        train_file="input/data/el/train.txt",
-        dev_file="input/data/el/validate.txt",
-        output_dir="models/EL/el_output/",
-        w2v_corpus_path="input/data/el/tencent-ailab-embedding-zh-d100-v0.2.0-s/tencent-ailab-embedding-zh-d100-v0.2.0-s.txt",
-        w2v_load_path="models/EL/el_output/w2v_model.bin",
-        w2v_save_path="models/EL/el_output/w2v_model.bin",
+        train_file="input/data/el/train.txt",  # 训练集数据路径
+        dev_file="input/data/el/validate.txt",  # 验证集数据路径
+        output_dir="models/EL/el_output/",  # 输出目录
+        w2v_corpus_path="input/data/el/tencent-ailab-embedding-zh-d100-v0.2.0-s/tencent-ailab-embedding-zh-d100-v0.2.0-s.txt",  # 所用的word2vec原文路径
+        w2v_load_path="models/EL/el_output/w2v_model.bin",  # 缓存word2vec模型路径
     ),
     test=dict(
-        test_file="input/data/el/test.txt",
-        w2v_load_path="models/EL/el_output/w2v_model.bin",
-        model_path="models/EL/el_output/best_el.bin"
+        test_file="input/data/el/test.txt",  # 测试集数据路径
+        w2v_load_path="models/EL/el_output/w2v_model.bin",  # 缓存word2vec模型路径
+        model_path="models/EL/el_output/best_el.bin"  # 训练好的实体链接模型路径
     )
 )
 
@@ -165,9 +164,9 @@ kbqa_runner_config = dict(
     ),
 
     el=dict(
-        pre_train_model_file='models/EL/el_output/best_el.bin',
-        w2v_load_path="models/EL/el_output/w2v_model.bin",
-        w2v_corpus_path="input/data/el/tencent-ailab-embedding-zh-d100-v0.2.0-s/tencent-ailab-embedding-zh-d100-v0.2.0-s.txt",
+        pre_train_model_file='models/EL/el_output/best_el.bin',  # 训练好的实体链接模型路径
+        w2v_load_path="models/EL/el_output/w2v_model.bin",  # 缓存的word2vec模型路径
+        w2v_corpus_path="input/data/el/tencent-ailab-embedding-zh-d100-v0.2.0-s/tencent-ailab-embedding-zh-d100-v0.2.0-s.txt",  # word2vec原文本路径
     )
 )
 
@@ -180,22 +179,20 @@ faq_runner_config = dict(
         db="qa100",  # mysql数据库名
         charset="utf8mb4",  # mysql字符集
     ),
-    verbose=True,  # 是否启用FAQ输出
+    verbose=True,  # 是否启用FAQ日志输出
     admit_threshold=0.3,  # 使用FAQ回答的最低FAQ信心值
     table_name="t_nlp_qa_faq",  # mysql表名
     vocab_file="input/data/faq/vocab",  # FAQ词汇文件路径
     model_dir="models/FAQ/finetune_model/",  # 训练好的模型路径
     id2label_file="models/FAQ/finetune_model/id2label.has_init",  # FAQ id2label文件路径
     test=dict(
-        accept_thresholds=["any"],
-        sim_test_file="input/data/sim/test.txt",
-        faq_test_file="input/data/faq/no_commas_large_neg2pos_1/test_data",
-        n_mixed_inputs=9999999,
+        sim_test_file="input/data/sim/test.txt",  # 测试用SIM问题路径
+        faq_test_file="input/data/faq/no_commas_large_neg2pos_1/test_data",  # 测试用FAQ问题路径
     )
 )
 
 chatglm_runner_config = dict(
-    repo_name="THUDM/chatglm-6b",
-    verbose=True,
-    use_local_chatglm=True
+    repo_name="THUDM/chatglm-6b",  # ChatGLM仓库名称
+    verbose=True,  # 是否启用ChatGLM日志输出
+    use_local_chatglm=False  # 是否使用本地的ChatGLM 
 )
