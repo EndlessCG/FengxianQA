@@ -85,12 +85,12 @@ class EL():
     def _calc_features(self, mention, entity, question, mask_idx=[]):
         string_sim = self._string_similarity(mention, entity)
         m_e_w2v_sim = self._word2vec_similarity(mention, entity)
-        # m_s_w2v_sim = self._word2vec_similarity(mention, question)
+        m_s_w2v_sim = self._word2vec_similarity(mention, question)
         e_pop = self._entity_popularity(entity)
-        # m_e_bm25_sim = self._bm25_similarity(mention, self._get_e_id(entity))
+        m_e_bm25_sim = self._bm25_similarity(mention, self._get_e_id(entity))
         m_s_bm25_sim = self._bm25_similarity(question, self._get_e_id(entity))
         reg_lev_dist = self._levenshstein_distance(mention, entity)
-        all_features = [string_sim, m_e_w2v_sim, e_pop, m_s_bm25_sim, reg_lev_dist]
+        all_features = [string_sim, m_e_w2v_sim, m_s_w2v_sim, e_pop, m_e_bm25_sim, m_s_bm25_sim, reg_lev_dist]
         for idx in mask_idx:
             all_features.pop(idx)
         return all_features
@@ -174,6 +174,34 @@ class EL():
             acc = self._do_test(test_features, group=test_group)
             print(f"Test accuracy: {acc}")
 
+    def feature_corr_matrix(self, train_args, test_args):
+        train_features, train_labels, train_group = self._parse_dataset(train_args.train_file, get_group=True)
+        val_features, val_labels, val_group = self._parse_dataset(train_args.dev_file, get_group=True)
+        test_features, test_labels, test_group = self._parse_dataset(test_args.test_file, get_group=True)
+        all_feat = np.concatenate([train_features, val_features, test_features])
+        all_labels = np.concatenate([train_labels, val_labels, test_labels])
+        import pandas as pd
+        import seaborn as sns
+        import matplotlib.pyplot as plt
+        df = pd.DataFrame(np.concatenate([all_feat, np.expand_dims(all_labels, 1)], -1))
+        df.columns = ['jaccard', 'm_e_w2v_sim', 'm_s_w2v_sim', 'e_pop', 'm_e_bm25_sim', 'm_s_bm25_sim', 'lev_dist', 'label']
+        # sns.set(rc={'figure.figsize':(13,13)})
+        plt.xticks(rotation = 45, ha = 'right')
+        sns.heatmap(df.corr(), cmap='YlGnBu', annot=True)
+        plt.savefig('el_corr.png')       
+
+    def _filter_entities(self, mention, question, candidate_entities, top_k, strategy):
+        if strategy == 'q_e_bm25':
+            return self._top_k_bm25(question, candidate_entities, top_k)
+        elif strategy == 'm_e_bm25':
+            return self._top_k_bm25(mention, candidate_entities, top_k)
+        elif strategy == 'q_e_w2v':
+            return self._top_k_w2v(question, candidate_entities, top_k)
+        elif strategy == 'm_e_w2v':
+            return self._top_k_w2v(mention, candidate_entities, top_k)
+        else:
+            assert False, f'Invalid strategy {strategy}'
+
     def _top_k_bm25(self, question, candidate_entities, top_k=10):
         question = jieba.lcut(question)
         bm25_dists = [self.bm25_model.get_score(question, self._get_e_id(e)) for e in candidate_entities]
@@ -182,8 +210,14 @@ class EL():
         topk_idx = np.argpartition(bm25_dists, -top_k)[-top_k:]           
         return [candidate_entities[idx] for idx in topk_idx]
 
+    def _top_k_w2v(self, question, candidate_entities, top_k=10):
+        w2v_sims = [self._word2vec_similarity(question, e) for e in candidate_entities]
+        topk_idx = np.argpartition(w2v_sims, -top_k)[-top_k:]           
+        return [candidate_entities[idx] for idx in topk_idx]
+
     def get_entity(self, mentions, question, candidate_entities, el_threshold=0, top_k=1, best_entitiy_only=True, pre_top_k=10):
-        candidate_entities = self._top_k_bm25(question, candidate_entities, pre_top_k)
+        # 因为初筛方法召回率低且对响应时间提升不大，去除初筛步骤
+        # candidate_entities = self._top_k_bm25(question, candidate_entities, pre_top_k)
         results = []
         for mention in mentions:
             if mention in candidate_entities:

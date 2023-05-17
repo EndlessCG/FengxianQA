@@ -25,3 +25,14 @@ class Neo4jGraph():
         self.attribute_list = [i if isinstance(l, list) else l for l in self.attribute_list for i in l]
         self.attribute_list = list(set(self.attribute_list))
         self.attribute_list = sorted(self.attribute_list, key=lambda x: len(x), reverse=True)
+    
+    def get_all_words(self, attr_blacklist=[]):
+        get_all_e_query = 'MATCH (n) WHERE EXISTS(n.`名称`) RETURN DISTINCT n.`名称`'
+        get_all_a_query = f'match (n) return [k IN KEYS(n) where not k in {attr_blacklist} | n[k]]'
+        entity_list = sorted(self.execute_query(get_all_e_query), key=lambda x: len(x), reverse=True)
+        attribute_list = self.execute_query(get_all_a_query)
+        attribute_list = sum(attribute_list, [])
+        attribute_list = [i if isinstance(l, list) else l for l in attribute_list for i in l]
+        attribute_list = list(set(attribute_list))
+        attribute_list = sorted(attribute_list, key=lambda x: len(x), reverse=True)
+        return entity_list + attribute_list

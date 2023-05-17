@@ -11,10 +11,19 @@ NER_BASE = "input/data/ner"
 SIM_BASE = "input/data/sim"
 EL_BASE = "input/data/el"
 
+def load_synonym_dict(path):
+    synonym_dict = {}
+    with open(path, 'r') as f:
+        for line in f.readlines():
+            synonyms = line.strip('\n').split('\t')
+            original_word, synonyms = synonyms[0], synonyms[1:]
+            synonym_dict.setdefault(original_word, []).extend(synonyms)
+    return synonym_dict
+
 def generate_data(trans_dests=[]):
     question_descriptions = get_question_descriptions()
     data = []
-    entity_synonyms_dict = {}
+    entity_synonyms_dict = load_synonym_dict('synonyms.txt')
     for q_desc in tqdm(question_descriptions):
         if len(q_desc) == 6:
             q_type, chart, raw_questions, question_slots, ner, sgraph = q_desc
@@ -32,11 +41,12 @@ def generate_data(trans_dests=[]):
                     temp_ner.append((chart[key][i], label))
                     # get entity synonyms for EL
                     if chart[key][i] in entity_synonyms_dict:
-                        print(f"Already generated synonyms of {chart[key][i]}, using {entity_synonyms_dict[chart[key][i]]}")
                         synonyms = entity_synonyms_dict[chart[key][i]]
                     else:
-                        synonyms = do_request(chart[key][i], 5, input_type='word', full_sentence=temp_data['question'])
-                        entity_synonyms_dict[chart[key][i]] = synonyms
+                        # synonyms = do_request(chart[key][i], 5, input_type='word', full_sentence=temp_data['question'])
+                        # entity_synonyms_dict[chart[key][i]] = synonyms
+                        print(f"ignoring {chart[key][i]}")
+                        synonyms = []
                     temp_el.append([raw_question, chart[key][i], raw_question.format(*val), synonyms])
                 temp_data['qtype'] = q_type
                 temp_data['ner'] = temp_ner
@@ -145,7 +155,8 @@ def make_el_dataset(data, neg_to_pos=1):
                         filled_data.append([item["qtype"], mention, entity, raw_question.format(*series), 2, original_question])
                     else:
                         filled_data.append([item["qtype"], mention, entity, raw_question.format(*series), 1, original_question])
-                    neg_entities = random.sample(all_entities, neg_to_pos)
+                    neg_entities = copy.deepcopy(all_entities)
+                    neg_entities.remove(entity)
                     for neg_entity in neg_entities:
                         while neg_entity == entity:
                             neg_entity = random.sample(all_entities, 1)[0]
@@ -242,9 +253,9 @@ def write_el_dataset(train, dev, test, base_dir, split_test=True):
                 funchainmhop.write("{}\t{}\t{}\t{}\t{}\n".format(*item[1:]))
 
 def main():
-    # data = generate_data(trans_dests=[])
-    # torch.save(data, 'input/data/temp_data.bin')
-    data = torch.load('/home/gyc/bert-kbqa-test/bert-kbqa/input/data/temp_data.bin')
+    data = generate_data(trans_dests=[])
+    torch.save(data, 'input/data/temp_data.bin')
+    # data = torch.load('/home/gyc/bert-kbqa-test/bert-kbqa/input/data/temp_data.bin')
     train_data, dev_data, test_data = split_data(data, rseed=202302, ratio=[0.6, 0.2, 0.2], shuffle=True)
     ner_train_set, ner_dev_set, ner_test_set = make_ner_dataset(train_data), make_ner_dataset(dev_data), make_ner_dataset(test_data)
     all_sims = set([d["sim"] for d in data])

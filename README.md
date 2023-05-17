@@ -59,6 +59,7 @@ FAQ数据存放在`input/data/faq/file/qa100.xls`
     * EL_main.py      训练实体链接模型
     * test_EL.py      测试实体链接模型
     * EL_ablation_test.py  实体链接模型特征消融测试
+    * test_el_filter.py   实体链接初筛效果测试
   * NER
     * CRF_model.py    条件随机场模型
     * BERT_CRF.py     BERT+条件随机场
@@ -89,6 +90,8 @@ FAQ数据存放在`input/data/faq/file/qa100.xls`
     * file_to_mysql.py     将FAQ数据上传至MySQL脚本
   * data_generator.py    训练数据生成脚本
   * util.py              训练数据生成工具库
+  * synonyms.txt         用于生成实体链接数据的近义词库
+  * write_entities.py    将所有实体/属性写至文件脚本
 * utils 工具库
 * fengxian_qa.py  FengxianQA类定义
 * config.py 项目配置文件

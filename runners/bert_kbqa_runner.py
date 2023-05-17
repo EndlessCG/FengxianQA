@@ -239,7 +239,12 @@ class BertKBQARunner():
         if get_sgraph:
             # top-k not supported for now
             return attribute_list[all_logits[:,1].argmax()]
-        return torch.topk(all_logits[:,1], k=top_k).indices
+        self._print('SIM信心', torch.topk(all_logits[:,1], k=top_k).values)
+        top_k_results, top_k_indices = torch.topk(all_logits[:,1], k=top_k)
+        if top_k_results[0] < self.config.get("sim_accept_threshold"):
+            return -1
+        else:
+            return top_k_indices
 
     def fuzzy_entity_linking(self, e_mention_list, a_mention_list, question, e_candidate_entities=None, a_candidate_entities=None):
         if e_candidate_entities is None:
@@ -343,7 +348,7 @@ class BertKBQARunner():
                 query_result = self.graph.execute_query(query.format(**query_slots))
             except KeyError:
                 continue
-            sgraph_candidates += query_result
+            sgraph_candidates += [r for r in query_result if '名称' not in r]
             for g in query_result:
                 sgraph_type_idx[g] = sgraph_type
             acc_idx += len(query_result)
